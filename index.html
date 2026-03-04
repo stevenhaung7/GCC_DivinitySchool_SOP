@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高雄大使命神學院 — 歷年各處室行事曆 SOP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== Variables ===== */
+    :root {
+      --primary: #1a3a5c;
+      --primary-light: #2c5a8c;
+      --accent: #8b6914;
+      --gold: #DAA520;
+      --gold-light: #f0e6cc;
+      --bg: #f8f6f0;
+      --text: #2c2c2c;
+      --president: #8B0000;
+      --dept-ac: #2E5090;
+      --dept-sa: #2D6A4F;
+      --dept-adm: #7B2D8B;
+      --dept-lib: #B8860B;
+      --radius: 8px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+      --font: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif;
+    }
+
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ===== Loading Overlay ===== */
+    #loading-overlay {
+      position: fixed; inset: 0;
+      background: rgba(26,58,92,0.96);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 9999; color: var(--gold);
+      font-size: 1.2rem; gap: 1rem;
+      transition: opacity 0.5s ease;
+    }
+    .spinner {
+      width: 48px; height: 48px;
+      border: 4px solid rgba(218,165,32,0.3);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    body.loaded #loading-overlay { opacity: 0; pointer-events: none; }
+
+    /* ===== Show all panels before loaded (for Mermaid rendering) ===== */
+    .dept-panel, .sop-panel { display: block; }
+    body.loaded .dept-panel { display: none; }
+    body.loaded .dept-panel.active { display: block; }
+    body.loaded .sop-panel { display: none; }
+    body.loaded .sop-panel.active { display: block; }
+
+    /* ===== Header ===== */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, #0d2137 100%);
+      color: #fff; text-align: center;
+      padding: 2.5rem 1rem 2rem;
+    }
+    header h1 { font-size: 1.8rem; font-weight: 700; letter-spacing: 2px; margin-bottom: 0.5rem; }
+    header .subtitle {
+      display: inline-flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+      font-size: 0.95rem; color: var(--gold); font-weight: 500;
+    }
+    header .subtitle span { white-space: nowrap; }
+
+    /* ===== President Section ===== */
+    #president {
+      background: linear-gradient(135deg, #1a2a3c 0%, #0d1a2a 100%);
+      border-bottom: 3px solid var(--gold);
+      color: #fff;
+    }
+    .president-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem; cursor: pointer; user-select: none;
+    }
+    .president-header:hover { background: rgba(218,165,32,0.08); }
+    .president-header h2 { font-size: 1.25rem; color: var(--gold); }
+    .president-toggle {
+      background: none; border: 2px solid var(--gold); color: var(--gold);
+      width: 32px; height: 32px; border-radius: 50%;
+      font-size: 1rem; cursor: pointer; transition: transform 0.3s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .president-toggle.collapsed { transform: rotate(-90deg); }
+    .president-subtitle {
+      padding: 0 2rem 0.5rem; font-size: 0.9rem; color: #aab;
+    }
+    .president-body {
+      max-height: 5000px; overflow: hidden;
+      transition: max-height 0.6s ease, padding 0.4s ease;
+      padding: 0 2rem 2rem;
+    }
+    .president-body.collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; }
+    .president-grid {
+      display: grid; grid-template-columns: 1fr; gap: 1.5rem;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .president-card {
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(218,165,32,0.25);
+      border-radius: var(--radius); padding: 1.5rem 2rem;
+    }
+    .president-card h3 {
+      font-size: 1.1rem; color: var(--gold); margin-bottom: 1rem;
+      border-bottom: 1px solid rgba(218,165,32,0.2); padding-bottom: 0.5rem;
+    }
+    .president-card .mermaid-wrap {
+      justify-content: center; padding: 1.5rem 0;
+    }
+
+    /* ===== Department Tabs (Level 1) ===== */
+    .dept-tabs {
+      display: flex; background: var(--primary);
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .dept-tab {
+      flex: 1; min-width: 140px; padding: 0.9rem 1.2rem;
+      background: none; border: none; color: rgba(255,255,255,0.7);
+      font-family: var(--font); font-size: 0.95rem; font-weight: 500;
+      cursor: pointer; transition: all 0.3s;
+      border-bottom: 3px solid transparent; white-space: nowrap;
+    }
+    .dept-tab:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .dept-tab.active { color: #fff; border-bottom-color: var(--gold); background: rgba(218,165,32,0.12); }
+    .dept-tab[data-dept="academic"].active { border-bottom-color: var(--dept-ac); }
+    .dept-tab[data-dept="student"].active { border-bottom-color: var(--dept-sa); }
+    .dept-tab[data-dept="admin"].active { border-bottom-color: var(--dept-adm); }
+    .dept-tab[data-dept="library"].active { border-bottom-color: var(--dept-lib); }
+
+    /* ===== Department Content ===== */
+    main { max-width: 1200px; margin: 0 auto; padding: 0 1rem 2rem; }
+    .dept-intro {
+      display: flex; align-items: center; gap: 0.8rem;
+      padding: 1.2rem 1.5rem; margin: 1.5rem 0 1rem;
+      background: #fff; border-radius: var(--radius);
+      box-shadow: var(--shadow); border-left: 4px solid var(--primary);
+    }
+    .dept-intro[data-color="ac"] { border-left-color: var(--dept-ac); }
+    .dept-intro[data-color="sa"] { border-left-color: var(--dept-sa); }
+    .dept-intro[data-color="adm"] { border-left-color: var(--dept-adm); }
+    .dept-intro[data-color="lib"] { border-left-color: var(--dept-lib); }
+    .dept-intro .icon { font-size: 1.6rem; }
+    .dept-intro .info h3 { font-size: 1.05rem; margin-bottom: 0.15rem; }
+    .dept-intro .info p { font-size: 0.88rem; color: #666; }
+
+    /* ===== SOP Tabs (Level 2) ===== */
+    .sop-tabs {
+      display: flex; gap: 0.4rem; padding: 0.5rem 0;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+    }
+    .sop-tab {
+      padding: 0.55rem 1rem; border: 1.5px solid #ccc;
+      background: #fff; border-radius: 20px;
+      font-family: var(--font); font-size: 0.82rem; font-weight: 500;
+      color: #555; cursor: pointer; transition: all 0.25s;
+      white-space: nowrap;
+    }
+    .sop-tab:hover { border-color: var(--gold); color: var(--accent); }
+    .sop-tab.active {
+      background: var(--gold); color: var(--primary);
+      border-color: var(--gold); font-weight: 700;
+    }
+
+    /* ===== SOP Panel ===== */
+    .sop-panel {
+      background: #fff; border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 1.5rem;
+      margin-top: 0.8rem; animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .sop-title { font-size: 1.15rem; font-weight: 700; color: var(--primary); margin-bottom: 0.3rem; }
+    .sop-objective { font-size: 0.9rem; color: #666; margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 1px solid #eee; }
+    .role-note {
+      display: inline-block; padding: 0.35rem 1rem; margin-bottom: 1rem;
+      border-radius: 20px; font-size: 0.82rem; font-weight: 500;
+    }
+    .role-note.has-role { background: var(--gold-light); color: var(--accent); }
+    .role-note.no-role  { background: #e8f0f8; color: var(--primary-light); }
+
+    /* ===== Mermaid Container ===== */
+    .mermaid-wrap {
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding: 1.5rem 0; margin-bottom: 1.2rem;
+      display: flex; justify-content: center;
+    }
+    .mermaid-wrap .mermaid {
+      min-width: 300px;
+    }
+    /* Global Mermaid SVG readability */
+    .mermaid svg {
+      font-size: 16px !important;
+    }
+    .mermaid .nodeLabel {
+      font-size: 15px !important;
+      line-height: 1.5 !important;
+      padding: 6px 10px !important;
+    }
+    .mermaid .edgeLabel {
+      font-size: 13px !important;
+      background: rgba(255,255,255,0.85) !important;
+      padding: 3px 8px !important;
+      border-radius: 4px !important;
+    }
+    .sop-panel .mermaid .nodeLabel {
+      font-size: 15px !important;
+    }
+    .president-card .mermaid .nodeLabel {
+      font-size: 16px !important;
+    }
+    .president-card .mermaid .edgeLabel {
+      font-size: 14px !important;
+    }
+    /* Dark bg edge labels */
+    #president .mermaid .edgeLabel {
+      background: rgba(26,42,60,0.9) !important;
+      color: #ddd !important;
+    }
+
+    /* ===== Responsibilities ===== */
+    .resp-section h4 {
+      font-size: 0.95rem; color: var(--primary); margin-bottom: 0.6rem;
+      padding-bottom: 0.3rem; border-bottom: 2px solid var(--gold-light);
+    }
+    .resp-section ul { list-style: none; padding: 0; }
+    .resp-section li {
+      padding: 0.45rem 0 0.45rem 1.4rem; position: relative;
+      font-size: 0.88rem; border-bottom: 1px solid #f5f5f5;
+    }
+    .resp-section li::before {
+      content: "\25B8"; position: absolute; left: 0;
+      color: var(--gold); font-weight: bold;
+    }
+    .resp-section li strong { color: var(--primary); }
+
+    /* ===== Footer ===== */
+    footer {
+      text-align: center; padding: 1.5rem;
+      color: #999; font-size: 0.8rem;
+      border-top: 1px solid #e0d8c8;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      header h1 { font-size: 1.3rem; }
+      .president-grid { grid-template-columns: 1fr; }
+      .president-header { padding: 0.8rem 1rem; }
+      .president-header h2 { font-size: 1.05rem; }
+      .president-body { padding: 0 0.8rem 1rem; }
+      .dept-tab { min-width: 110px; padding: 0.7rem 0.8rem; font-size: 0.85rem; }
+      main { padding: 0 0.5rem 1.5rem; }
+      .sop-panel { padding: 1rem; }
+      .dept-intro { flex-direction: column; align-items: flex-start; padding: 1rem; }
+    }
+
+    /* ===== Print ===== */
+    @media print {
+      #loading-overlay { display: none !important; }
+      body.loaded .dept-panel, body.loaded .sop-panel { display: block !important; }
+      .dept-tabs, .sop-tabs, .president-toggle, #loading-overlay { display: none !important; }
+      .president-body.collapsed { max-height: none !important; padding: 1rem !important; }
+      .dept-panel { page-break-before: always; }
+      .sop-panel { page-break-inside: avoid; }
+      header, #president { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .dept-tabs { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ==================== Loading Overlay ==================== -->
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <p>載入 SOP 流程圖中⋯</p>
+</div>
+
+<!-- ==================== Header ==================== -->
+<header>
+  <h1>高雄大使命神學院</h1>
+  <p style="font-size:1.1rem;margin-bottom:0.5rem;">歷年各處室行事曆 SOP</p>
+  <div class="subtitle">
+    <span>&#10022; 異象導向</span>
+    <span>&#10022; 扁平化管理</span>
+    <span>&#10022; 高度靈活性</span>
+  </div>
+</header>
+
+<!-- ==================== President Section ==================== -->
+<section id="president">
+  <div class="president-header" onclick="togglePresident()">
+    <h2>&#127963; 院長室 — 總指導與跨處室整合</h2>
+    <button class="president-toggle" id="toggle-btn" aria-label="展開/收合">&#9660;</button>
+  </div>
+  <p class="president-subtitle">以 Vision Casting 啟動每學期策略循環，展現垂直執行力與橫向整合能力，確保課程永遠走在時代前端。</p>
+  <div class="president-body" id="president-body">
+    <div class="president-grid">
+
+      <!-- Vision Casting -->
+      <div class="president-card">
+        <h3>&#128203; 跨處室腦力激盪營 Vision Casting</h3>
+        <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    P["&#127963; 院長室\n發起學期課程規劃"]:::pr --> VC["&#127919; 召開跨處室\n腦力激盪營"]:::pr
+    VC --> S1["&#128215; 學務處\n反映學生能力缺口"]:::sa
+    VC --> S2["&#128213; 資圖處\n報告高頻借閱與資源趨勢"]:::lib
+    VC --> S3["&#128217; 行政處\n回饋市場需求與教會反饋"]:::adm
+    S1 --> INT["&#127963; 彙整分析\n院長室主持決策會議"]:::pr
+    S2 --> INT
+    S3 --> INT
+    INT --> AF["&#128216; 教務處\n定調下學期課程方向"]:::ac
+    AF --> EX["&#127963; 各處室\n依決議展開執行"]:::pr
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:16px
+    classDef ac fill:#2E5090,stroke:#1a3a5c,stroke-width:2px,color:#fff,font-size:16px
+    classDef sa fill:#2D6A4F,stroke:#1B4332,stroke-width:2px,color:#fff,font-size:16px
+    classDef adm fill:#7B2D8B,stroke:#5B1D6B,stroke-width:2px,color:#fff,font-size:16px
+    classDef lib fill:#B8860B,stroke:#8B6914,stroke-width:2px,color:#fff,font-size:16px
+</pre>
+        </div>
+      </div>
+
+      <!-- SOP Lifecycle -->
+      <div class="president-card">
+        <h3>&#128260; 全院 SOP 串聯生命週期</h3>
+        <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart LR
+    VC["&#127919; Vision Casting\n跨處室腦力激盪營"]:::pr
+    SOP3["&#128226; SOP3\n招生說明會"]:::adm
+    SOP4["&#128221; SOP4\n報名繳費與註冊"]:::mixed
+    SOP1["&#128218; SOP1\n數位選課"]:::ac
+    SOP2["&#9962; SOP2\nChapel 全院崇拜"]:::sa
+    PRES(["&#127963; 院長室"]):::pr
+    VC -- "院長核定課程" --> SOP3
+    SOP3 -- "錄取名單" --> SOP4
+    SOP4 -- "註冊完成" --> SOP1
+    SOP1 -- "學期進行中" --> SOP2
+    SOP2 -- "學期結束回饋" --> VC
+    PRES -.->|"監督"| SOP3
+    PRES -.->|"監督"| SOP4
+    PRES -.->|"監督"| SOP1
+    PRES -.->|"監督"| SOP2
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:16px
+    classDef ac fill:#2E5090,stroke:#1a3a5c,stroke-width:2px,color:#fff,font-size:16px
+    classDef sa fill:#2D6A4F,stroke:#1B4332,stroke-width:2px,color:#fff,font-size:16px
+    classDef adm fill:#7B2D8B,stroke:#5B1D6B,stroke-width:2px,color:#fff,font-size:16px
+    classDef mixed fill:#4a4a6a,stroke:#DAA520,stroke-width:2px,color:#fff,font-size:16px
+</pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==================== Department Tabs ==================== -->
+<nav class="dept-tabs">
+  <button class="dept-tab active" data-dept="academic">&#128216; 教務處</button>
+  <button class="dept-tab" data-dept="student">&#128215; 學務處</button>
+  <button class="dept-tab" data-dept="admin">&#128217; 行政處</button>
+  <button class="dept-tab" data-dept="library">&#128213; 資圖處</button>
+</nav>
+
+<!-- ==================== Main Content ==================== -->
+<main>
+
+<!-- ============================================================ -->
+<!-- ====================== 教務處 ============================== -->
+<!-- ============================================================ -->
+<div class="dept-panel active" data-dept-panel="academic">
+  <div class="dept-intro" data-color="ac">
+    <span class="icon">&#128216;</span>
+    <div class="info">
+      <h3>教務處 Academic Affairs</h3>
+      <p>核心邏輯：減少紙本、全面數位化，強調「學術與實務並重」</p>
+    </div>
+  </div>
+  <div class="sop-tabs">
+    <button class="sop-tab active" data-sop="sop1">SOP1 數位選課</button>
+    <button class="sop-tab" data-sop="sop2">SOP2 Chapel 崇拜</button>
+    <button class="sop-tab" data-sop="sop3">SOP3 招生說明會</button>
+    <button class="sop-tab" data-sop="sop4">SOP4 報名註冊</button>
+  </div>
+
+  <!-- 教務處 x SOP1 -->
+  <div class="sop-panel active" data-sop-panel="sop1">
+    <div class="sop-title">SOP 1：數位選課標準作業程序</div>
+    <div class="sop-objective">核心目標：確保學生精準對接異象課程，並簡化行政核銷流程。</div>
+    <div class="role-note has-role">&#128310; 金色節點 = 教務處負責項目</div>
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    A["課程預備\n彙整大綱・確認學分"]:::hl --> B["系統佈署\n匯入校務系統"]:::nm
+    B --> C["選課公告\nAPP+社群推播"]:::nm
+    C --> D["線上選課\n學生登入・教務處監控"]:::hl
+    D --> E{"選課人數\n≥ 門檻？"}:::hl
+    E -->|"是"| F["確認開課"]:::nm
+    E -->|"否"| G["48hr 內決定\n開課或轉專書閱讀"]:::hl
+    G --> F
+    F --> H["加退選\n開學後兩週內受理"]:::hl
+    H --> I["系統鎖定\n產出正式點名冊"]:::hl
+    PR(["院長室"]):::pr -.->|"監督"| E
+    classDef hl fill:#DAA520,stroke:#8b6914,stroke-width:2.5px,color:#1a3a5c,font-weight:bold,font-size:16px
+    classDef nm fill:#1a3a5c,stroke:#2c4a6c,stroke-width:1.5px,color:#fff,font-size:15px
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:15px
+</pre>
+    </div>
+    <div class="resp-section">
+      <h4>&#128203; 教務處職責要點</h4>
+      <ul>
+        <li><strong>課程預備</strong> — 開學前 4 週，彙整教師課程大綱（Syllabus），確認必/選修學分與授課方式（實體/線上）</li>
+        <li><strong>即時監控</strong> — 選課期間監控各課人數，針對人數不足之課程於 48 小時內決定是否開課或轉為專書閱讀</li>
+        <li><strong>加退選管理</strong> — 開學後兩週內受理異動申請</li>
+        <li><strong>系統鎖定</strong> — 加退選截止後系統自動鎖定，產出正式點名冊</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 教務處 x SOP2 -->
+  <div class="sop-panel" data-sop-panel="sop2">
+    <div class="sop-title">SOP 2：期初/期末 Chapel（全院崇拜）</div>
+    <div class="sop-objective">核心目標：期初「傳遞異象」、期末「數算恩典」，營造強大屬靈氛圍。</div>
+    <div class="role-note no-role">&#8505; 教務處於本 SOP 中擔任課務協調支援角色</div>
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    A["主題定調"]:::nm --> B{"期初 or 期末？"}:::nm
+    B -->|"期初"| C["年度異象\n院長傳講核心訊息"]:::nm
+    B -->|"期末"| D["見證與差派\n學生實務心得分享"]:::nm
+    C --> E["敬拜團召集\n2 週前確認曲目"]:::nm
+    D --> E
+    E --> F["直播與錄影\n設備準備"]:::nm
+    F --> G["會場布置\n立約牆・愛筵預備"]:::nm
+    G --> H["T-60min\n音響媒體測試"]:::nm
+    H --> I["T-30min\n會前禱告"]:::nm
+    I --> J["崇拜進行\n祭壇回應時間"]:::nm
+    J --> K["後續跟進\n代禱事項→導師小組"]:::nm
+    PR(["院長室"]):::pr -.->|"監督"| A
+    classDef hl fill:#DAA520,stroke:#8b6914,stroke-width:2.5px,color:#1a3a5c,font-weight:bold,font-size:16px
+    classDef nm fill:#1a3a5c,stroke:#2c4a6c,stroke-width:1.5px,color:#fff,font-size:15px
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:15px
+</pre>
+    </div>
+    <div class="resp-section">
+      <h4>&#128203; 教務處支援角色</h4>
+      <ul>
+        <li><strong>課務協調</strong> — 配合調整上課時間，確保 Chapel 時段不與必修課程衝突</li>
+        <li><strong>學術整合</strong> — 視需要安排教師於 Chapel 中分享學術與信仰整合之見證</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 教務處 x SOP3 -->
+  <div class="sop-panel" data-sop-panel="sop3">
+    <div class="sop-title">SOP 3：招生說明會執行</div>
+    <div class="sop-objective">核心目標：展現學院專業度與「大使命」吸引力，達成高效轉化（名單→學生）。</div>
+    <div class="role-note has-role">&#128310; 金色節點 = 教務處負責項目</div>
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    A["行銷推廣\n社群廣告+教會巡迴"]:::nm --> B["場地準備\n招生手冊+學院影片"]:::nm
+    B --> C["學生大使安排\n導覽與見證分享"]:::nm
+    C --> D["內容設計\n學制・獎助學金・工場對接"]:::hl
+    D --> E["說明會當日"]:::nm
+    E --> F["即時諮詢區\n呼召初步協談"]:::hl
+    E --> G["線上報名\nQR Code 意願書"]:::nm
+    F --> H["名單追蹤\n3 天內回訪"]:::nm
+    G --> H
+    PR(["院長室"]):::pr -.->|"監督"| D
+    classDef hl fill:#DAA520,stroke:#8b6914,stroke-width:2.5px,color:#1a3a5c,font-weight:bold,font-size:16px
+    classDef nm fill:#1a3a5c,stroke:#2c4a6c,stroke-width:1.5px,color:#fff,font-size:15px
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:15px
+</pre>
+    </div>
+    <div class="resp-section">
+      <h4>&#128203; 教務處職責要點</h4>
+      <ul>
+        <li><strong>內容設計</strong> — 由教務長介紹學制特色、獎助學金及未來服事工場對接方案</li>
+        <li><strong>即時諮詢</strong> — 於說明會現場設立諮詢區，針對報名者的呼召進行初步學術方向建議</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 教務處 x SOP4 -->
+  <div class="sop-panel" data-sop-panel="sop4">
+    <div class="sop-title">SOP 4：報名繳費與註冊流程</div>
+    <div class="sop-objective">核心目標：財務透明、流程簡便、嚴謹審核。</div>
+    <div class="role-note has-role">&#128310; 金色節點 = 教務處負責項目</div>
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    A["資料收件\n報名表・推薦信・學歷"]:::hl --> B["入學口試\n面試委員會"]:::hl
+    B --> C{"錄取？"}:::hl
+    C -->|"是"| D["繳費通知\n發送通知單"]:::nm
+    C -->|"否"| E["通知未錄取"]:::nm
+    D --> F["多元支付\n轉帳・線上・教會代付"]:::nm
+    F --> G{"繳費完成？"}:::nm
+    G -->|"是"| H["24hr 內開通\n系統帳號+圖書權限"]:::nm
+    G -->|"否"| I["繳費提醒追蹤"]:::nm
+    I --> G
+    H --> J["產出學員證\n確認選課→註冊完成"]:::hl
+    PR(["院長室"]):::pr -.->|"監督"| C
+    classDef hl fill:#DAA520,stroke:#8b6914,stroke-width:2.5px,color:#1a3a5c,font-weight:bold,font-size:16px
+    classDef nm fill:#1a3a5c,stroke:#2c4a6c,stroke-width:1.5px,color:#fff,font-size:15px
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:15px
+</pre>
+    </div>
+    <div class="resp-section">
+      <h4>&#128203; 教務處職責要點</h4>
+      <ul>
+        <li><strong>資料收件</strong> — 接收學生線上提交之報名表、牧者推薦信、學歷證明</li>
+        <li><strong>入學口試</strong> — 安排面試委員會（含一名外聘牧者），評估報名者生命成熟度與事奉動機</li>
+        <li><strong>錄取決策</strong> — 綜合評估後決定錄取名單</li>
+        <li><strong>註冊完成</strong> — 產出學員證，確認選課狀態，完成學期註冊手續</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ====================== 學務處 ============================== -->
+<!-- ============================================================ -->
+<div class="dept-panel" data-dept-panel="student">
+  <div class="dept-intro" data-color="sa">
+    <span class="icon">&#128215;</span>
+    <div class="info">
+      <h3>學務處 Student Affairs</h3>
+      <p>核心邏輯：靈命即生命，強調「小組牧養」與「恩膏傳承」</p>
+    </div>
+  </div>
+  <div class="sop-tabs">
+    <button class="sop-tab active" data-sop="sop1">SOP1 數位選課</button>
+    <button class="sop-tab" data-sop="sop2">SOP2 Chapel 崇拜</button>
+    <button class="sop-tab" data-sop="sop3">SOP3 招生說明會</button>
+    <button class="sop-tab" data-sop="sop4">SOP4 報名註冊</button>
+  </div>
+
+  <!-- 學務處 x SOP1 -->
+  <div class="sop-panel active" data-sop-panel="sop1">
+    <div class="sop-title">SOP 1：數位選課標準作業程序</div>
+    <div class="sop-objective">核心目標：確保學生精準對接異象課程，並簡化行政核銷流程。</div>
+    <div class="role-note no-role">&#8505; 學務處於本 SOP 中擔任學生諮詢支援角色</div>
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    A["課程預備\n彙整大綱・確認學分"]:::nm --> B["系統佈署\n匯入校務系統"]:::nm
+    B --> C["選課公告\nAPP+社群推播"]:::nm
+    C --> D["線上選課\n學生登入・教務處監控"]:::nm
+    D --> E{"選課人數\n≥ 門檻？"}:::nm
+    E -->|"是"| F["確認開課"]:::nm
+    E -->|"否"| G["48hr 內決定\n開課或轉專書閱讀"]:::nm
+    G --> F
+    F --> H["加退選\n開學後兩週內受理"]:::nm
+    H --> I["系統鎖定\n產出正式點名冊"]:::nm
+    PR(["院長室"]):::pr -.->|"監督"| E
+    classDef hl fill:#DAA520,stroke:#8b6914,stroke-width:2.5px,color:#1a3a5c,font-weight:bold,font-size:16px
+    classDef nm fill:#1a3a5c,stroke:#2c4a6c,stroke-width:1.5px,color:#fff,font-size:15px
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:15px
+</pre>
+    </div>
+    <div class="resp-section">
+      <h4>&#128203; 學務處支援角色</h4>
+      <ul>
+        <li><strong>選課諮詢</strong> — 協助學生釐清呼召方向，選擇最符合生命階段的課程組合</li>
+        <li><strong>小組關懷</strong> — 透過導師小組了解學生修課壓力，適時反映給教務處</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 學務處 x SOP2 -->
+  <div class="sop-panel" data-sop-panel="sop2">
+    <div class="sop-title">SOP 2：期初/期末 Chapel（全院崇拜）</div>
+    <div class="sop-objective">核心目標：期初「傳遞異象」、期末「數算恩典」，營造強大屬靈氛圍。</div>
+    <div class="role-note has-role">&#128310; 金色節點 = 學務處負責項目</div>
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    A["主題定調"]:::hl --> B{"期初 or 期末？"}:::hl
+    B -->|"期初"| C["年度異象\n院長傳講核心訊息"]:::hl
+    B -->|"期末"| D["見證與差派\n學生實務心得分享"]:::hl
+    C --> E["敬拜團召集\n2 週前確認曲目"]:::hl
+    D --> E
+    E --> F["直播與錄影\n設備準備"]:::nm
+    F --> G["會場布置\n立約牆・愛筵預備"]:::nm
+    G --> H["T-60min\n音響媒體測試"]:::nm
+    H --> I["T-30min\n會前禱告"]:::hl
+    I --> J["崇拜進行\n祭壇回應時間"]:::hl
+    J --> K["後續跟進\n代禱事項→導師小組"]:::hl
+    PR(["院長室"]):::pr -.->|"監督"| A
+    classDef hl fill:#DAA520,stroke:#8b6914,stroke-width:2.5px,color:#1a3a5c,font-weight:bold,font-size:16px
+    classDef nm fill:#1a3a5c,stroke:#2c4a6c,stroke-width:1.5px,color:#fff,font-size:15px
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:15px
+</pre>
+    </div>
+    <div class="resp-section">
+      <h4>&#128203; 學務處職責要點</h4>
+      <ul>
+        <li><strong>主題定調</strong> — 期初圍繞「年度異象」安排院長傳講；期末圍繞「見證與差派」安排學生分享</li>
+        <li><strong>敬拜團統籌</strong> — 2 週前召集學生敬拜團，確認曲目（現代敬拜與經典聖詩平衡）</li>
+        <li><strong>會前禱告</strong> — T-30min 帶領敬拜團與講員進行會前禱告</li>
+        <li><strong>祭壇回應</strong> — 崇拜中安排「呼召與祭壇回應」時間，強化學生召命</li>
+        <li><strong>後續跟進</strong> — 收集代禱事項，交由導師小組持續關懷</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 學務處 x SOP3 -->
+  <div class="sop-panel" data-sop-panel="sop3">
+    <div class="sop-title">SOP 3：招生說明會執行</div>
+    <div class="sop-objective">核心目標：展現學院專業度與「大使命」吸引力，達成高效轉化（名單→學生）。</div>
+    <div class="role-note has-role">&#128310; 金色節點 = 學務處負責項目</div>
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    A["行銷推廣\n社群廣告+教會巡迴"]:::nm --> B["場地準備\n招生手冊+學院影片"]:::nm
+    B --> C["學生大使安排\n導覽與見證分享"]:::hl
+    C --> D["內容設計\n學制・獎助學金・工場對接"]:::nm
+    D --> E["說明會當日"]:::nm
+    E --> F["即時諮詢區\n呼召初步協談"]:::nm
+    E --> G["線上報名\nQR Code 意願書"]:::nm
+    F --> H["名單追蹤\n3 天內回訪"]:::nm
+    G --> H
+    PR(["院長室"]):::pr -.->|"監督"| D
+    classDef hl fill:#DAA520,stroke:#8b6914,stroke-width:2.5px,color:#1a3a5c,font-weight:bold,font-size:16px
+    classDef nm fill:#1a3a5c,stroke:#2c4a6c,stroke-width:1.5px,color:#fff,font-size:15px
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:15px
+</pre>
+    </div>
+    <div class="resp-section">
+      <h4>&#128203; 學務處職責要點</h4>
+      <ul>
+        <li><strong>學生大使</strong> — 安排資深學生擔任「大使」，提供親切導覽與個人蒙召見證分享</li>
+        <li><strong>氛圍營造</strong> — 確保說明會現場有溫暖的團契氣氛，讓來賓感受到學院的生命力</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 學務處 x SOP4 -->
+  <div class="sop-panel" data-sop-panel="sop4">
+    <div class="sop-title">SOP 4：報名繳費與註冊流程</div>
+    <div class="sop-objective">核心目標：財務透明、流程簡便、嚴謹審核。</div>
+    <div class="role-note has-role">&#128310; 金色節點 = 學務處負責項目</div>
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    A["資料收件\n報名表・推薦信・學歷"]:::nm --> B["入學口試\n面試委員會"]:::hl
+    B --> C{"錄取？"}:::nm
+    C -->|"是"| D["繳費通知\n發送通知單"]:::nm
+    C -->|"否"| E["通知未錄取"]:::nm
+    D --> F["多元支付\n轉帳・線上・教會代付"]:::nm
+    F --> G{"繳費完成？"}:::nm
+    G -->|"是"| H["24hr 內開通\n系統帳號+圖書權限"]:::nm
+    G -->|"否"| I["繳費提醒追蹤"]:::nm
+    I --> G
+    H --> J["產出學員證\n確認選課→註冊完成"]:::nm
+    PR(["院長室"]):::pr -.->|"監督"| C
+    classDef hl fill:#DAA520,stroke:#8b6914,stroke-width:2.5px,color:#1a3a5c,font-weight:bold,font-size:16px
+    classDef nm fill:#1a3a5c,stroke:#2c4a6c,stroke-width:1.5px,color:#fff,font-size:15px
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:15px
+</pre>
+    </div>
+    <div class="resp-section">
+      <h4>&#128203; 學務處職責要點</h4>
+      <ul>
+        <li><strong>入學口試</strong> — 參與面試委員會，評估報名者的生命成熟度與事奉動機</li>
+        <li><strong>靈命評估</strong> — 從牧養角度提供面試意見，確保新生具備受造就的基礎</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ====================== 行政處 ============================== -->
+<!-- ============================================================ -->
+<div class="dept-panel" data-dept-panel="admin">
+  <div class="dept-intro" data-color="adm">
+    <span class="icon">&#128217;</span>
+    <div class="info">
+      <h3>行政處 General Admin</h3>
+      <p>核心邏輯：專業管家、高效支持、五星級服事（Hospitality）</p>
+    </div>
+  </div>
+  <div class="sop-tabs">
+    <button class="sop-tab active" data-sop="sop1">SOP1 數位選課</button>
+    <button class="sop-tab" data-sop="sop2">SOP2 Chapel 崇拜</button>
+    <button class="sop-tab" data-sop="sop3">SOP3 招生說明會</button>
+    <button class="sop-tab" data-sop="sop4">SOP4 報名註冊</button>
+  </div>
+
+  <!-- 行政處 x SOP1 -->
+  <div class="sop-panel active" data-sop-panel="sop1">
+    <div class="sop-title">SOP 1：數位選課標準作業程序</div>
+    <div class="sop-objective">核心目標：確保學生精準對接異象課程，並簡化行政核銷流程。</div>
+    <div class="role-note has-role">&#128310; 金色節點 = 行政處負責項目</div>
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    A["課程預備\n彙整大綱・確認學分"]:::nm --> B["系統佈署\n匯入校務系統"]:::nm
+    B --> C["選課公告\nAPP+社群推播"]:::hl
+    C --> D["線上選課\n學生登入・教務處監控"]:::nm
+    D --> E{"選課人數\n≥ 門檻？"}:::nm
+    E -->|"是"| F["確認開課"]:::nm
+    E -->|"否"| G["48hr 內決定\n開課或轉專書閱讀"]:::nm
+    G --> F
+    F --> H["加退選\n開學後兩週內受理"]:::nm
+    H --> I["系統鎖定\n產出正式點名冊"]:::nm
+    PR(["院長室"]):::pr -.->|"監督"| E
+    classDef hl fill:#DAA520,stroke:#8b6914,stroke-width:2.5px,color:#1a3a5c,font-weight:bold,font-size:16px
+    classDef nm fill:#1a3a5c,stroke:#2c4a6c,stroke-width:1.5px,color:#fff,font-size:15px
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:15px
+</pre>
+    </div>
+    <div class="resp-section">
+      <h4>&#128203; 行政處職責要點</h4>
+      <ul>
+        <li><strong>選課公告</strong> — 透過 APP 與官方社群發送「選課懶人包」，提醒選課起訖時間</li>
+        <li><strong>資訊統整</strong> — 確保公告內容包含完整課程資訊與操作指引</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 行政處 x SOP2 -->
+  <div class="sop-panel" data-sop-panel="sop2">
+    <div class="sop-title">SOP 2：期初/期末 Chapel（全院崇拜）</div>
+    <div class="sop-objective">核心目標：期初「傳遞異象」、期末「數算恩典」，營造強大屬靈氛圍。</div>
+    <div class="role-note has-role">&#128310; 金色節點 = 行政處負責項目</div>
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    A["主題定調"]:::nm --> B{"期初 or 期末？"}:::nm
+    B -->|"期初"| C["年度異象\n院長傳講核心訊息"]:::nm
+    B -->|"期末"| D["見證與差派\n學生實務心得分享"]:::nm
+    C --> E["敬拜團召集\n2 週前確認曲目"]:::nm
+    D --> E
+    E --> F["直播與錄影\n設備準備"]:::nm
+    F --> G["會場布置\n立約牆・愛筵預備"]:::hl
+    G --> H["T-60min\n音響媒體測試"]:::nm
+    H --> I["T-30min\n會前禱告"]:::nm
+    I --> J["崇拜進行\n祭壇回應時間"]:::nm
+    J --> K["後續跟進\n代禱事項→導師小組"]:::nm
+    PR(["院長室"]):::pr -.->|"監督"| A
+    classDef hl fill:#DAA520,stroke:#8b6914,stroke-width:2.5px,color:#1a3a5c,font-weight:bold,font-size:16px
+    classDef nm fill:#1a3a5c,stroke:#2c4a6c,stroke-width:1.5px,color:#fff,font-size:15px
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:15px
+</pre>
+    </div>
+    <div class="resp-section">
+      <h4>&#128203; 行政處職責要點</h4>
+      <ul>
+        <li><strong>會場布置</strong> — 期初預備「立約牆」佈置；期末預備「愛筵」場地與餐點</li>
+        <li><strong>後勤支援</strong> — 確保會場座椅、空調、飲水等硬體設施完備</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 行政處 x SOP3 -->
+  <div class="sop-panel" data-sop-panel="sop3">
+    <div class="sop-title">SOP 3：招生說明會執行</div>
+    <div class="sop-objective">核心目標：展現學院專業度與「大使命」吸引力，達成高效轉化（名單→學生）。</div>
+    <div class="role-note has-role">&#128310; 金色節點 = 行政處負責項目</div>
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    A["行銷推廣\n社群廣告+教會巡迴"]:::hl --> B["場地準備\n招生手冊+學院影片"]:::hl
+    B --> C["學生大使安排\n導覽與見證分享"]:::nm
+    C --> D["內容設計\n學制・獎助學金・工場對接"]:::nm
+    D --> E["說明會當日"]:::nm
+    E --> F["即時諮詢區\n呼召初步協談"]:::nm
+    E --> G["線上報名\nQR Code 意願書"]:::hl
+    F --> H["名單追蹤\n3 天內回訪"]:::hl
+    G --> H
+    PR(["院長室"]):::pr -.->|"監督"| D
+    classDef hl fill:#DAA520,stroke:#8b6914,stroke-width:2.5px,color:#1a3a5c,font-weight:bold,font-size:16px
+    classDef nm fill:#1a3a5c,stroke:#2c4a6c,stroke-width:1.5px,color:#fff,font-size:15px
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:15px
+</pre>
+    </div>
+    <div class="resp-section">
+      <h4>&#128203; 行政處職責要點</h4>
+      <ul>
+        <li><strong>行銷推廣</strong> — 說明會前 1 個月，啟動社群廣告投放、至友好教會巡迴宣傳</li>
+        <li><strong>場地與文宣</strong> — 準備「招生手冊」、「學院簡介影片」及現場文宣品</li>
+        <li><strong>線上報名</strong> — 提供 QR Code 連結，鼓勵現場填寫意願書</li>
+        <li><strong>名單追蹤</strong> — 會後 3 天內，行政助理逐一電話/訊息回訪，詢問報名意願</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 行政處 x SOP4 -->
+  <div class="sop-panel" data-sop-panel="sop4">
+    <div class="sop-title">SOP 4：報名繳費與註冊流程</div>
+    <div class="sop-objective">核心目標：財務透明、流程簡便、嚴謹審核。</div>
+    <div class="role-note has-role">&#128310; 金色節點 = 行政處負責項目</div>
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    A["資料收件\n報名表・推薦信・學歷"]:::nm --> B["入學口試\n面試委員會"]:::nm
+    B --> C{"錄取？"}:::nm
+    C -->|"是"| D["繳費通知\n發送通知單"]:::hl
+    C -->|"否"| E["通知未錄取"]:::hl
+    D --> F["多元支付\n轉帳・線上・教會代付"]:::hl
+    F --> G{"繳費完成？"}:::nm
+    G -->|"是"| H["24hr 內開通\n系統帳號+圖書權限"]:::nm
+    G -->|"否"| I["繳費提醒追蹤"]:::hl
+    I --> G
+    H --> J["產出學員證\n確認選課→註冊完成"]:::nm
+    PR(["院長室"]):::pr -.->|"監督"| C
+    classDef hl fill:#DAA520,stroke:#8b6914,stroke-width:2.5px,color:#1a3a5c,font-weight:bold,font-size:16px
+    classDef nm fill:#1a3a5c,stroke:#2c4a6c,stroke-width:1.5px,color:#fff,font-size:15px
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:15px
+</pre>
+    </div>
+    <div class="resp-section">
+      <h4>&#128203; 行政處職責要點</h4>
+      <ul>
+        <li><strong>繳費通知</strong> — 錄取名單公告後，發送「繳費通知單」含金額明細與截止日</li>
+        <li><strong>多元支付</strong> — 提供轉帳、線上支付，或與特定教會的「代付機制」</li>
+        <li><strong>未錄取通知</strong> — 以溫暖、鼓勵的口吻通知未錄取者，並提供旁聽或推廣教育管道</li>
+        <li><strong>繳費追蹤</strong> — 針對逾期未繳者定期提醒，協助了解困難並安排分期方案</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ====================== 資圖處 ============================== -->
+<!-- ============================================================ -->
+<div class="dept-panel" data-dept-panel="library">
+  <div class="dept-intro" data-color="lib">
+    <span class="icon">&#128213;</span>
+    <div class="info">
+      <h3>資圖處 Library &amp; Resource Center</h3>
+      <p>核心邏輯：從「藏書樓」轉型為「資源中心」，強調數位整合與研究支持</p>
+    </div>
+  </div>
+  <div class="sop-tabs">
+    <button class="sop-tab active" data-sop="sop1">SOP1 數位選課</button>
+    <button class="sop-tab" data-sop="sop2">SOP2 Chapel 崇拜</button>
+    <button class="sop-tab" data-sop="sop3">SOP3 招生說明會</button>
+    <button class="sop-tab" data-sop="sop4">SOP4 報名註冊</button>
+  </div>
+
+  <!-- 資圖處 x SOP1 -->
+  <div class="sop-panel active" data-sop-panel="sop1">
+    <div class="sop-title">SOP 1：數位選課標準作業程序</div>
+    <div class="sop-objective">核心目標：確保學生精準對接異象課程，並簡化行政核銷流程。</div>
+    <div class="role-note has-role">&#128310; 金色節點 = 資圖處負責項目</div>
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    A["課程預備\n彙整大綱・確認學分"]:::nm --> B["系統佈署\n匯入校務系統"]:::hl
+    B --> C["選課公告\nAPP+社群推播"]:::nm
+    C --> D["線上選課\n學生登入・教務處監控"]:::nm
+    D --> E{"選課人數\n≥ 門檻？"}:::nm
+    E -->|"是"| F["確認開課"]:::nm
+    E -->|"否"| G["48hr 內決定\n開課或轉專書閱讀"]:::nm
+    G --> F
+    F --> H["加退選\n開學後兩週內受理"]:::nm
+    H --> I["系統鎖定\n產出正式點名冊"]:::nm
+    PR(["院長室"]):::pr -.->|"監督"| E
+    classDef hl fill:#DAA520,stroke:#8b6914,stroke-width:2.5px,color:#1a3a5c,font-weight:bold,font-size:16px
+    classDef nm fill:#1a3a5c,stroke:#2c4a6c,stroke-width:1.5px,color:#fff,font-size:15px
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:15px
+</pre>
+    </div>
+    <div class="resp-section">
+      <h4>&#128203; 資圖處職責要點</h4>
+      <ul>
+        <li><strong>系統佈署</strong> — 將課程資料匯入校務系統，設置各課人數上限及先修課程限制</li>
+        <li><strong>技術維護</strong> — 確保選課系統穩定運作，手機端操作流暢</li>
+        <li><strong>參考書專區</strong> — 配合課表建置「本學期課程參考書專區」（含 E-book 連結）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 資圖處 x SOP2 -->
+  <div class="sop-panel" data-sop-panel="sop2">
+    <div class="sop-title">SOP 2：期初/期末 Chapel（全院崇拜）</div>
+    <div class="sop-objective">核心目標：期初「傳遞異象」、期末「數算恩典」，營造強大屬靈氛圍。</div>
+    <div class="role-note has-role">&#128310; 金色節點 = 資圖處負責項目</div>
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    A["主題定調"]:::nm --> B{"期初 or 期末？"}:::nm
+    B -->|"期初"| C["年度異象\n院長傳講核心訊息"]:::nm
+    B -->|"期末"| D["見證與差派\n學生實務心得分享"]:::nm
+    C --> E["敬拜團召集\n2 週前確認曲目"]:::nm
+    D --> E
+    E --> F["直播與錄影\n設備準備"]:::hl
+    F --> G["會場布置\n立約牆・愛筵預備"]:::nm
+    G --> H["T-60min\n音響媒體測試"]:::hl
+    H --> I["T-30min\n會前禱告"]:::nm
+    I --> J["崇拜進行\n祭壇回應時間"]:::nm
+    J --> K["後續跟進\n代禱事項→導師小組"]:::nm
+    PR(["院長室"]):::pr -.->|"監督"| A
+    classDef hl fill:#DAA520,stroke:#8b6914,stroke-width:2.5px,color:#1a3a5c,font-weight:bold,font-size:16px
+    classDef nm fill:#1a3a5c,stroke:#2c4a6c,stroke-width:1.5px,color:#fff,font-size:15px
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:15px
+</pre>
+    </div>
+    <div class="resp-section">
+      <h4>&#128203; 資圖處職責要點</h4>
+      <ul>
+        <li><strong>直播與錄影</strong> — 負責現場直播串流與錄影存檔，確保遠距學生同步領受</li>
+        <li><strong>音響媒體測試</strong> — T-60min 完成音響、投影、直播設備全面測試</li>
+        <li><strong>影音存檔</strong> — 崇拜結束後 24 小時內上傳錄影至校務平台</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 資圖處 x SOP3 -->
+  <div class="sop-panel" data-sop-panel="sop3">
+    <div class="sop-title">SOP 3：招生說明會執行</div>
+    <div class="sop-objective">核心目標：展現學院專業度與「大使命」吸引力，達成高效轉化（名單→學生）。</div>
+    <div class="role-note no-role">&#8505; 資圖處於本 SOP 中提供數位技術支援</div>
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    A["行銷推廣\n社群廣告+教會巡迴"]:::nm --> B["場地準備\n招生手冊+學院影片"]:::nm
+    B --> C["學生大使安排\n導覽與見證分享"]:::nm
+    C --> D["內容設計\n學制・獎助學金・工場對接"]:::nm
+    D --> E["說明會當日"]:::nm
+    E --> F["即時諮詢區\n呼召初步協談"]:::nm
+    E --> G["線上報名\nQR Code 意願書"]:::nm
+    F --> H["名單追蹤\n3 天內回訪"]:::nm
+    G --> H
+    PR(["院長室"]):::pr -.->|"監督"| D
+    classDef hl fill:#DAA520,stroke:#8b6914,stroke-width:2.5px,color:#1a3a5c,font-weight:bold,font-size:16px
+    classDef nm fill:#1a3a5c,stroke:#2c4a6c,stroke-width:1.5px,color:#fff,font-size:15px
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:15px
+</pre>
+    </div>
+    <div class="resp-section">
+      <h4>&#128203; 資圖處支援角色</h4>
+      <ul>
+        <li><strong>影片技術</strong> — 協助製作或播放「學院簡介影片」，確保視聽品質</li>
+        <li><strong>數位資源展示</strong> — 於說明會現場展示圖書館數位資源與電子書平台</li>
+        <li><strong>線上系統</strong> — 維護報名系統穩定運作，確保 QR Code 連結正常</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 資圖處 x SOP4 -->
+  <div class="sop-panel" data-sop-panel="sop4">
+    <div class="sop-title">SOP 4：報名繳費與註冊流程</div>
+    <div class="sop-objective">核心目標：財務透明、流程簡便、嚴謹審核。</div>
+    <div class="role-note has-role">&#128310; 金色節點 = 資圖處負責項目</div>
+    <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+    A["資料收件\n報名表・推薦信・學歷"]:::nm --> B["入學口試\n面試委員會"]:::nm
+    B --> C{"錄取？"}:::nm
+    C -->|"是"| D["繳費通知\n發送通知單"]:::nm
+    C -->|"否"| E["通知未錄取"]:::nm
+    D --> F["多元支付\n轉帳・線上・教會代付"]:::nm
+    F --> G{"繳費完成？"}:::nm
+    G -->|"是"| H["24hr 內開通\n系統帳號+圖書權限"]:::hl
+    G -->|"否"| I["繳費提醒追蹤"]:::nm
+    I --> G
+    H --> J["產出學員證\n確認選課→註冊完成"]:::nm
+    PR(["院長室"]):::pr -.->|"監督"| C
+    classDef hl fill:#DAA520,stroke:#8b6914,stroke-width:2.5px,color:#1a3a5c,font-weight:bold,font-size:16px
+    classDef nm fill:#1a3a5c,stroke:#2c4a6c,stroke-width:1.5px,color:#fff,font-size:15px
+    classDef pr fill:#8B0000,stroke:#DAA520,stroke-width:2.5px,color:#fff,font-weight:bold,font-size:15px
+</pre>
+    </div>
+    <div class="resp-section">
+      <h4>&#128203; 資圖處職責要點</h4>
+      <ul>
+        <li><strong>帳號開通</strong> — 確認繳費完成後，24 小時內開通圖書館借閱權限及校務系統帳號</li>
+        <li><strong>數位識別</strong> — 學生入學註冊成功後，數位識別碼自動連動成為借閱權限</li>
+        <li><strong>新生導引</strong> — 準備圖書館使用導覽資料，協助新生快速上手數位資源</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- ==================== Footer ==================== -->
+<footer>
+  <p>高雄大使命神學院 &copy; 2026 &#65372; 本文件為內部行政標準作業程序，版本日期：2026-03-04</p>
+</footer>
+
+<!-- ==================== JavaScript ==================== -->
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'base',
+    securityLevel: 'loose',
+    themeVariables: {
+      fontFamily: '"Noto Sans TC", "Microsoft JhengHei", sans-serif',
+      fontSize: '16px',
+      nodeTextColor: '#fff',
+      lineColor: '#7a8a9a',
+      primaryColor: '#1a3a5c',
+      primaryTextColor: '#fff'
+    },
+    flowchart: {
+      htmlLabels: true,
+      curve: 'basis',
+      padding: 20,
+      nodeSpacing: 40,
+      rankSpacing: 50,
+      useMaxWidth: true
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      await mermaid.run();
+    } catch (e) {
+      console.warn('Mermaid rendering warning:', e);
+    }
+
+    document.body.classList.add('loaded');
+
+    // Department tab switching
+    document.querySelectorAll('.dept-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.dept-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const dept = tab.dataset.dept;
+        document.querySelectorAll('.dept-panel').forEach(p => p.classList.remove('active'));
+        const target = document.querySelector(`[data-dept-panel="${dept}"]`);
+        if (target) target.classList.add('active');
+      });
+    });
+
+    // SOP tab switching (scoped within each department panel)
+    document.querySelectorAll('.sop-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const parent = tab.closest('.dept-panel');
+        parent.querySelectorAll('.sop-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const sop = tab.dataset.sop;
+        parent.querySelectorAll('.sop-panel').forEach(p => p.classList.remove('active'));
+        const target = parent.querySelector(`[data-sop-panel="${sop}"]`);
+        if (target) target.classList.add('active');
+      });
+    });
+  });
+
+  // President section toggle
+  window.togglePresident = function() {
+    const body = document.getElementById('president-body');
+    const btn = document.getElementById('toggle-btn');
+    body.classList.toggle('collapsed');
+    btn.classList.toggle('collapsed');
+    btn.textContent = body.classList.contains('collapsed') ? '\u25B6' : '\u25BC';
+  };
+</script>
+
+</body>
+</html>
