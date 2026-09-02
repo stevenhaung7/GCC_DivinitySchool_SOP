@@ -1,0 +1,133 @@
+<!--
+  FAQ SECTION REFERENCE
+  =====================
+  HTML pattern for the FAQ section. A single variant using native
+  <details>/<summary> for accordion behavior. No JavaScript required.
+  Read this file, then generate actual content by replacing {placeholder}
+  tokens with real questions and answers for the user's product.
+
+  Design system: Tailwind CSS v4. Black/neutral palette. No gradients,
+  no shadows, no decorative color. Clean and typographic.
+
+  CONTENT SCHEMA
+  ==============
+  Required:
+    faqs           — Array of FAQ objects. 4–8 items typical.
+      .question     — The question. Write it as a user would actually ask it.
+                      Creative framing is allowed. e.g. "Isn't this just ChatGPT?"
+      .answer       — 2–4 sentences. Direct answer first, then any nuance.
+
+  Optional:
+    eyebrow        — Short label above the headline. e.g. "Common questions"
+    headline       — Section headline. Can be conversational. e.g. "You probably have questions"
+
+  VARIANT SELECTION GUIDE
+  =======================
+  default         — The only variant. Works for all FAQ use cases.
+                    Uses native <details>/<summary> — no JavaScript, accessible by default.
+                    The plus icon rotates 45deg when open (becoming an ×).
+                    Tailwind group/group-open classes handle the open state styling.
+
+  WRITING NOTES
+  =============
+  - Questions should mirror how a skeptical user would actually phrase it.
+  - Don't write "What is your refund policy?" — write "What if it doesn't work for me?"
+  - Answers should be direct. Lead with the answer, then elaborate if needed.
+  - 4 questions minimum, 8 maximum. More than 8 feels like a wall of text.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: default
+     Native details/summary accordion. Divide-y gives clean
+     separators between items. No JS needed.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <!-- Section header: optional. Works with or without. -->
+  <div class="mb-10">
+    <p class="text-sm font-medium uppercase tracking-wider text-neutral-500 mb-2">{eyebrow}</p>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black text-balance">{headline}</h2>
+  </div>
+
+  <!-- FAQ list: max-w-2xl keeps lines readable. divide-y draws separators. -->
+  <div class="max-w-2xl divide-y divide-neutral-200">
+
+    <!-- FAQ item: <details> is the accordion container.
+         group class enables group-open:* modifier on children. -->
+    <details class="group py-6">
+      <summary class="flex items-center justify-between gap-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+        <span class="text-base font-medium text-black">{faqs[0].question}</span>
+        <!-- Plus icon: rotates 45deg to become an × when open -->
+        <span class="shrink-0 text-neutral-400 transition-transform duration-200 group-open:rotate-45">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+          </svg>
+        </span>
+      </summary>
+      <div class="mt-4 pr-9">
+        <p class="text-neutral-600 text-sm leading-relaxed">{faqs[0].answer}</p>
+      </div>
+    </details>
+
+    <details class="group py-6">
+      <summary class="flex items-center justify-between gap-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+        <span class="text-base font-medium text-black">{faqs[1].question}</span>
+        <span class="shrink-0 text-neutral-400 transition-transform duration-200 group-open:rotate-45">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+          </svg>
+        </span>
+      </summary>
+      <div class="mt-4 pr-9">
+        <p class="text-neutral-600 text-sm leading-relaxed">{faqs[1].answer}</p>
+      </div>
+    </details>
+
+    <details class="group py-6">
+      <summary class="flex items-center justify-between gap-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+        <span class="text-base font-medium text-black">{faqs[2].question}</span>
+        <span class="shrink-0 text-neutral-400 transition-transform duration-200 group-open:rotate-45">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+          </svg>
+        </span>
+      </summary>
+      <div class="mt-4 pr-9">
+        <p class="text-neutral-600 text-sm leading-relaxed">{faqs[2].answer}</p>
+      </div>
+    </details>
+
+    <details class="group py-6">
+      <summary class="flex items-center justify-between gap-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+        <span class="text-base font-medium text-black">{faqs[3].question}</span>
+        <span class="shrink-0 text-neutral-400 transition-transform duration-200 group-open:rotate-45">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+          </svg>
+        </span>
+      </summary>
+      <div class="mt-4 pr-9">
+        <p class="text-neutral-600 text-sm leading-relaxed">{faqs[3].answer}</p>
+      </div>
+    </details>
+
+    <details class="group py-6">
+      <summary class="flex items-center justify-between gap-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+        <span class="text-base font-medium text-black">{faqs[4].question}</span>
+        <span class="shrink-0 text-neutral-400 transition-transform duration-200 group-open:rotate-45">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+          </svg>
+        </span>
+      </summary>
+      <div class="mt-4 pr-9">
+        <p class="text-neutral-600 text-sm leading-relaxed">{faqs[4].answer}</p>
+      </div>
+    </details>
+
+    <!-- Add more <details> items as needed. 8 max. -->
+
+  </div>
+
+</section>

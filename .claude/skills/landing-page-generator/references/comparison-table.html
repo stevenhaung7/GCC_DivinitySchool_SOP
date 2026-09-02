@@ -1,0 +1,219 @@
+<!--
+  COMPARISON TABLE SECTION REFERENCE
+  ====================================
+  HTML patterns for side-by-side feature comparison against competitors.
+  Read this file to understand the available structures, then generate actual
+  content for the user's product by replacing {placeholder} tokens with real copy.
+
+  Design system: Tailwind CSS v4. Black/neutral palette. No gradients,
+  no shadows, no decorative color. Clean and typographic.
+
+  CONTENT SCHEMA
+  ==============
+  Required:
+    plans        — string[] — Column headers. First entry is typically "Us",
+                   rest are competitors. 2-4 plans max.
+    categories   — Array of category groups. Each has:
+      .name        — Category label. e.g. "Integrations", "Support"
+      .features    — Array of feature rows. Each has:
+        .name        — Feature name. e.g. "API access"
+        .values      — Record<planName, string|boolean>
+                       boolean true  → renders a checkmark
+                       boolean false → renders an em dash (absent)
+                       string        → renders the text value
+
+  Optional:
+    headline       — Section headline. e.g. "How we compare"
+    highlightedPlan — Plan name to visually emphasize with bg-neutral-50.
+                      Usually your own product.
+
+  VARIANT SELECTION GUIDE
+  =======================
+  default         — Standard comparison table with category groupings.
+                    Use when you have 3+ feature categories.
+  simple          — Flat table, no category groupings.
+                    Use for 6-10 features where grouping would feel heavy.
+
+  WRITING NOTES
+  =============
+  - Only include features where the comparison is meaningful.
+  - Don't pad with rows you "win" on trivially. Focus on what buyers care about.
+  - Competitor names should be real. Don't use fake names.
+  - Boolean false is honest — don't hide competitor strengths, show your differentiators.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: default
+     Grouped by category. Use when features naturally cluster.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <!-- Section header: optional -->
+  <div class="mb-10">
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black text-balance">{headline}</h2>
+  </div>
+
+  <!-- Scroll wrapper for narrow viewports -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm border-collapse">
+
+      <!-- Column headers: plan names -->
+      <thead>
+        <tr class="border-b border-neutral-200">
+          <!-- Empty first cell: aligns with feature name column -->
+          <th class="text-left py-3 pr-6 font-medium text-neutral-500 w-1/3"></th>
+
+          <!-- Plan header: first plan is typically yours — highlighted -->
+          <th class="py-3 px-4 text-center font-semibold text-black bg-neutral-50 rounded-t-lg">{plans[0]}</th>
+          <th class="py-3 px-4 text-center font-medium text-neutral-500">{plans[1]}</th>
+          <th class="py-3 px-4 text-center font-medium text-neutral-500">{plans[2]}</th>
+          <!-- Add more <th> columns if needed. 4 plans max. -->
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <!-- Category group: repeat this block for each category -->
+        <tr>
+          <td colspan="4" class="pt-8 pb-2">
+            <span class="text-xs font-semibold uppercase tracking-wider text-neutral-400">{categories[0].name}</span>
+          </td>
+        </tr>
+
+        <!-- Feature row: one per feature in this category -->
+        <tr class="border-b border-neutral-100">
+          <td class="py-3 pr-6 text-neutral-700">{categories[0].features[0].name}</td>
+          <!-- Boolean true → checkmark. Boolean false → em dash. String → text. -->
+          <td class="py-3 px-4 text-center bg-neutral-50">
+            <!-- Use one of these three depending on the value: -->
+            <!-- true:  --> <svg class="w-5 h-5 text-black mx-auto" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            <!-- false: --> <span class="text-neutral-300 text-lg leading-none">&mdash;</span>
+            <!-- text:  --> <span class="text-neutral-700">{categories[0].features[0].values.planName}</span>
+          </td>
+          <td class="py-3 px-4 text-center">
+            <span class="text-neutral-300 text-lg leading-none">&mdash;</span>
+          </td>
+          <td class="py-3 px-4 text-center">
+            <svg class="w-5 h-5 text-neutral-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+          </td>
+        </tr>
+
+        <tr class="border-b border-neutral-100">
+          <td class="py-3 pr-6 text-neutral-700">{categories[0].features[1].name}</td>
+          <td class="py-3 px-4 text-center bg-neutral-50">
+            <svg class="w-5 h-5 text-black mx-auto" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+          </td>
+          <td class="py-3 px-4 text-center">
+            <svg class="w-5 h-5 text-neutral-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+          </td>
+          <td class="py-3 px-4 text-center">
+            <span class="text-neutral-300 text-lg leading-none">&mdash;</span>
+          </td>
+        </tr>
+
+        <!-- Add more feature rows within this category as needed. -->
+
+        <!-- Second category group -->
+        <tr>
+          <td colspan="4" class="pt-8 pb-2">
+            <span class="text-xs font-semibold uppercase tracking-wider text-neutral-400">{categories[1].name}</span>
+          </td>
+        </tr>
+
+        <tr class="border-b border-neutral-100">
+          <td class="py-3 pr-6 text-neutral-700">{categories[1].features[0].name}</td>
+          <td class="py-3 px-4 text-center bg-neutral-50">
+            <svg class="w-5 h-5 text-black mx-auto" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+          </td>
+          <td class="py-3 px-4 text-center">
+            <span class="text-neutral-300 text-lg leading-none">&mdash;</span>
+          </td>
+          <td class="py-3 px-4 text-center">
+            <span class="text-neutral-300 text-lg leading-none">&mdash;</span>
+          </td>
+        </tr>
+
+        <!-- Add more categories and rows as needed. -->
+
+      </tbody>
+
+    </table>
+  </div>
+
+</section>
+
+
+<!-- ============================================================
+     VARIANT 2: simple
+     Flat table, no category groupings. Use for 6-10 features
+     where adding groups would feel over-engineered.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <!-- Section header: optional -->
+  <div class="mb-10">
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black text-balance">{headline}</h2>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm border-collapse">
+
+      <thead>
+        <tr class="border-b border-neutral-200">
+          <th class="text-left py-3 pr-6 font-medium text-neutral-500 w-1/3"></th>
+          <th class="py-3 px-4 text-center font-semibold text-black bg-neutral-50 rounded-t-lg">{plans[0]}</th>
+          <th class="py-3 px-4 text-center font-medium text-neutral-500">{plans[1]}</th>
+          <th class="py-3 px-4 text-center font-medium text-neutral-500">{plans[2]}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr class="border-b border-neutral-100">
+          <td class="py-3 pr-6 text-neutral-700">{features[0].name}</td>
+          <td class="py-3 px-4 text-center bg-neutral-50">
+            <svg class="w-5 h-5 text-black mx-auto" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+          </td>
+          <td class="py-3 px-4 text-center">
+            <svg class="w-5 h-5 text-neutral-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+          </td>
+          <td class="py-3 px-4 text-center">
+            <span class="text-neutral-300 text-lg leading-none">&mdash;</span>
+          </td>
+        </tr>
+
+        <tr class="border-b border-neutral-100">
+          <td class="py-3 pr-6 text-neutral-700">{features[1].name}</td>
+          <td class="py-3 px-4 text-center bg-neutral-50">
+            <svg class="w-5 h-5 text-black mx-auto" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+          </td>
+          <td class="py-3 px-4 text-center">
+            <span class="text-neutral-300 text-lg leading-none">&mdash;</span>
+          </td>
+          <td class="py-3 px-4 text-center">
+            <span class="text-neutral-300 text-lg leading-none">&mdash;</span>
+          </td>
+        </tr>
+
+        <tr class="border-b border-neutral-100">
+          <td class="py-3 pr-6 text-neutral-700">{features[2].name}</td>
+          <td class="py-3 px-4 text-center bg-neutral-50">
+            <span class="text-neutral-700 font-medium">{features[2].values.planName}</span>
+          </td>
+          <td class="py-3 px-4 text-center">
+            <span class="text-neutral-700">{features[2].values.competitor1}</span>
+          </td>
+          <td class="py-3 px-4 text-center">
+            <span class="text-neutral-700">{features[2].values.competitor2}</span>
+          </td>
+        </tr>
+
+        <!-- Add more feature rows as needed. -->
+
+      </tbody>
+
+    </table>
+  </div>
+
+</section>

@@ -1,0 +1,79 @@
+<!--
+  TEXT BLOCK SECTION REFERENCE
+  ==============================
+  HTML patterns for long-form content sections. Use for narrative copy,
+  manifesto statements, detailed explanations, or any block of prose that
+  doesn't fit neatly into features, FAQ, or other structured sections.
+
+  Design system: Tailwind CSS v4. Black/neutral palette. No gradients,
+  no shadows, no decorative color. Clean and typographic.
+
+  CONTENT SCHEMA
+  ==============
+  Required:
+    content    — String. The body copy. Rendered as paragraphs.
+                 Separate paragraphs with a blank line (the generator
+                 will split on double newlines).
+
+  Optional:
+    headline   — Short heading above the body. 10 words max.
+    image      — Description of what the placeholder image represents.
+                 Placed below the content if provided.
+
+  VARIANT SELECTION GUIDE
+  =======================
+  default     — Headline + prose paragraphs. No image.
+                Use for any standalone copy block.
+  with-image  — Headline + prose + image below.
+                Use when there's an illustration or diagram to add context.
+
+  NOTE ON CONTENT LENGTH
+  ======================
+  Keep text blocks short. 2-4 paragraphs max. If it's longer than that,
+  consider whether it should be broken into a features-list or FAQ instead.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: default
+     Headline + prose paragraphs. No image.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+  <div class="max-w-2xl">
+
+    <!-- Optional headline — omit if the section flows without a heading -->
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black mb-6 text-balance">{headline}</h2>
+
+    <!-- Content: split {content} on double newlines to produce <p> tags -->
+    <div class="space-y-4 text-neutral-600 leading-relaxed">
+      <p>{content[paragraph 1]}</p>
+      <p>{content[paragraph 2]}</p>
+      <!-- Add more <p> tags for additional paragraphs. 4 max. -->
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     VARIANT 2: with-image
+     Headline + prose + image below.
+     Use when a visual adds context to the prose.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+  <div class="max-w-2xl">
+
+    <!-- Optional headline -->
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black mb-6 text-balance">{headline}</h2>
+
+    <!-- Content -->
+    <div class="space-y-4 text-neutral-600 leading-relaxed mb-8">
+      <p>{content[paragraph 1]}</p>
+      <p>{content[paragraph 2]}</p>
+    </div>
+
+    <!-- Image below content -->
+    <div class="bg-neutral-100 rounded-2xl min-h-[280px] flex items-center justify-center text-neutral-400 text-sm">[img: {image}]</div>
+
+  </div>
+</section>

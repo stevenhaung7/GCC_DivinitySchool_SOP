@@ -1,0 +1,157 @@
+<!--
+  PAIN SECTION REFERENCE
+  ======================
+  HTML patterns for pain point / problem-awareness sections. Read this file
+  to understand the available structures, then generate actual content for
+  the user's product by replacing {placeholder} tokens with real copy.
+
+  Design system: Tailwind CSS v4. Black/neutral palette. No gradients,
+  no shadows, no decorative color. Clean and typographic.
+
+  CONTENT SCHEMA
+  ==============
+  Required:
+    headline       — 10 words max. Names the pain directly.
+
+  Optional:
+    subheadline    — 1-2 sentences. Confirms you understand the problem.
+    painPoints     — Array<{ title: string, description: string }>
+                     3-5 items. Each names one specific frustration.
+    before         — { headline: string, points: string[] }
+                     The painful "before" state.
+    after          — { headline: string, points: string[] }
+                     The relief the product provides.
+
+  VARIANT SELECTION GUIDE
+  =======================
+  default       — Numbered pain points in a light box. Use when listing
+                  3-5 distinct frustrations that resonate individually.
+  before-after  — Two-column contrast: old way vs. new way. Use when the
+                  product's value is clearest as a direct transformation.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: default
+     Numbered pain points in a contained light box.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+  <div class="max-w-2xl">
+
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black mb-4 text-balance">{headline}</h2>
+    <p class="text-lg text-neutral-600 mb-8 text-balance">{subheadline}</p>
+
+    <div class="bg-neutral-50 rounded-2xl px-6">
+
+      <!-- Pain point item — repeat for each item (3-5 total) -->
+      <div class="flex gap-5 py-6 border-t border-neutral-200 first:border-t-0">
+        <span class="text-2xl font-bold text-neutral-300 tabular-nums shrink-0 leading-tight">01</span>
+        <div>
+          <h3 class="text-base font-semibold text-black mb-1">{painPoints[0].title}</h3>
+          <p class="text-neutral-600 text-sm leading-relaxed">{painPoints[0].description}</p>
+        </div>
+      </div>
+
+      <div class="flex gap-5 py-6 border-t border-neutral-200">
+        <span class="text-2xl font-bold text-neutral-300 tabular-nums shrink-0 leading-tight">02</span>
+        <div>
+          <h3 class="text-base font-semibold text-black mb-1">{painPoints[1].title}</h3>
+          <p class="text-neutral-600 text-sm leading-relaxed">{painPoints[1].description}</p>
+        </div>
+      </div>
+
+      <div class="flex gap-5 py-6 border-t border-neutral-200">
+        <span class="text-2xl font-bold text-neutral-300 tabular-nums shrink-0 leading-tight">03</span>
+        <div>
+          <h3 class="text-base font-semibold text-black mb-1">{painPoints[2].title}</h3>
+          <p class="text-neutral-600 text-sm leading-relaxed">{painPoints[2].description}</p>
+        </div>
+      </div>
+
+      <!-- Add items 04, 05 here if needed. 5 max. -->
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     VARIANT 2: before-after
+     Two-column contrast. Left = painful old way. Right = new way.
+     Use when the product's value is clearest as a transformation.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black mb-4 text-balance">{headline}</h2>
+  <p class="text-lg text-neutral-600 mb-8 text-balance">{subheadline}</p>
+
+  <div class="grid md:grid-cols-2 gap-8">
+
+    <!-- Before column: light, neutral, pain state -->
+    <div class="bg-neutral-50 rounded-2xl p-8">
+      <h3 class="text-sm font-semibold uppercase tracking-wider text-neutral-400 mb-6">{before.headline}</h3>
+      <ul class="space-y-4">
+
+        <li class="flex items-start gap-3">
+          <!-- X mark -->
+          <svg class="w-5 h-5 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <span class="text-neutral-600">{before.points[0]}</span>
+        </li>
+
+        <li class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <span class="text-neutral-600">{before.points[1]}</span>
+        </li>
+
+        <li class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <span class="text-neutral-600">{before.points[2]}</span>
+        </li>
+
+        <!-- Add more before.points here if needed -->
+
+      </ul>
+    </div>
+
+    <!-- After column: dark, confident, relief state -->
+    <div class="bg-neutral-900 rounded-2xl p-8">
+      <h3 class="text-sm font-semibold uppercase tracking-wider text-neutral-500 mb-6">{after.headline}</h3>
+      <ul class="space-y-4">
+
+        <li class="flex items-start gap-3">
+          <!-- Checkmark -->
+          <svg class="w-5 h-5 text-neutral-300 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+          </svg>
+          <span class="text-neutral-300">{after.points[0]}</span>
+        </li>
+
+        <li class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-neutral-300 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+          </svg>
+          <span class="text-neutral-300">{after.points[1]}</span>
+        </li>
+
+        <li class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-neutral-300 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+          </svg>
+          <span class="text-neutral-300">{after.points[2]}</span>
+        </li>
+
+        <!-- Add more after.points here if needed -->
+
+      </ul>
+    </div>
+
+  </div>
+
+</section>

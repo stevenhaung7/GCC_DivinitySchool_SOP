@@ -1,0 +1,106 @@
+<!--
+  RESULTS SECTION REFERENCE
+  ==========================
+  HTML patterns for outcome and results sections. These show proof that
+  the product works — either as metrics or as a customer story. Read this
+  file to understand the available structures, then generate actual content
+  for the user's product by replacing {placeholder} tokens with real copy.
+
+  Design system: Tailwind CSS v4. Black/neutral palette. No gradients,
+  no shadows, no decorative color. Clean and typographic.
+
+  CONTENT SCHEMA
+  ==============
+  Optional (use one or the other, not both on the same section):
+    results    — Array<{ value: string, context: string }>
+                 2-4 items. Each result is a specific, verifiable outcome.
+                 value    — The number or outcome: "3x faster", "40% fewer"
+                 context  — One sentence of explanation. What produced this?
+
+    story      — Single customer success narrative.
+                 customer    — Name and role/company.
+                 before      — What their situation was before.
+                 after       — What changed after using the product.
+                 quote       — Optional direct quote from the customer.
+                 quoteAuthor — Name and role for attribution.
+
+  VARIANT SELECTION GUIDE
+  =======================
+  metrics   — Grid of specific results with context. Use when you have
+              multiple measurable outcomes to show side by side.
+  story     — Single narrative with before/after. Use when one customer's
+              transformation is more convincing than a set of numbers.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: metrics
+     Grid of results with large values and context sentences.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <div class="border-y border-neutral-200 py-10">
+
+    <!-- Adjust grid-cols to match number of results (2-4). -->
+    <dl class="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+      <div>
+        <dd class="text-3xl md:text-4xl font-bold text-black mb-2">{results[0].value}</dd>
+        <p class="text-neutral-600 text-sm leading-relaxed">{results[0].context}</p>
+      </div>
+
+      <div>
+        <dd class="text-3xl md:text-4xl font-bold text-black mb-2">{results[1].value}</dd>
+        <p class="text-neutral-600 text-sm leading-relaxed">{results[1].context}</p>
+      </div>
+
+      <div>
+        <dd class="text-3xl md:text-4xl font-bold text-black mb-2">{results[2].value}</dd>
+        <p class="text-neutral-600 text-sm leading-relaxed">{results[2].context}</p>
+      </div>
+
+      <!-- Add results[3] here if needed. 4 max. -->
+
+    </dl>
+
+  </div>
+
+</section>
+
+
+<!-- ============================================================
+     VARIANT 2: story
+     Single customer transformation narrative.
+     Use when one real story is more convincing than many numbers.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+  <div class="max-w-2xl">
+
+    <!-- Customer attribution -->
+    <p class="text-sm font-medium text-neutral-500 mb-6">{story.customer}</p>
+
+    <!-- Before / After -->
+    <div class="space-y-6 mb-8">
+
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-1">Before</p>
+        <p class="text-neutral-600 leading-relaxed">{story.before}</p>
+      </div>
+
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-1">After</p>
+        <p class="text-black font-medium leading-relaxed">{story.after}</p>
+      </div>
+
+    </div>
+
+    <!-- Optional customer quote — include only if a real quote is available -->
+    <blockquote class="border-l-2 border-neutral-200 pl-6">
+      <p class="text-lg font-medium text-neutral-600 mb-2 text-balance">&ldquo;{story.quote}&rdquo;</p>
+      <footer class="text-sm">
+        <span class="font-semibold text-black">{story.quoteAuthor}</span>
+      </footer>
+    </blockquote>
+
+  </div>
+</section>

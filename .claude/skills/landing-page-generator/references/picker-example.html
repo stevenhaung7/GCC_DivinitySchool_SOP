@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TalkJS — Chat API for Marketplaces</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            50: '#eef7ff', 100: '#d9ecff', 200: '#bcdeff', 300: '#8ecaff',
+            400: '#59acff', 500: '#3388ff', 600: '#1a6bf5', 700: '#1255e1',
+            800: '#1545b6', 900: '#143c8f', 950: '#112657'
+          },
+          dark: { 700: '#1a1d2b', 800: '#141623', 900: '#0f111c', 950: '#0a0b14' }
+        },
+        fontFamily: {
+          display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+          body: ['Inter', 'system-ui', 'sans-serif'],
+        },
+        boxShadow: {
+          'soft': '0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04)',
+          'lifted': '0 2px 8px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.08)',
+          'hero': '0 8px 30px rgba(0,0,0,0.15), 0 32px 80px rgba(0,0,0,0.2)',
+        }
+      }
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .hero-headline { font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.05; letter-spacing: -0.03em; }
+    .section-headline { font-size: clamp(1.75rem, 3.5vw, 3rem); line-height: 1.1; letter-spacing: -0.02em; }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Nav (no picker — stays constant) -->
+  <nav class="bg-dark-950">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+      <span class="text-white font-display font-bold text-xl">TalkJS</span>
+      <div class="flex items-center gap-8">
+        <a href="#" class="text-white/60 hover:text-white text-sm font-medium transition-colors">Features</a>
+        <a href="#" class="text-white/60 hover:text-white text-sm font-medium transition-colors">Pricing</a>
+        <a href="#" class="text-white/60 hover:text-white text-sm font-medium transition-colors">Docs</a>
+        <a href="#" class="px-4 py-2 bg-brand-500 text-white rounded-lg text-sm font-medium hover:bg-brand-600 transition-colors">Start free</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO — 5 versions -->
+  <div data-pp-pick="hero" class="contents">
+    <div data-pp-option="1" class="contents">
+      <section class="bg-dark-950 relative overflow-hidden">
+        <div class="absolute inset-0 bg-brand-500/[0.06] blur-[120px] rounded-full w-[600px] h-[600px] mx-auto mt-[-200px]"></div>
+        <div class="max-w-7xl mx-auto px-6 py-24 md:py-32 text-center relative">
+          <p class="text-brand-400 text-sm font-semibold uppercase tracking-wider mb-6">CHAT API FOR MARKETPLACES</p>
+          <h1 class="hero-headline font-display font-bold text-white max-w-4xl mx-auto mb-6" style="text-wrap:balance">Drop in real-time messaging. Ship this week.</h1>
+          <p class="text-lg text-white/60 max-w-2xl mx-auto mb-10">One JavaScript snippet. Buyer-seller chat, group threads, and typing indicators — live in your marketplace before Friday.</p>
+          <div class="flex items-center justify-center gap-4">
+            <a href="#" class="px-6 py-3 bg-brand-500 text-white rounded-lg font-medium text-sm hover:bg-brand-600 transition-colors">Start building free</a>
+            <a href="#" class="px-6 py-3 text-white/70 border border-white/20 rounded-lg font-medium text-sm hover:border-white/40 hover:text-white transition-colors">See the docs</a>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div data-pp-option="2" class="contents" hidden>
+      <section class="bg-dark-950 relative overflow-hidden">
+        <div class="absolute inset-0 bg-brand-500/[0.06] blur-[120px] rounded-full w-[600px] h-[600px] mx-auto mt-[-200px]"></div>
+        <div class="max-w-7xl mx-auto px-6 py-24 md:py-32 text-center relative">
+          <p class="text-brand-400 text-sm font-semibold uppercase tracking-wider mb-6">CHAT API FOR MARKETPLACES</p>
+          <h1 class="hero-headline font-display font-bold text-white max-w-4xl mx-auto mb-6" style="text-wrap:balance">Your buyers and sellers, talking in real time — inside your app.</h1>
+          <p class="text-lg text-white/60 max-w-2xl mx-auto mb-10">TalkJS handles the infrastructure so your team stays focused on the marketplace. Messages sync in under 50ms, across every device.</p>
+          <div class="flex items-center justify-center gap-4">
+            <a href="#" class="px-6 py-3 bg-brand-500 text-white rounded-lg font-medium text-sm hover:bg-brand-600 transition-colors">Try the free tier</a>
+            <a href="#" class="px-6 py-3 text-white/70 border border-white/20 rounded-lg font-medium text-sm hover:border-white/40 hover:text-white transition-colors">Explore features</a>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div data-pp-option="3" class="contents" hidden>
+      <section class="bg-dark-950 relative overflow-hidden">
+        <div class="absolute inset-0 bg-brand-500/[0.06] blur-[120px] rounded-full w-[600px] h-[600px] mx-auto mt-[-200px]"></div>
+        <div class="max-w-7xl mx-auto px-6 py-24 md:py-32 text-center relative">
+          <p class="text-brand-400 text-sm font-semibold uppercase tracking-wider mb-6">CHAT API FOR MARKETPLACES</p>
+          <h1 class="hero-headline font-display font-bold text-white max-w-4xl mx-auto mb-6" style="text-wrap:balance">Add chat to your marketplace — without building a chat team.</h1>
+          <p class="text-lg text-white/60 max-w-2xl mx-auto mb-10">Pre-built UI, 50ms message sync, and moderation tools out of the box. Focus on your marketplace, not WebSocket debugging.</p>
+          <div class="flex items-center justify-center gap-4">
+            <a href="#" class="px-6 py-3 bg-brand-500 text-white rounded-lg font-medium text-sm hover:bg-brand-600 transition-colors">Start free — no credit card</a>
+            <a href="#" class="px-6 py-3 text-white/70 border border-white/20 rounded-lg font-medium text-sm hover:border-white/40 hover:text-white transition-colors">Watch the demo</a>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div data-pp-option="4" class="contents" hidden>
+      <section class="bg-dark-950 relative overflow-hidden">
+        <div class="absolute inset-0 bg-brand-500/[0.06] blur-[120px] rounded-full w-[600px] h-[600px] mx-auto mt-[-200px]"></div>
+        <div class="max-w-7xl mx-auto px-6 py-24 md:py-32 text-center relative">
+          <p class="text-brand-400 text-sm font-semibold uppercase tracking-wider mb-6">CHAT API FOR MARKETPLACES</p>
+          <h1 class="hero-headline font-display font-bold text-white max-w-4xl mx-auto mb-6" style="text-wrap:balance">You built a great marketplace. Now let buyers and sellers actually talk.</h1>
+          <p class="text-lg text-white/60 max-w-2xl mx-auto mb-10">Most marketplace teams spend 6+ months building in-house chat. TalkJS gives you a production-ready messaging UI in one afternoon.</p>
+          <div class="flex items-center justify-center gap-4">
+            <a href="#" class="px-6 py-3 bg-brand-500 text-white rounded-lg font-medium text-sm hover:bg-brand-600 transition-colors">Get started free</a>
+            <a href="#" class="px-6 py-3 text-white/70 border border-white/20 rounded-lg font-medium text-sm hover:border-white/40 hover:text-white transition-colors">See how it works</a>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div data-pp-option="5" class="contents" hidden>
+      <section class="bg-dark-950 relative overflow-hidden">
+        <div class="absolute inset-0 bg-brand-500/[0.06] blur-[120px] rounded-full w-[600px] h-[600px] mx-auto mt-[-200px]"></div>
+        <div class="max-w-7xl mx-auto px-6 py-24 md:py-32 text-center relative">
+          <p class="text-brand-400 text-sm font-semibold uppercase tracking-wider mb-6">TRUSTED BY 2,400+ PLATFORMS</p>
+          <h1 class="hero-headline font-display font-bold text-white max-w-4xl mx-auto mb-6" style="text-wrap:balance">2,400 marketplaces ship chat with TalkJS. You're next.</h1>
+          <p class="text-lg text-white/60 max-w-2xl mx-auto mb-10">Enterprise-grade chat infrastructure with a 10-minute setup. The free tier covers most startups — no credit card, no contracts.</p>
+          <div class="flex items-center justify-center gap-4">
+            <a href="#" class="px-6 py-3 bg-brand-500 text-white rounded-lg font-medium text-sm hover:bg-brand-600 transition-colors">Start building free</a>
+            <a href="#" class="px-6 py-3 text-white/70 border border-white/20 rounded-lg font-medium text-sm hover:border-white/40 hover:text-white transition-colors">Read case studies</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- PAIN — 5 versions -->
+  <div data-pp-pick="pain" class="contents">
+    <div data-pp-option="1" class="contents">
+      <section class="bg-white py-24 md:py-32">
+        <div class="max-w-7xl mx-auto px-6">
+          <p class="text-brand-600 text-sm font-semibold uppercase tracking-wider mb-4">STOP BUILDING CHAT</p>
+          <h2 class="section-headline font-display font-bold text-neutral-900 max-w-3xl mb-12" style="text-wrap:balance">Your marketplace ships features. Your chat infrastructure ships headaches.</h2>
+          <div class="grid md:grid-cols-3 gap-8">
+            <div class="border border-black/10 rounded-2xl p-6 hover:shadow-soft transition-all duration-300">
+              <h3 class="font-display font-semibold text-neutral-900 mb-2">3 engineers, 4 months, still broken</h3>
+              <p class="text-neutral-500 text-sm leading-relaxed">That's the average in-house chat build. Messages out of order. Offline sync doesn't work. And you haven't started on moderation.</p>
+            </div>
+            <div class="border border-black/10 rounded-2xl p-6 hover:shadow-soft transition-all duration-300">
+              <h3 class="font-display font-semibold text-neutral-900 mb-2">$180K/year in maintenance</h3>
+              <p class="text-neutral-500 text-sm leading-relaxed">Server costs, on-call rotations, security patches. Your "free" in-house solution costs more than every SaaS tool combined.</p>
+            </div>
+            <div class="border border-black/10 rounded-2xl p-6 hover:shadow-soft transition-all duration-300">
+              <h3 class="font-display font-semibold text-neutral-900 mb-2">Every bug is urgent</h3>
+              <p class="text-neutral-500 text-sm leading-relaxed">Chat is real-time. When it breaks, both sides of the transaction see it. There's no "we'll fix it next sprint."</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div data-pp-option="2" class="contents" hidden>
+      <section class="bg-white py-24 md:py-32">
+        <div class="max-w-7xl mx-auto px-6">
+          <p class="text-brand-600 text-sm font-semibold uppercase tracking-wider mb-4">SOUND FAMILIAR?</p>
+          <h2 class="section-headline font-display font-bold text-neutral-900 max-w-3xl mb-12" style="text-wrap:balance">Building chat from scratch is a full-time job. You already have one.</h2>
+          <div class="grid md:grid-cols-3 gap-8">
+            <div class="border border-black/10 rounded-2xl p-6 hover:shadow-soft transition-all duration-300">
+              <h3 class="font-display font-semibold text-neutral-900 mb-2">The "quick" chat feature</h3>
+              <p class="text-neutral-500 text-sm leading-relaxed">What started as a weekend project is eating your sprint. WebSockets, persistence, push notifications — it never ends.</p>
+            </div>
+            <div class="border border-black/10 rounded-2xl p-6 hover:shadow-soft transition-all duration-300">
+              <h3 class="font-display font-semibold text-neutral-900 mb-2">Users expect Slack-quality UX</h3>
+              <p class="text-neutral-500 text-sm leading-relaxed">Instant delivery, emoji reactions, threaded replies. Your MVP with plain text bubbles isn't cutting it anymore.</p>
+            </div>
+            <div class="border border-black/10 rounded-2xl p-6 hover:shadow-soft transition-all duration-300">
+              <h3 class="font-display font-semibold text-neutral-900 mb-2">Moderation nightmares</h3>
+              <p class="text-neutral-500 text-sm leading-relaxed">Spam, abuse reports, GDPR deletion requests. You need moderation tools but you haven't finished the chat itself.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div data-pp-option="3" class="contents" hidden>
+      <section class="bg-white py-24 md:py-32">
+        <div class="max-w-7xl mx-auto px-6">
+          <p class="text-brand-600 text-sm font-semibold uppercase tracking-wider mb-4">50MS MESSAGE SYNC</p>
+          <h2 class="section-headline font-display font-bold text-neutral-900 max-w-3xl mb-12" style="text-wrap:balance">Stop debugging WebSockets. Start shipping marketplace features.</h2>
+          <div class="grid md:grid-cols-3 gap-8">
+            <div class="border border-black/10 rounded-2xl p-6 hover:shadow-soft transition-all duration-300">
+              <h3 class="font-display font-semibold text-neutral-900 mb-2">Connection drops at 2 AM</h3>
+              <p class="text-neutral-500 text-sm leading-relaxed">WebSocket state management, reconnection logic, presence indicators going stale — and your chat code isn't even the product.</p>
+            </div>
+            <div class="border border-black/10 rounded-2xl p-6 hover:shadow-soft transition-all duration-300">
+              <h3 class="font-display font-semibold text-neutral-900 mb-2">6 months to "good enough"</h3>
+              <p class="text-neutral-500 text-sm leading-relaxed">Read receipts, typing indicators, file sharing — each feature is another sprint your marketplace features don't get.</p>
+            </div>
+            <div class="border border-black/10 rounded-2xl p-6 hover:shadow-soft transition-all duration-300">
+              <h3 class="font-display font-semibold text-neutral-900 mb-2">Scale surprises at 10K users</h3>
+              <p class="text-neutral-500 text-sm leading-relaxed">Chat worked fine at 100 users. At 10,000, the database queries powering it are now your biggest bottleneck.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div data-pp-option="4" class="contents" hidden>
+      <section class="bg-white py-24 md:py-32">
+        <div class="max-w-7xl mx-auto px-6">
+          <p class="text-brand-600 text-sm font-semibold uppercase tracking-wider mb-4">THE MESSAGING TRAP</p>
+          <h2 class="section-headline font-display font-bold text-neutral-900 max-w-3xl mb-12" style="text-wrap:balance">You built a marketplace. Now you're accidentally maintaining a chat app.</h2>
+          <div class="grid md:grid-cols-3 gap-8">
+            <div class="border border-black/10 rounded-2xl p-6 hover:shadow-soft transition-all duration-300">
+              <h3 class="font-display font-semibold text-neutral-900 mb-2">It started as "just a chat feature"</h3>
+              <p class="text-neutral-500 text-sm leading-relaxed">Now it has its own Jira board, its own on-call rotation, and it still drops messages when two people type at once.</p>
+            </div>
+            <div class="border border-black/10 rounded-2xl p-6 hover:shadow-soft transition-all duration-300">
+              <h3 class="font-display font-semibold text-neutral-900 mb-2">Your best engineers are stuck on plumbing</h3>
+              <p class="text-neutral-500 text-sm leading-relaxed">They could be building the features that differentiate your marketplace. Instead they're fixing message ordering bugs.</p>
+            </div>
+            <div class="border border-black/10 rounded-2xl p-6 hover:shadow-soft transition-all duration-300">
+              <h3 class="font-display font-semibold text-neutral-900 mb-2">Users don't praise chat — they punish its absence</h3>
+              <p class="text-neutral-500 text-sm leading-relaxed">Nobody signs up because your chat is great. But they'll churn instantly if a message doesn't arrive.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div data-pp-option="5" class="contents" hidden>
+      <section class="bg-white py-24 md:py-32">
+        <div class="max-w-7xl mx-auto px-6">
+          <p class="text-brand-600 text-sm font-semibold uppercase tracking-wider mb-4">ZERO DEVOPS</p>
+          <h2 class="section-headline font-display font-bold text-neutral-900 max-w-3xl mb-12" style="text-wrap:balance">Chat infrastructure that scales to millions — without a single ops hire.</h2>
+          <div class="grid md:grid-cols-3 gap-8">
+            <div class="border border-black/10 rounded-2xl p-6 hover:shadow-soft transition-all duration-300">
+              <h3 class="font-display font-semibold text-neutral-900 mb-2">99.99% uptime, not your problem</h3>
+              <p class="text-neutral-500 text-sm leading-relaxed">We handle the servers, the CDN, the failover. You handle the marketplace. That's how it should work.</p>
+            </div>
+            <div class="border border-black/10 rounded-2xl p-6 hover:shadow-soft transition-all duration-300">
+              <h3 class="font-display font-semibold text-neutral-900 mb-2">From 10 to 10 million messages</h3>
+              <p class="text-neutral-500 text-sm leading-relaxed">Same API, same pricing model, same reliability. No re-architecture needed when your marketplace takes off.</p>
+            </div>
+            <div class="border border-black/10 rounded-2xl p-6 hover:shadow-soft transition-all duration-300">
+              <h3 class="font-display font-semibold text-neutral-900 mb-2">SOC 2 and GDPR built in</h3>
+              <p class="text-neutral-500 text-sm leading-relaxed">Compliance you'd need 6 months and a security team to build yourself. It comes standard with every TalkJS plan.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- CTA — 5 versions -->
+  <div data-pp-pick="cta" class="contents">
+    <div data-pp-option="1" class="contents">
+      <section class="bg-dark-950 py-24 md:py-32">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+          <h2 class="section-headline font-display font-bold text-white mb-4" style="text-wrap:balance">Ship chat today. Seriously.</h2>
+          <p class="text-lg text-white/60 max-w-xl mx-auto mb-10">Free tier. No credit card. Your first messages flowing in under 10 minutes.</p>
+          <a href="#" class="px-8 py-4 bg-brand-500 text-white rounded-lg font-medium hover:bg-brand-600 transition-colors inline-block">Start building free</a>
+        </div>
+      </section>
+    </div>
+    <div data-pp-option="2" class="contents" hidden>
+      <section class="bg-dark-950 py-24 md:py-32">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+          <h2 class="section-headline font-display font-bold text-white mb-4" style="text-wrap:balance">Get back to building your marketplace.</h2>
+          <p class="text-lg text-white/60 max-w-xl mx-auto mb-10">Let TalkJS handle the messaging so your team can focus on the features that make your platform unique.</p>
+          <a href="#" class="px-8 py-4 bg-brand-500 text-white rounded-lg font-medium hover:bg-brand-600 transition-colors inline-block">Try TalkJS free</a>
+        </div>
+      </section>
+    </div>
+    <div data-pp-option="3" class="contents" hidden>
+      <section class="bg-dark-950 py-24 md:py-32">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+          <h2 class="section-headline font-display font-bold text-white mb-4" style="text-wrap:balance">Add chat to your app — not to your roadmap.</h2>
+          <p class="text-lg text-white/60 max-w-xl mx-auto mb-10">Pre-built UI, real-time sync, moderation tools. Everything you need to ship messaging without the infrastructure headache.</p>
+          <a href="#" class="px-8 py-4 bg-brand-500 text-white rounded-lg font-medium hover:bg-brand-600 transition-colors inline-block">Start free — no credit card</a>
+        </div>
+      </section>
+    </div>
+    <div data-pp-option="4" class="contents" hidden>
+      <section class="bg-dark-950 py-24 md:py-32">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+          <h2 class="section-headline font-display font-bold text-white mb-4" style="text-wrap:balance">Your competitor is already shipping faster. Catch up.</h2>
+          <p class="text-lg text-white/60 max-w-xl mx-auto mb-10">2,400 platforms chose TalkJS over building in-house. The average integration takes one afternoon.</p>
+          <a href="#" class="px-8 py-4 bg-brand-500 text-white rounded-lg font-medium hover:bg-brand-600 transition-colors inline-block">Start your free integration</a>
+        </div>
+      </section>
+    </div>
+    <div data-pp-option="5" class="contents" hidden>
+      <section class="bg-dark-950 py-24 md:py-32">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+          <h2 class="section-headline font-display font-bold text-white mb-4" style="text-wrap:balance">2,400 platforms trust TalkJS. Join them.</h2>
+          <p class="text-lg text-white/60 max-w-xl mx-auto mb-10">Enterprise-grade messaging with a startup-friendly free tier. The same API scales from day one to IPO.</p>
+          <a href="#" class="px-8 py-4 bg-brand-500 text-white rounded-lg font-medium hover:bg-brand-600 transition-colors inline-block">Start building free</a>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <footer class="bg-dark-950 border-t border-dark-700 py-6 text-center text-sm text-white/30">
+    Generated with PiratePage
+  </footer>
+
+  <!-- PiratePage Picker (inline from piratepage-picker.js) -->
+  <script>
+(function(){
+'use strict';
+var picks=document.querySelectorAll('[data-pp-pick]');
+if(!picks.length)return;
+var active=[];
+picks.forEach(function(pick,pi){
+  var options=pick.querySelectorAll('[data-pp-option]');
+  if(!options.length)return;
+  pick.classList.remove('contents');
+  pick.style.overflow='clip';
+  options.forEach(function(opt,oi){
+    if(oi===0){opt.removeAttribute('hidden');opt.style.display=''}
+    else{opt.setAttribute('hidden','');opt.style.display='none'}
+  });
+  active[pi]=0;
+  var tb=document.createElement('div');
+  tb.setAttribute('data-pp-toolbar','');
+  tb.style.cssText='position:sticky;top:16px;z-index:40;width:fit-content;margin:0 auto -32px;display:flex;align-items:center;gap:2px;padding:3px;background:rgba(255,255,255,0.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:9px;font-family:Inter,system-ui,sans-serif;box-shadow:0 0 0 1px rgba(0,0,0,0.08),0 1px 3px rgba(0,0,0,0.06);pointer-events:auto;';
+  var grip=document.createElement('div');
+  grip.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:16px;height:26px;cursor:grab;flex-shrink:0;margin-left:2px;user-select:none;opacity:0.35;transition:opacity 0.12s;';
+  for(var gi=0;gi<3;gi++){var bar=document.createElement('div');bar.style.cssText='width:10px;height:1.5px;background:#525252;border-radius:1px;';grip.appendChild(bar)}
+  grip.addEventListener('mouseenter',function(){grip.style.opacity='0.7'});
+  grip.addEventListener('mouseleave',function(){if(!dragState)grip.style.opacity='0.35'});
+  var dragState=null;
+  grip.addEventListener('mousedown',function(e){
+    e.preventDefault();
+    var rect=tb.getBoundingClientRect(),pr=pick.getBoundingClientRect();
+    pick.style.position='relative';
+    tb.style.position='absolute';tb.style.margin='0';
+    tb.style.left=(rect.left-pr.left)+'px';
+    tb.style.top=(rect.top-pr.top+pick.scrollTop)+'px';
+    dragState={offsetX:e.clientX-rect.left,offsetY:e.clientY-rect.top};
+    grip.style.cursor='grabbing';
+  });
+  document.addEventListener('mousemove',function(e){
+    if(!dragState)return;
+    var pr=pick.getBoundingClientRect();
+    var x=e.clientX-dragState.offsetX-pr.left;
+    var y=e.clientY-dragState.offsetY-pr.top;
+    x=Math.max(0,Math.min(pr.width-tb.offsetWidth,x));
+    y=Math.max(0,Math.min(pr.height-tb.offsetHeight,y));
+    tb.style.left=x+'px';tb.style.top=y+'px';
+  });
+  document.addEventListener('mouseup',function(){
+    if(!dragState)return;dragState=null;grip.style.cursor='grab';grip.style.opacity='0.35';
+  });
+  options.forEach(function(opt,oi){
+    var btn=document.createElement('button');
+    btn.type='button';btn.textContent=String(oi+1);
+    btn.setAttribute('data-pp-btn',oi);
+    btn.style.cssText='width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:6px;border:none;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.12s;font-family:inherit;line-height:1;';
+    stylePill(btn,oi===0);
+    btn.addEventListener('click',function(){doShow(pi,oi)});
+    tb.appendChild(btn);
+  });
+  tb.appendChild(grip);
+  pick.insertBefore(tb,pick.firstChild);
+});
+var highlights=[];
+picks.forEach(function(pick,pi){
+  var tb=pick.querySelector('[data-pp-toolbar]');
+  if(!tb)return;
+  var inner=document.createElement('div');
+  inner.style.cssText='position:relative;display:flex;align-items:center;gap:2px;';
+  while(tb.firstChild)inner.appendChild(tb.firstChild);
+  tb.appendChild(inner);
+  var hl=document.createElement('div');
+  hl.style.cssText='position:absolute;top:0;left:0;width:26px;height:26px;background:#18181b;border-radius:6px;transition:transform 0.25s cubic-bezier(0.4,0,0.2,1);pointer-events:none;';
+  inner.insertBefore(hl,inner.firstChild);
+  highlights[pi]=hl;
+  (function(h,inn){requestAnimationFrame(function(){var btn=inn.querySelector('[data-pp-btn]');if(btn)h.style.left=btn.offsetLeft+'px'})})(hl,inner);
+});
+function moveHighlight(pi,oi){var hl=highlights[pi];if(hl)hl.style.transform='translateX('+(oi*28)+'px)';}
+function stylePill(b,on){
+  b.style.background='transparent';
+  b.style.color=on?'#fff':'#525252';
+  b.style.position='relative';
+  b.style.zIndex='1';
+}
+function showOption(pi,oi){
+  var pick=picks[pi];
+  pick.querySelectorAll('[data-pp-option]').forEach(function(opt,i){
+    if(i===oi){opt.removeAttribute('hidden');opt.style.display=''}
+    else{opt.setAttribute('hidden','');opt.style.display='none'}
+  });
+  pick.querySelectorAll('[data-pp-btn]').forEach(function(btn,i){stylePill(btn,i===oi)});
+  active[pi]=oi;moveHighlight(pi,oi);updateHash();
+}
+function doShow(pi,oi){
+  showOption(pi,oi);
+  if(navigator.clipboard)navigator.clipboard.writeText(location.href).then(function(){toast('URL copied')});
+}
+function updateHash(){
+  var p=[];
+  picks.forEach(function(pick,pi){
+    var o=pick.querySelectorAll('[data-pp-option]');var c=o[active[pi]];
+    if(c)p.push(pick.getAttribute('data-pp-pick')+':'+c.getAttribute('data-pp-option'));
+  });
+  history.replaceState(null,'','#'+p.join(','));
+}
+function readHash(){
+  var h=location.hash.slice(1);if(!h)return;
+  h.split(',').forEach(function(e){
+    var kv=e.split(':');if(kv.length!==2)return;
+    picks.forEach(function(pick,pi){
+      if(pick.getAttribute('data-pp-pick')!==kv[0])return;
+      pick.querySelectorAll('[data-pp-option]').forEach(function(opt,oi){
+        if(opt.getAttribute('data-pp-option')===kv[1])showOption(pi,oi);
+      });
+    });
+  });
+}
+function toast(msg){
+  var el=document.getElementById('pp-pick-toast');
+  if(!el){el=document.createElement('div');el.id='pp-pick-toast';el.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);opacity:0;transition:opacity 0.3s ease,transform 0.3s cubic-bezier(0.16,1,0.3,1);pointer-events:none;background:rgba(24,24,27,0.88);backdrop-filter:blur(8px);color:#fff;text-align:center;padding:8px 16px;border-radius:10px;z-index:9999;font-family:Inter,system-ui,sans-serif;font-size:12px;font-weight:500;box-shadow:0 4px 12px rgba(0,0,0,0.2);';document.body.appendChild(el)}
+  el.textContent=msg;el.style.opacity='1';el.style.transform='translateX(-50%) translateY(0)';
+  clearTimeout(el._t);el._t=setTimeout(function(){el.style.opacity='0';el.style.transform='translateX(-50%) translateY(8px)'},1500);
+}
+window.addEventListener('hashchange',readHash);readHash();
+})();
+  </script>
+</body>
+</html>

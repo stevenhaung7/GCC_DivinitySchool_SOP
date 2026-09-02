@@ -1,0 +1,118 @@
+<!--
+  CTA SECTION REFERENCE
+  =====================
+  HTML patterns for all 3 CTA section variants. Read this file to understand
+  the available structures, then generate actual content for the user's
+  product by replacing {placeholder} tokens with real copy.
+
+  Design system: Tailwind CSS v4. Black/neutral palette. No gradients,
+  no shadows, no decorative color. Clean and typographic.
+
+  All variants share a top border (border-t border-neutral-200) that
+  visually separates the CTA from the section above.
+
+  CONTENT SCHEMA
+  ==============
+  Required:
+    headline       — The call to action itself. Make it active, direct.
+                     e.g. "Ready to stop overthinking your homepage?"
+    primaryCTA     — { text: string, href: string }
+
+  Optional:
+    eyebrow        — Short label. Use sparingly. Good: "Get started today".
+                     Bad: "Call to Action".
+    subheadline    — 1–2 sentences adding urgency or removing a final objection.
+    testimonial    — { quote: string, author: string } — (with-proof variant)
+    trustBadges    — string[] — short trust signals (with-trust variant)
+                     e.g. ["No credit card required", "Cancel anytime", "Free 14-day trial"]
+
+  VARIANT SELECTION GUIDE
+  =======================
+  default         — Use for most closing CTAs. Clean and direct. Headline +
+                    subheadline + button. No distractions.
+  with-proof      — Use when there's a strong closing testimonial that
+                    reinforces the CTA. Social proof right at the decision moment.
+  with-trust      — Use when friction/hesitation is a concern. Trust badges
+                    directly below the CTA button remove final objections.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: default
+     Clean closing CTA. Headline + optional subheadline + button.
+     Use for most sections. No distractions.
+     ============================================================ -->
+<section class="py-8 md:py-12 border-t border-neutral-200">
+  <div class="max-w-2xl">
+
+    <p class="text-sm font-medium uppercase tracking-wider text-neutral-500 mb-3">{eyebrow}</p>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black mb-4 text-balance">{headline}</h2>
+    <p class="text-lg text-neutral-600 mb-8 text-balance">{subheadline}</p>
+
+    <a href="{primaryCTA.href}" class="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-black rounded-lg hover:bg-neutral-800 transition-colors">
+      {primaryCTA.text}
+    </a>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     VARIANT 2: with-proof
+     CTA with a supporting testimonial. The quote appears beside
+     (or below on mobile) the headline to reinforce the decision.
+     Use when a real customer quote is the strongest closer.
+     ============================================================ -->
+<section class="py-8 md:py-12 border-t border-neutral-200">
+  <div class="max-w-2xl">
+
+    <p class="text-sm font-medium uppercase tracking-wider text-neutral-500 mb-3">{eyebrow}</p>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black mb-4 text-balance">{headline}</h2>
+    <p class="text-lg text-neutral-600 mb-8 text-balance">{subheadline}</p>
+
+    <a href="{primaryCTA.href}" class="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-black rounded-lg hover:bg-neutral-800 transition-colors">
+      {primaryCTA.text}
+    </a>
+
+    <!-- Supporting testimonial: appears below the CTA button -->
+    <blockquote class="mt-10 border-l-2 border-neutral-200 pl-6">
+      <p class="text-base font-medium text-neutral-600 mb-2 text-balance">&ldquo;{testimonial.quote}&rdquo;</p>
+      <footer class="text-sm text-neutral-500">
+        &mdash; <span class="font-medium text-black">{testimonial.author}</span>
+      </footer>
+    </blockquote>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     VARIANT 3: with-trust
+     CTA with trust badges below the button. Removes final
+     objections at the moment of decision.
+     Use when hesitation or perceived risk is a concern.
+     ============================================================ -->
+<section class="py-8 md:py-12 border-t border-neutral-200">
+  <div class="max-w-2xl">
+
+    <p class="text-sm font-medium uppercase tracking-wider text-neutral-500 mb-3">{eyebrow}</p>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black mb-4 text-balance">{headline}</h2>
+    <p class="text-lg text-neutral-600 mb-8 text-balance">{subheadline}</p>
+
+    <a href="{primaryCTA.href}" class="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-black rounded-lg hover:bg-neutral-800 transition-colors">
+      {primaryCTA.text}
+    </a>
+
+    <!-- Trust badges: short friction-removing statements below the button.
+         Render as a flex row. 2–4 items. Use middot as separator. -->
+    <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-neutral-500">
+      <span>{trustBadges[0]}</span>
+      <span class="text-neutral-300">&middot;</span>
+      <span>{trustBadges[1]}</span>
+      <span class="text-neutral-300">&middot;</span>
+      <span>{trustBadges[2]}</span>
+      <!-- Add more trust badges as needed. 4 max. -->
+    </div>
+
+  </div>
+</section>

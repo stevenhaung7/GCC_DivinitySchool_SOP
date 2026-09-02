@@ -1,0 +1,110 @@
+<!--
+  SOCIAL PROOF SECTION REFERENCE
+  ================================
+  HTML patterns for logo and badge social proof sections. These show
+  credibility through recognized names and trust signals — not testimonials
+  (those are in testimonials.html). Read this file to understand the
+  available structures, then generate actual content for the user's product
+  by replacing {placeholder} tokens with real copy.
+
+  Design system: Tailwind CSS v4. Black/neutral palette. No gradients,
+  no shadows, no decorative color. Clean and typographic.
+
+  CONTENT SCHEMA
+  ==============
+  Required:
+    logos    — string[] — Company or publication names. 3-8 items.
+               Rendered as text placeholders. A designer will replace
+               these with actual SVG logos.
+
+  Optional:
+    headline — Short label above logos. e.g. "Trusted by teams at"
+               Keep it short. If omitted, logos stand alone.
+    badges   — string[] — Trust signals like certifications, awards,
+               or press features. e.g. "SOC 2 Type II", "Featured in Forbes"
+
+  VARIANT SELECTION GUIDE
+  =======================
+  logos-only  — Horizontal wrapping row of logo placeholders.
+                Use when you have recognized company names to show.
+  with-badges — Logos above, trust badges below.
+                Use when you also have certifications or press mentions.
+
+  NOTE ON LOGO PLACEHOLDERS
+  =========================
+  Logos are shown as text pill placeholders. A designer will replace
+  these with actual SVG/PNG logos. The text in {logos[n]} should be
+  the company name, not a description.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: logos-only
+     Horizontal wrapping row of logo placeholders.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <!-- Optional headline label — omit if logos speak for themselves -->
+  <p class="text-sm font-medium text-neutral-400 mb-6">{headline}</p>
+
+  <div class="flex flex-wrap items-center gap-6">
+
+    <!-- Logo placeholder — repeat for each company (3-8 total) -->
+    <div class="bg-neutral-100 rounded-lg px-6 py-3 text-neutral-400 font-medium text-sm">{logos[0]}</div>
+    <div class="bg-neutral-100 rounded-lg px-6 py-3 text-neutral-400 font-medium text-sm">{logos[1]}</div>
+    <div class="bg-neutral-100 rounded-lg px-6 py-3 text-neutral-400 font-medium text-sm">{logos[2]}</div>
+    <div class="bg-neutral-100 rounded-lg px-6 py-3 text-neutral-400 font-medium text-sm">{logos[3]}</div>
+    <div class="bg-neutral-100 rounded-lg px-6 py-3 text-neutral-400 font-medium text-sm">{logos[4]}</div>
+
+    <!-- Add more logo divs here if needed. 8 max. -->
+
+  </div>
+
+</section>
+
+
+<!-- ============================================================
+     VARIANT 2: with-badges
+     Logos above, then a row of trust signal badges below.
+     Use when certifications or press mentions add meaningful credibility.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <!-- Optional headline label -->
+  <p class="text-sm font-medium text-neutral-400 mb-6">{headline}</p>
+
+  <!-- Logos -->
+  <div class="flex flex-wrap items-center gap-6 mb-10">
+
+    <div class="bg-neutral-100 rounded-lg px-6 py-3 text-neutral-400 font-medium text-sm">{logos[0]}</div>
+    <div class="bg-neutral-100 rounded-lg px-6 py-3 text-neutral-400 font-medium text-sm">{logos[1]}</div>
+    <div class="bg-neutral-100 rounded-lg px-6 py-3 text-neutral-400 font-medium text-sm">{logos[2]}</div>
+    <div class="bg-neutral-100 rounded-lg px-6 py-3 text-neutral-400 font-medium text-sm">{logos[3]}</div>
+
+    <!-- Add more logo divs here if needed. -->
+
+  </div>
+
+  <!-- Trust badges: certifications, awards, press -->
+  <div class="flex flex-wrap items-center gap-4">
+
+    <span class="inline-flex items-center gap-2 border border-neutral-200 rounded-full px-4 py-1.5 text-sm text-neutral-600">
+      <!-- Shield icon for security/cert badges — swap for appropriate icon if needed -->
+      <svg class="w-4 h-4 text-neutral-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+      </svg>
+      {badges[0]}
+    </span>
+
+    <span class="inline-flex items-center gap-2 border border-neutral-200 rounded-full px-4 py-1.5 text-sm text-neutral-600">
+      <svg class="w-4 h-4 text-neutral-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+      </svg>
+      {badges[1]}
+    </span>
+
+    <!-- Add more badges here if needed. -->
+
+  </div>
+
+</section>
