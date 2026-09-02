@@ -1,0 +1,239 @@
+<!--
+  SHOWCASE SECTION REFERENCE
+  ===========================
+  HTML patterns for showcasing a collection of items — integrations,
+  use cases, portfolio pieces, examples, customer logos with descriptions.
+  Read this file to understand the available structures, then generate actual
+  content for the user's product by replacing {placeholder} tokens with real copy.
+
+  Design system: Tailwind CSS v4. Black/neutral palette. No gradients,
+  no shadows, no decorative color. Clean and typographic.
+
+  CONTENT SCHEMA
+  ==============
+  Optional:
+    headline     — Section headline.
+    subheadline  — 1-2 sentences expanding on the headline.
+    items        — Array of showcase items. Count depends on variant (see below).
+      .title       — Item name or label. Required.
+      .description — 1-2 sentence description. Used in cards and logo-cards variants.
+      .image       — Description of the image/logo/icon placeholder.
+      .url         — Link destination if item is clickable. Optional.
+      .badge       — Short label e.g. "New", "Popular", "Beta". Optional.
+
+  VARIANT SELECTION GUIDE
+  =======================
+  grid        — Compact tile grid. 6-12 items, no descriptions.
+                Use for integrations, supported formats, or "works with" lists.
+  cards       — Larger cards with title and description. 3-6 items.
+                Use for use cases, example outputs, or featured items.
+  logo-cards  — Cards with a logo/icon placeholder and short description. 3-6 items.
+                Use for partner integrations or featured customers with context.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: grid
+     Compact tile grid. 6-12 items. No descriptions.
+     Use for integrations, compatibility lists, format support.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <!-- Section header: optional -->
+  <div class="mb-10">
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black text-balance">{headline}</h2>
+    <p class="mt-4 text-lg text-neutral-600 text-balance">{subheadline}</p>
+  </div>
+
+  <!-- Grid: adjust cols to item count. 6 items → 2/3/3. 12 items → 2/4/4. -->
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+    <!-- Grid tile: image placeholder + name. Click-through is optional. -->
+    <div class="bg-neutral-50 rounded-xl p-4 flex items-center gap-3">
+      <div class="w-8 h-8 bg-neutral-200 rounded-lg shrink-0 flex items-center justify-center text-neutral-400 text-xs">[img]</div>
+      <span class="text-sm font-medium text-neutral-700">{items[0].title}</span>
+      <!-- Optional badge -->
+      <span class="ml-auto text-xs bg-neutral-200 text-neutral-600 rounded-full px-2 py-0.5 shrink-0">{items[0].badge}</span>
+    </div>
+
+    <div class="bg-neutral-50 rounded-xl p-4 flex items-center gap-3">
+      <div class="w-8 h-8 bg-neutral-200 rounded-lg shrink-0 flex items-center justify-center text-neutral-400 text-xs">[img]</div>
+      <span class="text-sm font-medium text-neutral-700">{items[1].title}</span>
+    </div>
+
+    <div class="bg-neutral-50 rounded-xl p-4 flex items-center gap-3">
+      <div class="w-8 h-8 bg-neutral-200 rounded-lg shrink-0 flex items-center justify-center text-neutral-400 text-xs">[img]</div>
+      <span class="text-sm font-medium text-neutral-700">{items[2].title}</span>
+    </div>
+
+    <div class="bg-neutral-50 rounded-xl p-4 flex items-center gap-3">
+      <div class="w-8 h-8 bg-neutral-200 rounded-lg shrink-0 flex items-center justify-center text-neutral-400 text-xs">[img]</div>
+      <span class="text-sm font-medium text-neutral-700">{items[3].title}</span>
+    </div>
+
+    <div class="bg-neutral-50 rounded-xl p-4 flex items-center gap-3">
+      <div class="w-8 h-8 bg-neutral-200 rounded-lg shrink-0 flex items-center justify-center text-neutral-400 text-xs">[img]</div>
+      <span class="text-sm font-medium text-neutral-700">{items[4].title}</span>
+    </div>
+
+    <div class="bg-neutral-50 rounded-xl p-4 flex items-center gap-3">
+      <div class="w-8 h-8 bg-neutral-200 rounded-lg shrink-0 flex items-center justify-center text-neutral-400 text-xs">[img]</div>
+      <span class="text-sm font-medium text-neutral-700">{items[5].title}</span>
+    </div>
+
+    <!-- Add more tiles as needed. 12 max. -->
+
+  </div>
+
+</section>
+
+
+<!-- ============================================================
+     VARIANT 2: cards
+     Larger cards with title and description. 3-6 items.
+     Use for use cases, example outputs, or featured items.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <!-- Section header: optional -->
+  <div class="mb-10">
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black text-balance">{headline}</h2>
+    <p class="mt-4 text-lg text-neutral-600 text-balance">{subheadline}</p>
+  </div>
+
+  <!-- Cards grid: 1 → 2 → 3 columns -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <!-- Card: wireframe at top, title and description below -->
+    <div class="bg-neutral-50 rounded-2xl overflow-hidden">
+      <!-- Wireframe C2 — mini card with preview -->
+      <div class="bg-neutral-100 aspect-[3/2] overflow-hidden relative">
+        <div class="flex flex-col h-full">
+          <div class="h-[40%] bg-neutral-200/60"></div>
+          <div class="flex-1 p-4 flex flex-col gap-2">
+            <div class="h-2 w-3/4 bg-neutral-300/60 rounded"></div>
+            <div class="h-2 w-1/2 bg-neutral-300/40 rounded"></div>
+            <div class="flex-1"></div>
+            <div class="flex gap-2">
+              <div class="h-4 w-12 bg-neutral-200 rounded-full"></div>
+              <div class="h-4 w-10 bg-neutral-200 rounded-full"></div>
+              <div class="h-4 w-14 bg-neutral-200 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+        <span class="absolute bottom-1.5 right-2.5 text-[10px] text-neutral-300">[img: {items[0].image}]</span>
+      </div>
+      <div class="p-6">
+        <div class="flex items-start justify-between gap-3 mb-2">
+          <h3 class="font-semibold text-black">{items[0].title}</h3>
+          <!-- Optional badge -->
+          <span class="text-xs bg-neutral-200 text-neutral-600 rounded-full px-2 py-0.5 shrink-0 mt-0.5">{items[0].badge}</span>
+        </div>
+        <p class="text-sm text-neutral-600 leading-relaxed">{items[0].description}</p>
+        <!-- Optional link -->
+        <a href="{items[0].url}" class="inline-flex items-center gap-1 text-sm font-medium text-black mt-4 hover:underline">
+          View example
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="bg-neutral-50 rounded-2xl overflow-hidden">
+      <!-- Wireframe C1 — mini list -->
+      <div class="bg-neutral-100 aspect-[3/2] overflow-hidden relative">
+        <div class="flex flex-col h-full p-4 gap-2">
+          <div class="h-2 w-1/2 bg-neutral-300/60 rounded"></div>
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-neutral-300/60 shrink-0"></div>
+            <div class="h-2 w-3/4 bg-neutral-300/40 rounded"></div>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-neutral-300/60 shrink-0"></div>
+            <div class="h-2 w-2/3 bg-neutral-300/40 rounded"></div>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-neutral-300/60 shrink-0"></div>
+            <div class="h-2 w-5/6 bg-neutral-300/40 rounded"></div>
+          </div>
+          <div class="flex-1"></div>
+          <div class="h-6 w-20 bg-neutral-300/60 rounded"></div>
+        </div>
+        <span class="absolute bottom-1.5 right-2.5 text-[10px] text-neutral-300">[img: {items[1].image}]</span>
+      </div>
+      <div class="p-6">
+        <h3 class="font-semibold text-black mb-2">{items[1].title}</h3>
+        <p class="text-sm text-neutral-600 leading-relaxed">{items[1].description}</p>
+      </div>
+    </div>
+
+    <div class="bg-neutral-50 rounded-2xl overflow-hidden">
+      <!-- Wireframe C2 — mini card with preview -->
+      <div class="bg-neutral-100 aspect-[3/2] overflow-hidden relative">
+        <div class="flex flex-col h-full">
+          <div class="h-[40%] bg-neutral-200/60"></div>
+          <div class="flex-1 p-4 flex flex-col gap-2">
+            <div class="h-2 w-3/4 bg-neutral-300/60 rounded"></div>
+            <div class="h-2 w-1/2 bg-neutral-300/40 rounded"></div>
+            <div class="flex-1"></div>
+            <div class="flex gap-2">
+              <div class="h-4 w-12 bg-neutral-200 rounded-full"></div>
+              <div class="h-4 w-10 bg-neutral-200 rounded-full"></div>
+              <div class="h-4 w-14 bg-neutral-200 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+        <span class="absolute bottom-1.5 right-2.5 text-[10px] text-neutral-300">[img: {items[2].image}]</span>
+      </div>
+      <div class="p-6">
+        <h3 class="font-semibold text-black mb-2">{items[2].title}</h3>
+        <p class="text-sm text-neutral-600 leading-relaxed">{items[2].description}</p>
+      </div>
+    </div>
+
+    <!-- Add more cards as needed. 6 max. -->
+
+  </div>
+
+</section>
+
+
+<!-- ============================================================
+     VARIANT 3: logo-cards
+     Cards with a prominent logo area and short description.
+     Use for partners, integrations with context, or featured customers.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <!-- Section header: optional -->
+  <div class="mb-10">
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black text-balance">{headline}</h2>
+    <p class="mt-4 text-lg text-neutral-600 text-balance">{subheadline}</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <!-- Logo card: large logo area on top, name and description below -->
+    <div class="bg-neutral-50 rounded-2xl p-6">
+      <!-- Logo placeholder: landscape ratio, centered -->
+      <div class="bg-neutral-100 rounded-lg h-16 flex items-center justify-center text-neutral-400 text-sm mb-4">[logo: {items[0].title}]</div>
+      <h3 class="font-semibold text-black mb-1">{items[0].title}</h3>
+      <p class="text-sm text-neutral-600 leading-relaxed">{items[0].description}</p>
+    </div>
+
+    <div class="bg-neutral-50 rounded-2xl p-6">
+      <div class="bg-neutral-100 rounded-lg h-16 flex items-center justify-center text-neutral-400 text-sm mb-4">[logo: {items[1].title}]</div>
+      <h3 class="font-semibold text-black mb-1">{items[1].title}</h3>
+      <p class="text-sm text-neutral-600 leading-relaxed">{items[1].description}</p>
+    </div>
+
+    <div class="bg-neutral-50 rounded-2xl p-6">
+      <div class="bg-neutral-100 rounded-lg h-16 flex items-center justify-center text-neutral-400 text-sm mb-4">[logo: {items[2].title}]</div>
+      <h3 class="font-semibold text-black mb-1">{items[2].title}</h3>
+      <p class="text-sm text-neutral-600 leading-relaxed">{items[2].description}</p>
+    </div>
+
+    <!-- Add more logo cards as needed. 6 max. -->
+
+  </div>
+
+</section>

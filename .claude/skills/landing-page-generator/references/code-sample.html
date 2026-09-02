@@ -1,0 +1,164 @@
+<!--
+  CODE SAMPLE SECTION REFERENCE
+  ==============================
+  HTML patterns for sections that show code blocks. Use for developer tools,
+  APIs, CLIs, or any product where showing the code IS the pitch.
+  Read this file to understand the available structures, then generate actual
+  content for the user's product by replacing {placeholder} tokens with real copy.
+
+  Design system: Tailwind CSS v4. Black/neutral palette on light background;
+  dark code blocks for contrast. No syntax highlighting colors — a designer
+  or developer will add those. Clean and typographic.
+
+  CONTENT SCHEMA
+  ==============
+  Optional:
+    headline     — Section headline. e.g. "Get started in 3 lines"
+    subheadline  — 1-2 sentences of supporting copy.
+    blocks       — Array of code block objects. 1-3 blocks.
+      .language    — Language identifier. e.g. "bash", "typescript", "python"
+                     Used as a display label only, not for actual highlighting.
+      .label       — Optional human label. e.g. "Install", "Initialize", "Query"
+                     Use when the language alone isn't descriptive enough.
+      .code        — The code content. Whitespace-sensitive — preserve indentation.
+
+  VARIANT SELECTION GUIDE
+  =======================
+  default     — Single code block, centered copy above. One clear action.
+                Use when there's one command that tells the whole story.
+  multi-step  — Numbered steps with a code block each. 2-3 steps.
+                Use for quickstart flows where sequence matters.
+  side-by-side — Copy left, code block right. Good for hero-adjacent positioning.
+                Use when you want to pair a value statement with a code example.
+
+  WRITING NOTES
+  =============
+  - Code should be real and runnable, not pseudocode. If you don't know the
+    exact syntax, write plausible-looking code and note it needs review.
+  - The language label should match common usage: "bash" not "shell",
+    "typescript" not "ts", "python" not "py".
+  - Labels ("Install", "Query") are optional — only add if the language alone
+    is ambiguous or if you're using multi-step and want clear step titles.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: default
+     Centered copy above a single code block.
+     Use when one command or snippet tells the full story.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <!-- Centered copy: headline and subheadline -->
+  <div class="max-w-2xl mb-8">
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black text-balance">{headline}</h2>
+    <p class="mt-4 text-lg text-neutral-600 text-balance">{subheadline}</p>
+  </div>
+
+  <!-- Code block -->
+  <div class="max-w-2xl">
+    <!-- Language/label bar -->
+    <div class="bg-neutral-800 rounded-t-xl px-6 py-2 flex items-center justify-between">
+      <span class="text-xs text-neutral-400 font-mono">{blocks[0].language}</span>
+      <!-- Optional label -->
+      <span class="text-xs text-neutral-500">{blocks[0].label}</span>
+    </div>
+    <!-- Code content: dark background, monospace, scrollable horizontally -->
+    <div class="bg-neutral-900 rounded-b-xl px-6 py-5 overflow-x-auto">
+      <pre class="text-sm font-mono text-neutral-100 leading-relaxed whitespace-pre">{blocks[0].code}</pre>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ============================================================
+     VARIANT 2: multi-step
+     Numbered steps, each with a code block. 2-3 steps.
+     Use for quickstart flows: install, configure, run.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <!-- Section header -->
+  <div class="mb-10">
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black text-balance">{headline}</h2>
+    <p class="mt-4 text-lg text-neutral-600 text-balance">{subheadline}</p>
+  </div>
+
+  <div class="space-y-8 max-w-2xl">
+
+    <!-- Step 1 -->
+    <div>
+      <div class="flex items-center gap-3 mb-3">
+        <!-- Step number badge -->
+        <span class="w-6 h-6 rounded-full bg-black text-white text-xs font-bold flex items-center justify-center shrink-0">1</span>
+        <span class="font-semibold text-black">{blocks[0].label}</span>
+      </div>
+      <div class="bg-neutral-800 rounded-t-xl px-6 py-2">
+        <span class="text-xs text-neutral-400 font-mono">{blocks[0].language}</span>
+      </div>
+      <div class="bg-neutral-900 rounded-b-xl px-6 py-5 overflow-x-auto">
+        <pre class="text-sm font-mono text-neutral-100 leading-relaxed whitespace-pre">{blocks[0].code}</pre>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div>
+      <div class="flex items-center gap-3 mb-3">
+        <span class="w-6 h-6 rounded-full bg-black text-white text-xs font-bold flex items-center justify-center shrink-0">2</span>
+        <span class="font-semibold text-black">{blocks[1].label}</span>
+      </div>
+      <div class="bg-neutral-800 rounded-t-xl px-6 py-2">
+        <span class="text-xs text-neutral-400 font-mono">{blocks[1].language}</span>
+      </div>
+      <div class="bg-neutral-900 rounded-b-xl px-6 py-5 overflow-x-auto">
+        <pre class="text-sm font-mono text-neutral-100 leading-relaxed whitespace-pre">{blocks[1].code}</pre>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div>
+      <div class="flex items-center gap-3 mb-3">
+        <span class="w-6 h-6 rounded-full bg-black text-white text-xs font-bold flex items-center justify-center shrink-0">3</span>
+        <span class="font-semibold text-black">{blocks[2].label}</span>
+      </div>
+      <div class="bg-neutral-800 rounded-t-xl px-6 py-2">
+        <span class="text-xs text-neutral-400 font-mono">{blocks[2].language}</span>
+      </div>
+      <div class="bg-neutral-900 rounded-b-xl px-6 py-5 overflow-x-auto">
+        <pre class="text-sm font-mono text-neutral-100 leading-relaxed whitespace-pre">{blocks[2].code}</pre>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ============================================================
+     VARIANT 3: side-by-side
+     Value copy on the left, code block on the right.
+     Use when you want to pair a benefit statement with example code.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+
+    <!-- Left: copy -->
+    <div>
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black text-balance mb-4">{headline}</h2>
+      <p class="text-lg text-neutral-600 text-balance">{subheadline}</p>
+    </div>
+
+    <!-- Right: code block -->
+    <div>
+      <div class="bg-neutral-800 rounded-t-xl px-6 py-2 flex items-center justify-between">
+        <span class="text-xs text-neutral-400 font-mono">{blocks[0].language}</span>
+        <span class="text-xs text-neutral-500">{blocks[0].label}</span>
+      </div>
+      <div class="bg-neutral-900 rounded-b-xl px-6 py-5 overflow-x-auto">
+        <pre class="text-sm font-mono text-neutral-100 leading-relaxed whitespace-pre">{blocks[0].code}</pre>
+      </div>
+    </div>
+
+  </div>
+</section>

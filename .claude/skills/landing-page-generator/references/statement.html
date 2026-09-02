@@ -1,0 +1,70 @@
+<!--
+  STATEMENT SECTION REFERENCE
+  ============================
+  HTML pattern for a single bold full-width claim. The simplest section type.
+  One headline, nothing else. Use it to punctuate a page — create a moment
+  of stillness between denser sections. Read this file and generate content
+  by replacing {placeholder} tokens with real copy.
+
+  Design system: Tailwind CSS v4. Black/neutral palette. No gradients,
+  no shadows, no decorative color. Clean and typographic.
+
+  CONTENT SCHEMA
+  ==============
+  Required:
+    headline   — The claim. 1-2 sentences max. Should be the most confident,
+                 most assertive line on the page. Can include **bold** markers
+                 to emphasize specific words or phrases — render as <strong>.
+
+  VARIANT SELECTION GUIDE
+  =======================
+  default     — Full-width centered headline. Black text on white.
+                Use for a confident brand statement between sections.
+  ruled       — Headline with top and bottom border rules.
+                Use when you want more visual weight and separation.
+
+  USAGE NOTES
+  ===========
+  - This section does one thing: state a conviction. Don't add subheadlines,
+    CTAs, or supporting copy. That defeats the point.
+  - The line should be something only this product could say. Generic claims
+    ("We believe in the future of work") belong in the trash.
+  - Good: "Most founders know what they want to say. They just need someone
+    to help them say it clearly."
+  - Use <strong> tags around the words that deserve emphasis when rendering.
+    In the schema, **bold markers** denote these words.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: default
+     Centered headline, generous vertical padding. That's it.
+     ============================================================ -->
+<section class="py-16 md:py-24">
+  <div class="text-center max-w-3xl mx-auto px-4">
+    <!--
+      Render **bold** markers as <strong> tags.
+      Example: "The best homepage is one that **actually ships**."
+      Becomes: The best homepage is one that <strong>actually ships</strong>.
+    -->
+    <p class="text-3xl md:text-4xl font-bold text-black leading-snug text-balance">
+      {headline}
+    </p>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     VARIANT 2: ruled
+     Top and bottom border rules frame the headline.
+     Adds visual weight without color or decoration.
+     ============================================================ -->
+<section class="py-16 md:py-20">
+  <div class="border-y border-neutral-200 py-12">
+    <div class="text-center max-w-3xl mx-auto px-4">
+      <p class="text-3xl md:text-4xl font-bold text-black leading-snug text-balance">
+        {headline}
+      </p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,259 @@
+<!--
+  PRICING SECTION REFERENCE
+  =========================
+  HTML patterns for both pricing variants. Read this file to understand
+  the available structures, then generate actual content for the user's
+  product by replacing {placeholder} tokens with real copy.
+
+  Design system: Tailwind CSS v4. Black/neutral palette. No gradients,
+  no shadows, no decorative color. Clean and typographic.
+
+  CONTENT SCHEMA
+  ==============
+  Required:
+    plans          — Array of plan objects (see below). 1–4 plans typical.
+      .name         — Plan name. e.g. "Starter", "Pro", "Enterprise"
+      .price        — Price string. e.g. "$29/mo", "Free", "Custom"
+      .features     — string[] — list of what's included. 4–8 items.
+      .cta          — { text: string, href: string }
+    variant        — 'default' | 'single'
+
+  Optional:
+    eyebrow        — Short label above the headline.
+    headline       — Section headline. e.g. "Simple pricing"
+    plans[].highlighted  — boolean — marks the recommended plan.
+    plans[].badge        — string — badge text, e.g. "Most popular"
+    guarantee      — Trust line below the plans. e.g. "30-day money-back guarantee"
+
+  VARIANT SELECTION GUIDE
+  =======================
+  default         — Use for 2–4 plans. Highlighted plan draws the eye.
+                    Non-highlighted plans use a secondary button; highlighted
+                    plan uses a primary (black) button.
+  single          — Use when there's only one plan or one main offer.
+                    Spacious layout with price and CTA prominent at the top,
+                    features listed in a grid below.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: default
+     Multi-plan grid. Highlighted plan stands out with white
+     background + border + primary CTA. Non-highlighted plans
+     sit on neutral-50 with a secondary CTA.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <!-- Section header -->
+  <div class="mb-10">
+    <p class="text-sm font-medium uppercase tracking-wider text-neutral-500 mb-2">{eyebrow}</p>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black text-balance">{headline}</h2>
+  </div>
+
+  <!-- Plan grid: 1 col → 2 col → 3 col.
+       For 2 plans: remove lg:grid-cols-3, add max-w-2xl.
+       For 4 plans: use lg:grid-cols-4 or consider two rows. -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+    <!-- Non-highlighted plan -->
+    <div class="bg-neutral-50 rounded-2xl p-8 flex flex-col">
+      <div class="mb-6">
+        <p class="text-sm font-medium text-neutral-500 mb-1">{plans[0].name}</p>
+        <p class="text-4xl font-bold text-black">{plans[0].price}</p>
+      </div>
+
+      <ul class="space-y-3 mb-8 flex-1">
+        <li class="flex items-start gap-2.5 text-sm text-neutral-600">
+          <svg class="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+          </svg>
+          {plans[0].features[0]}
+        </li>
+        <li class="flex items-start gap-2.5 text-sm text-neutral-600">
+          <svg class="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+          </svg>
+          {plans[0].features[1]}
+        </li>
+        <li class="flex items-start gap-2.5 text-sm text-neutral-600">
+          <svg class="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+          </svg>
+          {plans[0].features[2]}
+        </li>
+        <!-- Add more feature items as needed. -->
+      </ul>
+
+      <!-- Secondary CTA for non-highlighted plan -->
+      <a href="{plans[0].cta.href}" class="block text-center px-6 py-3 text-sm font-medium text-black border border-neutral-300 rounded-lg hover:bg-neutral-100 transition-colors">
+        {plans[0].cta.text}
+      </a>
+    </div>
+
+    <!-- Highlighted (recommended) plan: white bg, border, primary CTA -->
+    <div class="border border-neutral-200 bg-white rounded-2xl p-8 flex flex-col">
+      <div class="mb-6">
+        <!-- Badge: only render if plans[1].badge exists -->
+        <span class="inline-block text-xs font-medium bg-black text-white rounded-full px-2.5 py-0.5 mb-2">{plans[1].badge}</span>
+        <p class="text-sm font-medium text-neutral-500 mb-1">{plans[1].name}</p>
+        <p class="text-4xl font-bold text-black">{plans[1].price}</p>
+      </div>
+
+      <ul class="space-y-3 mb-8 flex-1">
+        <li class="flex items-start gap-2.5 text-sm text-neutral-600">
+          <svg class="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+          </svg>
+          {plans[1].features[0]}
+        </li>
+        <li class="flex items-start gap-2.5 text-sm text-neutral-600">
+          <svg class="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+          </svg>
+          {plans[1].features[1]}
+        </li>
+        <li class="flex items-start gap-2.5 text-sm text-neutral-600">
+          <svg class="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+          </svg>
+          {plans[1].features[2]}
+        </li>
+        <!-- Add more feature items as needed. -->
+      </ul>
+
+      <!-- Primary CTA: black background -->
+      <a href="{plans[1].cta.href}" class="block text-center px-6 py-3 text-sm font-medium text-white bg-black rounded-lg hover:bg-neutral-800 transition-colors">
+        {plans[1].cta.text}
+      </a>
+    </div>
+
+    <!-- Third non-highlighted plan (if 3 plans) -->
+    <div class="bg-neutral-50 rounded-2xl p-8 flex flex-col">
+      <div class="mb-6">
+        <p class="text-sm font-medium text-neutral-500 mb-1">{plans[2].name}</p>
+        <p class="text-4xl font-bold text-black">{plans[2].price}</p>
+      </div>
+
+      <ul class="space-y-3 mb-8 flex-1">
+        <li class="flex items-start gap-2.5 text-sm text-neutral-600">
+          <svg class="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+          </svg>
+          {plans[2].features[0]}
+        </li>
+        <li class="flex items-start gap-2.5 text-sm text-neutral-600">
+          <svg class="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+          </svg>
+          {plans[2].features[1]}
+        </li>
+        <li class="flex items-start gap-2.5 text-sm text-neutral-600">
+          <svg class="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+          </svg>
+          {plans[2].features[2]}
+        </li>
+        <!-- Add more feature items as needed. -->
+      </ul>
+
+      <a href="{plans[2].cta.href}" class="block text-center px-6 py-3 text-sm font-medium text-black border border-neutral-300 rounded-lg hover:bg-neutral-100 transition-colors">
+        {plans[2].cta.text}
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Guarantee line: appears below all plans if present -->
+  <p class="text-sm text-neutral-500 mt-8 text-center">{guarantee}</p>
+
+</section>
+
+
+<!-- ============================================================
+     VARIANT 2: single
+     One-plan layout. Spacious card with price + CTA in a flex
+     row at the top, features in a 3-column grid below.
+     Use when there's one clear offer or a simple free trial.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <!-- Section header -->
+  <div class="mb-10">
+    <p class="text-sm font-medium uppercase tracking-wider text-neutral-500 mb-2">{eyebrow}</p>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black text-balance">{headline}</h2>
+  </div>
+
+  <!-- Single plan card -->
+  <div class="bg-neutral-50 rounded-2xl p-8 md:p-12">
+
+    <!-- Price + CTA row: flex at md+, stacked on mobile -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
+
+      <div>
+        <!-- Badge: only render if plans[0].badge exists -->
+        <span class="inline-block text-xs font-medium bg-black text-white rounded-full px-2.5 py-0.5 mb-2">{plans[0].badge}</span>
+        <p class="text-sm font-medium text-neutral-500 mb-1">{plans[0].name}</p>
+        <p class="text-5xl font-bold text-black">{plans[0].price}</p>
+      </div>
+
+      <a href="{plans[0].cta.href}" class="inline-flex items-center justify-center px-8 py-3.5 text-base font-medium text-white bg-black rounded-lg hover:bg-neutral-800 transition-colors shrink-0">
+        {plans[0].cta.text}
+      </a>
+
+    </div>
+
+    <!-- Features grid: 3 columns at md+ -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+      <div class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+        </svg>
+        <span class="text-sm text-neutral-600">{plans[0].features[0]}</span>
+      </div>
+
+      <div class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+        </svg>
+        <span class="text-sm text-neutral-600">{plans[0].features[1]}</span>
+      </div>
+
+      <div class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+        </svg>
+        <span class="text-sm text-neutral-600">{plans[0].features[2]}</span>
+      </div>
+
+      <div class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+        </svg>
+        <span class="text-sm text-neutral-600">{plans[0].features[3]}</span>
+      </div>
+
+      <div class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+        </svg>
+        <span class="text-sm text-neutral-600">{plans[0].features[4]}</span>
+      </div>
+
+      <div class="flex items-start gap-2.5">
+        <svg class="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+        </svg>
+        <span class="text-sm text-neutral-600">{plans[0].features[5]}</span>
+      </div>
+
+      <!-- Add more feature items as needed. -->
+
+    </div>
+
+  </div>
+
+  <!-- Guarantee line -->
+  <p class="text-sm text-neutral-500 mt-6 text-center">{guarantee}</p>
+
+</section>

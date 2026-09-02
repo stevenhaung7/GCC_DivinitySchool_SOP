@@ -1,0 +1,117 @@
+<!--
+  FOUNDER STORY SECTION REFERENCE
+  =================================
+  HTML patterns for a personal narrative from the founder. Humanizes the product
+  by telling the "why we built this" story. Read this file to understand the
+  available structures, then generate actual content for the user's product
+  by replacing {placeholder} tokens with real copy.
+
+  Design system: Tailwind CSS v4. Black/neutral palette. No gradients,
+  no shadows, no decorative color. Clean and typographic.
+
+  CONTENT SCHEMA
+  ==============
+  Required:
+    headline      — Section headline. Typically a short, personal statement.
+                    e.g. "Why I built this" or "I was the problem."
+    story         — The narrative. Plain text, 2-5 paragraphs. Write in first person.
+                    Separate paragraphs with newlines in the source; they'll render
+                    as individual <p> tags.
+    founderName   — Full name of the founder.
+
+  Optional:
+    founderRole   — Short title. e.g. "Founder, Acme" or "CEO & co-founder"
+    signature     — Whether to include a signature line. Renders founderName in
+                    a cursive-adjacent style.
+    image         — Description of founder photo. A designer will replace with real image.
+
+  VARIANT SELECTION GUIDE
+  =======================
+  default         — Narrative text with founder info below. Most common.
+                    Use when the story itself is the main content.
+  with-photo      — Photo left, story right. Side-by-side at md+.
+                    Use when a personal photo adds credibility and warmth.
+
+  WRITING NOTES
+  =============
+  - The story should sound like a person, not a press release. First person, direct.
+  - Good founder stories follow: the problem I hit → what I tried → why it failed
+    → what I built instead. Keep it honest.
+  - Avoid: "I'm passionate about X", "disrupting the Y space", "I realized that..."
+  - The headline should hook. Not "About the founder." Something like:
+    "I wasted six months on the wrong homepage."
+  - Signature is a nice touch but entirely optional. Don't force it.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: default
+     Full-width narrative. Story text, then founder attribution below.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <!-- Headline: personal, specific, hooks the reader -->
+  <div class="max-w-2xl mb-8">
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black text-balance">{headline}</h2>
+  </div>
+
+  <!-- Story: one <p> per paragraph. max-w-2xl for readable line length. -->
+  <div class="max-w-2xl space-y-5 text-neutral-600 leading-relaxed mb-10">
+    <!-- Repeat <p> tags for each paragraph of the story. 2-5 paragraphs. -->
+    <p>{story.paragraph1}</p>
+    <p>{story.paragraph2}</p>
+    <p>{story.paragraph3}</p>
+    <!-- Add more paragraphs as needed. -->
+  </div>
+
+  <!-- Founder attribution: photo placeholder + name + role -->
+  <div class="flex items-center gap-4 max-w-2xl">
+    <!-- Avatar placeholder: rendered if image available -->
+    <div class="w-12 h-12 rounded-full bg-neutral-200 overflow-hidden shrink-0">
+      <!-- [img: {image}] -->
+    </div>
+    <div>
+      <!-- Optional signature: founderName in a hand-written style -->
+      <!-- Only render the signature block if signature is requested. -->
+      <p class="font-['Georgia',serif] italic text-xl text-neutral-500 leading-none mb-0.5">{founderName}</p>
+      <p class="text-sm text-neutral-500">{founderRole}</p>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ============================================================
+     VARIANT 2: with-photo
+     Photo left, story right. Side-by-side on md+ screens.
+     Use when a founder photo adds credibility and warmth.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+
+    <!-- Left: founder photo -->
+    <div>
+      <!-- Photo placeholder: square or portrait aspect ratio. -->
+      <div class="bg-neutral-100 rounded-2xl aspect-square flex items-center justify-center text-neutral-400 text-sm">
+        [img: {image}]
+      </div>
+      <!-- Attribution below photo on desktop -->
+      <div class="mt-4">
+        <p class="font-['Georgia',serif] italic text-xl text-neutral-500 leading-none mb-0.5">{founderName}</p>
+        <p class="text-sm text-neutral-500">{founderRole}</p>
+      </div>
+    </div>
+
+    <!-- Right: headline + story -->
+    <div>
+      <h2 class="text-3xl font-bold tracking-tight text-black text-balance mb-6">{headline}</h2>
+      <div class="space-y-5 text-neutral-600 leading-relaxed">
+        <p>{story.paragraph1}</p>
+        <p>{story.paragraph2}</p>
+        <p>{story.paragraph3}</p>
+        <!-- Add more paragraphs as needed. -->
+      </div>
+    </div>
+
+  </div>
+</section>

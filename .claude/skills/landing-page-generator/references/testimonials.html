@@ -1,0 +1,215 @@
+<!--
+  TESTIMONIALS SECTION REFERENCE
+  ================================
+  HTML patterns for all 3 testimonials variants. Read this file to understand
+  the available structures, then generate actual content for the user's
+  product by replacing {placeholder} tokens with real copy.
+
+  Design system: Tailwind CSS v4. Black/neutral palette. No gradients,
+  no shadows, no decorative color. Clean and typographic.
+
+  CONTENT SCHEMA
+  ==============
+  Required:
+    testimonials   — Array of testimonial objects. 1–6 items depending on variant.
+      .quote        — The quote itself. 1–3 sentences max. Real words from a real user.
+                      Specific beats generic. "Shipped in 2 hours" beats "Really helpful."
+      .author       — Name of the person.
+    variant        — 'default' | 'featured' | 'with-results'
+
+  Optional:
+    eyebrow        — Short label above the headline.
+    headline       — Section headline. e.g. "What founders say"
+    testimonials[].role   — Job title or company. e.g. "Founder, Acme Co."
+    testimonials[].image  — Description of avatar image.
+    testimonials[].metric — A specific result. e.g. "40% increase in signups"
+                            Used in with-results variant only.
+
+  VARIANT SELECTION GUIDE
+  =======================
+  default         — Vertical stack of quotes. Clean left-border style.
+                    Use when you have 3–6 good quotes and want them all visible.
+                    Best for text-heavy proof without metrics.
+  featured        — Single large quote. Centered, prominent.
+                    Use when you have one outstanding testimonial that does real
+                    selling work. Pick the most specific, most credible quote.
+  with-results    — Grid of cards, each with a metric at the top.
+                    Use when customers have measurable outcomes to share.
+                    The metric is the headline; the quote provides context.
+
+  WRITING NOTES
+  =============
+  - Never write generic quotes like "This product is amazing, highly recommend."
+  - Good quotes are specific: time saved, problem solved, outcome achieved.
+  - If you don't have real quotes, write plausible-sounding ones that fit the product.
+  - Roles add credibility. Include them when available.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: default
+     Vertical stack of quotes. Left border adds visual rhythm.
+     Avatar is small (w-8 h-8). Use for 3–6 testimonials.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <!-- Section header: optional. -->
+  <div class="mb-10">
+    <p class="text-sm font-medium uppercase tracking-wider text-neutral-500 mb-2">{eyebrow}</p>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black text-balance">{headline}</h2>
+  </div>
+
+  <!-- Testimonial stack: space-y-12 gives breathing room between quotes. -->
+  <div class="space-y-12 max-w-2xl">
+
+    <!-- Testimonial item: left border as visual accent. -->
+    <blockquote class="border-l-2 border-neutral-200 pl-6">
+      <p class="text-lg font-medium text-black mb-4 text-balance">&ldquo;{testimonials[0].quote}&rdquo;</p>
+      <footer class="flex items-center gap-3">
+        <!-- Avatar: render if image available, else skip this div. -->
+        <div class="w-8 h-8 rounded-full bg-neutral-200 overflow-hidden shrink-0">
+          <!-- [img: {testimonials[0].image}] -->
+        </div>
+        <div>
+          <span class="text-sm font-semibold text-black">{testimonials[0].author}</span>
+          <span class="text-sm text-neutral-500">, {testimonials[0].role}</span>
+        </div>
+      </footer>
+    </blockquote>
+
+    <blockquote class="border-l-2 border-neutral-200 pl-6">
+      <p class="text-lg font-medium text-black mb-4 text-balance">&ldquo;{testimonials[1].quote}&rdquo;</p>
+      <footer class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-neutral-200 overflow-hidden shrink-0">
+          <!-- [img: {testimonials[1].image}] -->
+        </div>
+        <div>
+          <span class="text-sm font-semibold text-black">{testimonials[1].author}</span>
+          <span class="text-sm text-neutral-500">, {testimonials[1].role}</span>
+        </div>
+      </footer>
+    </blockquote>
+
+    <blockquote class="border-l-2 border-neutral-200 pl-6">
+      <p class="text-lg font-medium text-black mb-4 text-balance">&ldquo;{testimonials[2].quote}&rdquo;</p>
+      <footer class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-neutral-200 overflow-hidden shrink-0">
+          <!-- [img: {testimonials[2].image}] -->
+        </div>
+        <div>
+          <span class="text-sm font-semibold text-black">{testimonials[2].author}</span>
+          <span class="text-sm text-neutral-500">, {testimonials[2].role}</span>
+        </div>
+      </footer>
+    </blockquote>
+
+    <!-- Add more testimonial items as needed. -->
+
+  </div>
+
+</section>
+
+
+<!-- ============================================================
+     VARIANT 2: featured
+     Single large quote. Use your strongest testimonial here.
+     Large text, larger avatar. No surrounding distractions.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <!-- Section header: optional for this variant. Keep it minimal. -->
+  <div class="mb-10">
+    <p class="text-sm font-medium uppercase tracking-wider text-neutral-500 mb-2">{eyebrow}</p>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black text-balance">{headline}</h2>
+  </div>
+
+  <!-- Single featured quote: max-w-2xl keeps it readable. -->
+  <blockquote class="max-w-2xl">
+    <p class="text-xl md:text-2xl font-medium text-black mb-6 text-balance leading-snug">&ldquo;{testimonials[0].quote}&rdquo;</p>
+    <footer class="flex items-center gap-4">
+      <!-- Larger avatar: w-12 h-12 -->
+      <div class="w-12 h-12 rounded-full bg-neutral-200 overflow-hidden shrink-0">
+        <!-- [img: {testimonials[0].image}] -->
+      </div>
+      <div>
+        <p class="font-semibold text-black">{testimonials[0].author}</p>
+        <p class="text-sm text-neutral-500">{testimonials[0].role}</p>
+      </div>
+    </footer>
+  </blockquote>
+
+</section>
+
+
+<!-- ============================================================
+     VARIANT 3: with-results
+     Grid cards with a metric at the top of each card.
+     The metric is the first thing readers see; the quote elaborates.
+     Use when customers have specific, measurable outcomes.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <!-- Section header -->
+  <div class="mb-10">
+    <p class="text-sm font-medium uppercase tracking-wider text-neutral-500 mb-2">{eyebrow}</p>
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black text-balance">{headline}</h2>
+  </div>
+
+  <!-- Results grid: 1 col → 2 col → 3 col -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+    <!-- Results card: metric at top, quote below, author at bottom. -->
+    <div class="bg-neutral-50 rounded-2xl p-6 flex flex-col">
+      <!-- Metric: the quantified result. This is the headline of the card. -->
+      <p class="text-2xl font-bold text-black mb-3">{testimonials[0].metric}</p>
+      <blockquote class="flex-1">
+        <p class="text-sm text-neutral-600 leading-relaxed mb-4">&ldquo;{testimonials[0].quote}&rdquo;</p>
+        <footer class="flex items-center gap-2.5 mt-auto">
+          <div class="w-8 h-8 rounded-full bg-neutral-200 overflow-hidden shrink-0">
+            <!-- [img: {testimonials[0].image}] -->
+          </div>
+          <div>
+            <span class="text-sm font-semibold text-black">{testimonials[0].author}</span>
+            <span class="text-sm text-neutral-500">, {testimonials[0].role}</span>
+          </div>
+        </footer>
+      </blockquote>
+    </div>
+
+    <div class="bg-neutral-50 rounded-2xl p-6 flex flex-col">
+      <p class="text-2xl font-bold text-black mb-3">{testimonials[1].metric}</p>
+      <blockquote class="flex-1">
+        <p class="text-sm text-neutral-600 leading-relaxed mb-4">&ldquo;{testimonials[1].quote}&rdquo;</p>
+        <footer class="flex items-center gap-2.5 mt-auto">
+          <div class="w-8 h-8 rounded-full bg-neutral-200 overflow-hidden shrink-0">
+            <!-- [img: {testimonials[1].image}] -->
+          </div>
+          <div>
+            <span class="text-sm font-semibold text-black">{testimonials[1].author}</span>
+            <span class="text-sm text-neutral-500">, {testimonials[1].role}</span>
+          </div>
+        </footer>
+      </blockquote>
+    </div>
+
+    <div class="bg-neutral-50 rounded-2xl p-6 flex flex-col">
+      <p class="text-2xl font-bold text-black mb-3">{testimonials[2].metric}</p>
+      <blockquote class="flex-1">
+        <p class="text-sm text-neutral-600 leading-relaxed mb-4">&ldquo;{testimonials[2].quote}&rdquo;</p>
+        <footer class="flex items-center gap-2.5 mt-auto">
+          <div class="w-8 h-8 rounded-full bg-neutral-200 overflow-hidden shrink-0">
+            <!-- [img: {testimonials[2].image}] -->
+          </div>
+          <div>
+            <span class="text-sm font-semibold text-black">{testimonials[2].author}</span>
+            <span class="text-sm text-neutral-500">, {testimonials[2].role}</span>
+          </div>
+        </footer>
+      </blockquote>
+    </div>
+
+    <!-- Add more result cards as needed. -->
+
+  </div>
+
+</section>

@@ -1,0 +1,134 @@
+<!--
+  NAVBAR SECTION REFERENCE
+  ========================
+  HTML patterns for a responsive SaaS navigation bar. This sits at the
+  top of every generated page, above the hero section. Read this file to
+  understand the available structures, then generate actual content for
+  the user's product by replacing {placeholder} tokens with real copy.
+
+  Design system: Tailwind CSS v4. Black/neutral palette. No gradients,
+  no shadows, no decorative color. Clean and typographic.
+
+  CONTENT SCHEMA
+  ==============
+  Required:
+    productName  — Brand/product name shown as logo text.
+    navLinks     — { text: string, href: string }[] — 3-5 navigation items.
+    ctaButton    — { text: string, href: string } — Primary CTA in the navbar.
+
+  Optional:
+    logoImage    — Path to SVG/PNG/JPG logo file. When provided, replaces
+                   the text logo. Only used in the with-logo-placeholder variant.
+
+  VARIANT SELECTION GUIDE
+  =======================
+  default              — Text logo + nav links + CTA button. Use when no logo
+                         file is available (most common for generated pages).
+  with-logo-placeholder — Includes an image placeholder slot next to the product
+                          name. Use when the user has a logo file to include.
+
+  NOTE ON LOGO PLACEHOLDERS
+  =========================
+  The text logo uses the product name as a bold wordmark. A designer can
+  replace this with an actual SVG/PNG logo. The with-logo-placeholder
+  variant includes an explicit image slot for this purpose.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: default
+     Text logo + horizontal nav + CTA button. Responsive with
+     hamburger menu on mobile.
+     ============================================================ -->
+<nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-neutral-200">
+  <div class="max-w-5xl mx-auto px-8">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Logo: product name as text wordmark -->
+      <a href="/" class="text-lg font-bold text-black tracking-tight shrink-0">{productName}</a>
+
+      <!-- Desktop nav links -->
+      <div class="hidden md:flex items-center gap-8">
+        <a href="{navLinks[0].href}" class="text-sm font-medium text-neutral-600 hover:text-black transition-colors">{navLinks[0].text}</a>
+        <a href="{navLinks[1].href}" class="text-sm font-medium text-neutral-600 hover:text-black transition-colors">{navLinks[1].text}</a>
+        <a href="{navLinks[2].href}" class="text-sm font-medium text-neutral-600 hover:text-black transition-colors">{navLinks[2].text}</a>
+        <a href="{navLinks[3].href}" class="text-sm font-medium text-neutral-600 hover:text-black transition-colors">{navLinks[3].text}</a>
+        <!-- Add more nav links here if needed. 5 max. -->
+      </div>
+
+      <!-- Desktop CTA button -->
+      <div class="hidden md:block">
+        <a href="{ctaButton.href}" class="inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-white bg-black rounded-lg hover:bg-neutral-800 transition-colors">{ctaButton.text}</a>
+      </div>
+
+      <!-- Mobile hamburger button -->
+      <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="md:hidden p-2 text-neutral-600 hover:text-black" aria-label="Toggle menu">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+        </svg>
+      </button>
+
+    </div>
+
+    <!-- Mobile menu (hidden by default) -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-neutral-100 py-4 space-y-3">
+      <a href="{navLinks[0].href}" class="block text-sm font-medium text-neutral-600 hover:text-black transition-colors">{navLinks[0].text}</a>
+      <a href="{navLinks[1].href}" class="block text-sm font-medium text-neutral-600 hover:text-black transition-colors">{navLinks[1].text}</a>
+      <a href="{navLinks[2].href}" class="block text-sm font-medium text-neutral-600 hover:text-black transition-colors">{navLinks[2].text}</a>
+      <a href="{navLinks[3].href}" class="block text-sm font-medium text-neutral-600 hover:text-black transition-colors">{navLinks[3].text}</a>
+      <a href="{ctaButton.href}" class="inline-flex items-center justify-center w-full px-5 py-2.5 text-sm font-medium text-white bg-black rounded-lg hover:bg-neutral-800 transition-colors mt-2">{ctaButton.text}</a>
+    </div>
+
+  </div>
+</nav>
+
+
+<!-- ============================================================
+     VARIANT 2: with-logo-placeholder
+     Image logo slot + text fallback + nav + CTA. Use when the user
+     has an actual logo file (SVG/PNG/JPG) to display.
+     ============================================================ -->
+<nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-neutral-200">
+  <div class="max-w-5xl mx-auto px-8">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Logo: image + text fallback -->
+      <a href="/" class="flex items-center gap-2.5 shrink-0">
+        <!-- Logo image placeholder — replace src with actual logo file -->
+        <div class="w-8 h-8 bg-neutral-100 rounded-md flex items-center justify-center text-neutral-400 text-xs">[logo]</div>
+        <span class="text-lg font-bold text-black tracking-tight">{productName}</span>
+      </a>
+
+      <!-- Desktop nav links -->
+      <div class="hidden md:flex items-center gap-8">
+        <a href="{navLinks[0].href}" class="text-sm font-medium text-neutral-600 hover:text-black transition-colors">{navLinks[0].text}</a>
+        <a href="{navLinks[1].href}" class="text-sm font-medium text-neutral-600 hover:text-black transition-colors">{navLinks[1].text}</a>
+        <a href="{navLinks[2].href}" class="text-sm font-medium text-neutral-600 hover:text-black transition-colors">{navLinks[2].text}</a>
+        <a href="{navLinks[3].href}" class="text-sm font-medium text-neutral-600 hover:text-black transition-colors">{navLinks[3].text}</a>
+      </div>
+
+      <!-- Desktop CTA button -->
+      <div class="hidden md:block">
+        <a href="{ctaButton.href}" class="inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-white bg-black rounded-lg hover:bg-neutral-800 transition-colors">{ctaButton.text}</a>
+      </div>
+
+      <!-- Mobile hamburger button -->
+      <button onclick="document.getElementById('mobile-menu-logo').classList.toggle('hidden')" class="md:hidden p-2 text-neutral-600 hover:text-black" aria-label="Toggle menu">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+        </svg>
+      </button>
+
+    </div>
+
+    <!-- Mobile menu (hidden by default) -->
+    <div id="mobile-menu-logo" class="hidden md:hidden border-t border-neutral-100 py-4 space-y-3">
+      <a href="{navLinks[0].href}" class="block text-sm font-medium text-neutral-600 hover:text-black transition-colors">{navLinks[0].text}</a>
+      <a href="{navLinks[1].href}" class="block text-sm font-medium text-neutral-600 hover:text-black transition-colors">{navLinks[1].text}</a>
+      <a href="{navLinks[2].href}" class="block text-sm font-medium text-neutral-600 hover:text-black transition-colors">{navLinks[2].text}</a>
+      <a href="{navLinks[3].href}" class="block text-sm font-medium text-neutral-600 hover:text-black transition-colors">{navLinks[3].text}</a>
+      <a href="{ctaButton.href}" class="inline-flex items-center justify-center w-full px-5 py-2.5 text-sm font-medium text-white bg-black rounded-lg hover:bg-neutral-800 transition-colors mt-2">{ctaButton.text}</a>
+    </div>
+
+  </div>
+</nav>

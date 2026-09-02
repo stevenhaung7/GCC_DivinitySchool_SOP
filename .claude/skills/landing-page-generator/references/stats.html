@@ -1,0 +1,121 @@
+<!--
+  STATS SECTION REFERENCE
+  =======================
+  HTML patterns for social proof statistics sections. Read this file to
+  understand the available structures, then generate actual content for
+  the user's product by replacing {placeholder} tokens with real copy.
+
+  Design system: Tailwind CSS v4. Black/neutral palette. No gradients,
+  no shadows, no decorative color. Clean and typographic.
+
+  CONTENT SCHEMA
+  ==============
+  Optional:
+    stats      — Array<{ value: string, label: string, context?: string }>
+                 2-4 items. Each stat must be real and specific.
+                 value    — The number: "2,000+", "94%", "$2M"
+                 label    — What it measures: "founders helped", "time saved"
+                 context  — One short sentence of detail. Only use if meaningful.
+    proofStat  — Single sentence of aggregate social proof. Use when you only
+                 have one number worth stating. e.g. "Over 2,000 teams have
+                 stopped guessing and shipped their homepage."
+
+  VARIANT SELECTION GUIDE
+  =======================
+  default       — Grid of stats, values only. Use for 2-4 stats with no
+                  extra context needed. Punchy and minimal.
+  with-context  — Grid of stats with a context sentence under each. Use when
+                  a stat alone doesn't tell the full story.
+  proof-bar     — Single centered sentence. Use when there's only one stat
+                  worth featuring, or when a prose form reads stronger.
+
+  NOTE ON GRID COLUMNS
+  ====================
+  2 stats  → md:grid-cols-2
+  3 stats  → md:grid-cols-3
+  4 stats  → md:grid-cols-4
+  Adjust the grid class to match the number of items you generate.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: default
+     Grid of stats, values only. Clean and minimal.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+  <div class="border-y border-neutral-200 py-10">
+
+    <!-- Adjust grid-cols to match number of stats (2-4). -->
+    <dl class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+
+      <div>
+        <dd class="text-3xl md:text-4xl font-bold text-black mb-1">{stats[0].value}</dd>
+        <dt class="text-sm text-neutral-500">{stats[0].label}</dt>
+      </div>
+
+      <div>
+        <dd class="text-3xl md:text-4xl font-bold text-black mb-1">{stats[1].value}</dd>
+        <dt class="text-sm text-neutral-500">{stats[1].label}</dt>
+      </div>
+
+      <div>
+        <dd class="text-3xl md:text-4xl font-bold text-black mb-1">{stats[2].value}</dd>
+        <dt class="text-sm text-neutral-500">{stats[2].label}</dt>
+      </div>
+
+      <div>
+        <dd class="text-3xl md:text-4xl font-bold text-black mb-1">{stats[3].value}</dd>
+        <dt class="text-sm text-neutral-500">{stats[3].label}</dt>
+      </div>
+
+    </dl>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     VARIANT 2: with-context
+     Grid of stats with a context sentence under each.
+     Use when the stat alone doesn't explain why it matters.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+  <div class="border-y border-neutral-200 py-10">
+
+    <!-- Adjust grid-cols to match number of stats (2-4). -->
+    <dl class="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+      <div>
+        <dd class="text-3xl md:text-4xl font-bold text-black mb-1">{stats[0].value}</dd>
+        <dt class="text-sm font-medium text-neutral-700 mb-1">{stats[0].label}</dt>
+        <p class="text-sm text-neutral-500 leading-relaxed">{stats[0].context}</p>
+      </div>
+
+      <div>
+        <dd class="text-3xl md:text-4xl font-bold text-black mb-1">{stats[1].value}</dd>
+        <dt class="text-sm font-medium text-neutral-700 mb-1">{stats[1].label}</dt>
+        <p class="text-sm text-neutral-500 leading-relaxed">{stats[1].context}</p>
+      </div>
+
+      <div>
+        <dd class="text-3xl md:text-4xl font-bold text-black mb-1">{stats[2].value}</dd>
+        <dt class="text-sm font-medium text-neutral-700 mb-1">{stats[2].label}</dt>
+        <p class="text-sm text-neutral-500 leading-relaxed">{stats[2].context}</p>
+      </div>
+
+    </dl>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     VARIANT 3: proof-bar
+     Single centered statement. Use when you have one strong number
+     or when prose reads stronger than a grid.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+  <div class="border-y border-neutral-200 py-10 text-center">
+    <p class="text-lg font-semibold text-neutral-600 text-balance">{proofStat}</p>
+  </div>
+</section>

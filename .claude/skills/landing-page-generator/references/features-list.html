@@ -1,0 +1,224 @@
+<!--
+  FEATURES LIST SECTION REFERENCE
+  ================================
+  HTML patterns for vertical feature list sections. These are detailed,
+  narrative feature presentations (not the compact grid). Read this file
+  to understand the available structures, then generate actual content for
+  the user's product by replacing {placeholder} tokens with real copy.
+
+  Design system: Tailwind CSS v4. Black/neutral palette. No gradients,
+  no shadows, no decorative color. Clean and typographic.
+
+  CONTENT SCHEMA
+  ==============
+  Required:
+    features   — Array<{ title: string, description: string }>
+                 3-6 items. Each feature has a clear benefit-driven title
+                 and 2-4 sentence description.
+
+  Optional:
+    features[n].image       — Description of what the placeholder image shows.
+    features[n].quote       — Short customer quote validating this feature.
+    features[n].quoteAuthor — Name and role for the quote attribution.
+
+  VARIANT SELECTION GUIDE
+  =======================
+  default     — Vertical list with dividers. Use when features are best read
+                top-to-bottom without visual interruption. Pure copy play.
+  spotlight   — Alternating left/right layout. Use when each feature has an
+                image or screenshot to pair with the copy.
+  highlight   — Full-width, large type, generous spacing. Use for 3-4 deep
+                features where a customer quote reinforces each one.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: default
+     Vertical list with dividers. Text only, clean and readable.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <div class="space-y-8">
+
+    <!-- Feature item — repeat for each feature (3-6 total) -->
+    <div class="border-b border-neutral-200 pb-8 last:border-b-0 last:pb-0">
+      <h3 class="text-lg font-semibold text-black mb-2">{features[0].title}</h3>
+      <p class="text-neutral-600 leading-relaxed">{features[0].description}</p>
+    </div>
+
+    <div class="border-b border-neutral-200 pb-8 last:border-b-0 last:pb-0">
+      <h3 class="text-lg font-semibold text-black mb-2">{features[1].title}</h3>
+      <p class="text-neutral-600 leading-relaxed">{features[1].description}</p>
+    </div>
+
+    <div class="border-b border-neutral-200 pb-8 last:border-b-0 last:pb-0">
+      <h3 class="text-lg font-semibold text-black mb-2">{features[2].title}</h3>
+      <p class="text-neutral-600 leading-relaxed">{features[2].description}</p>
+    </div>
+
+    <!-- Add features[3], [4], [5] here if needed. 6 max. -->
+
+  </div>
+
+</section>
+
+
+<!-- ============================================================
+     VARIANT 2: spotlight
+     Alternating left/right layout with images. Odd items are text-left
+     image-right; even items are reversed (image-left text-right).
+     Use when each feature has something visual to show.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <div class="space-y-16">
+
+    <!-- Feature: text left, image right -->
+    <div class="grid md:grid-cols-2 gap-8 items-center">
+
+      <div>
+        <h3 class="text-xl font-bold text-black mb-3">{features[0].title}</h3>
+        <p class="text-neutral-600 leading-relaxed">{features[0].description}</p>
+      </div>
+
+      <!-- Wireframe B1 — form/card -->
+      <div class="bg-neutral-100 rounded-2xl aspect-[4/3] overflow-hidden relative border border-neutral-200">
+        <div class="flex flex-col h-full p-5 gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-neutral-300/60 shrink-0"></div>
+            <div class="space-y-1.5 flex-1">
+              <div class="h-2 w-24 bg-neutral-300/60 rounded"></div>
+              <div class="h-2 w-16 bg-neutral-300/40 rounded"></div>
+            </div>
+          </div>
+          <div class="h-8 bg-white/60 rounded border border-neutral-200"></div>
+          <div class="h-8 bg-white/60 rounded border border-neutral-200"></div>
+          <div class="flex-1"></div>
+          <div class="h-8 w-24 bg-neutral-300 rounded"></div>
+        </div>
+        <span class="absolute bottom-2 right-3 text-[10px] text-neutral-300">[img: {features[0].image}]</span>
+      </div>
+
+    </div>
+
+    <!-- Feature: image left, text right (reversed) -->
+    <div class="grid md:grid-cols-2 gap-8 items-center">
+
+      <div class="md:order-2">
+        <h3 class="text-xl font-bold text-black mb-3">{features[1].title}</h3>
+        <p class="text-neutral-600 leading-relaxed">{features[1].description}</p>
+      </div>
+
+      <!-- Wireframe B2 — chart + metrics -->
+      <div class="md:order-1 bg-neutral-100 rounded-2xl aspect-[4/3] overflow-hidden relative border border-neutral-200">
+        <div class="flex flex-col h-full p-5 gap-3">
+          <div class="flex gap-3">
+            <div class="flex-1 bg-white/60 rounded-lg p-3 space-y-2">
+              <div class="h-2 w-12 bg-neutral-300/60 rounded"></div>
+              <div class="h-3 w-16 bg-neutral-200 rounded"></div>
+            </div>
+            <div class="flex-1 bg-white/60 rounded-lg p-3 space-y-2">
+              <div class="h-2 w-10 bg-neutral-300/60 rounded"></div>
+              <div class="h-3 w-14 bg-neutral-200 rounded"></div>
+            </div>
+          </div>
+          <div class="flex-1 bg-white/60 rounded-lg p-4 flex items-end gap-2">
+            <div class="w-full h-[50%] bg-neutral-200/80 rounded-sm"></div>
+            <div class="w-full h-[75%] bg-neutral-200/80 rounded-sm"></div>
+            <div class="w-full h-[40%] bg-neutral-200/80 rounded-sm"></div>
+            <div class="w-full h-[90%] bg-neutral-200/80 rounded-sm"></div>
+            <div class="w-full h-[60%] bg-neutral-200/80 rounded-sm"></div>
+          </div>
+          <div class="space-y-1.5">
+            <div class="h-2 w-3/4 bg-neutral-300/40 rounded"></div>
+            <div class="h-2 w-1/2 bg-neutral-300/40 rounded"></div>
+          </div>
+        </div>
+        <span class="absolute bottom-2 right-3 text-[10px] text-neutral-300">[img: {features[1].image}]</span>
+      </div>
+
+    </div>
+
+    <!-- Feature: text left, image right -->
+    <div class="grid md:grid-cols-2 gap-8 items-center">
+
+      <div>
+        <h3 class="text-xl font-bold text-black mb-3">{features[2].title}</h3>
+        <p class="text-neutral-600 leading-relaxed">{features[2].description}</p>
+      </div>
+
+      <!-- Wireframe B1 — form/card -->
+      <div class="bg-neutral-100 rounded-2xl aspect-[4/3] overflow-hidden relative border border-neutral-200">
+        <div class="flex flex-col h-full p-5 gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-neutral-300/60 shrink-0"></div>
+            <div class="space-y-1.5 flex-1">
+              <div class="h-2 w-24 bg-neutral-300/60 rounded"></div>
+              <div class="h-2 w-16 bg-neutral-300/40 rounded"></div>
+            </div>
+          </div>
+          <div class="h-8 bg-white/60 rounded border border-neutral-200"></div>
+          <div class="h-8 bg-white/60 rounded border border-neutral-200"></div>
+          <div class="flex-1"></div>
+          <div class="h-8 w-24 bg-neutral-300 rounded"></div>
+        </div>
+        <span class="absolute bottom-2 right-3 text-[10px] text-neutral-300">[img: {features[2].image}]</span>
+      </div>
+
+    </div>
+
+    <!-- Continue alternating pattern for additional features. -->
+
+  </div>
+
+</section>
+
+
+<!-- ============================================================
+     VARIANT 3: highlight
+     Full-width, large type, generous spacing. 3-4 deep features.
+     Optional blockquote below each one for customer validation.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <div class="space-y-24">
+
+    <!-- Feature item with optional quote -->
+    <div>
+      <h3 class="text-2xl md:text-3xl font-bold text-black mb-4 text-balance">{features[0].title}</h3>
+      <p class="text-lg text-neutral-600 leading-relaxed max-w-2xl">{features[0].description}</p>
+
+      <!-- Optional blockquote — include only if a real quote is available -->
+      <blockquote class="mt-8 border-l-2 border-neutral-200 pl-6">
+        <p class="text-base font-medium text-neutral-600 mb-2">&ldquo;{features[0].quote}&rdquo;</p>
+        <footer class="text-sm">
+          <span class="font-semibold text-black">{features[0].quoteAuthor}</span>
+        </footer>
+      </blockquote>
+
+    </div>
+
+    <div>
+      <h3 class="text-2xl md:text-3xl font-bold text-black mb-4 text-balance">{features[1].title}</h3>
+      <p class="text-lg text-neutral-600 leading-relaxed max-w-2xl">{features[1].description}</p>
+
+      <blockquote class="mt-8 border-l-2 border-neutral-200 pl-6">
+        <p class="text-base font-medium text-neutral-600 mb-2">&ldquo;{features[1].quote}&rdquo;</p>
+        <footer class="text-sm">
+          <span class="font-semibold text-black">{features[1].quoteAuthor}</span>
+        </footer>
+      </blockquote>
+
+    </div>
+
+    <div>
+      <h3 class="text-2xl md:text-3xl font-bold text-black mb-4 text-balance">{features[2].title}</h3>
+      <p class="text-lg text-neutral-600 leading-relaxed max-w-2xl">{features[2].description}</p>
+
+      <!-- Quote is optional — omit the blockquote block if not available -->
+
+    </div>
+
+  </div>
+
+</section>

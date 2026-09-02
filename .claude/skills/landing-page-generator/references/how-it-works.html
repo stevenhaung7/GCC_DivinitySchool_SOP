@@ -1,0 +1,193 @@
+<!--
+  HOW IT WORKS SECTION REFERENCE
+  ================================
+  HTML patterns for step-by-step process sections. Read this file to
+  understand the available structures, then generate actual content for
+  the user's product by replacing {placeholder} tokens with real copy.
+
+  Design system: Tailwind CSS v4. Black/neutral palette. No gradients,
+  no shadows, no decorative color. Clean and typographic.
+
+  CONTENT SCHEMA
+  ==============
+  Required:
+    headline     — 10 words max. Names the process, not the outcome.
+    steps        — Array<{ title: string, description: string, image?: string }>
+                   3-5 steps. Each step is a discrete action or stage.
+
+  Optional:
+    subheadline  — 1-2 sentences. Sets expectations for the process.
+    steps[n].image — Description of what the placeholder image represents.
+
+  VARIANT SELECTION GUIDE
+  =======================
+  default       — Numbered steps, text only. Use when the process is the
+                  story and there's nothing visual to show.
+  with-images   — Numbered steps with image placeholders. Use when each
+                  step has a screen, illustration, or output to show.
+-->
+
+
+<!-- ============================================================
+     VARIANT 1: default
+     Numbered steps, text only. Clean and sequential.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+  <div class="max-w-2xl">
+
+    <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black mb-4 text-balance">{headline}</h2>
+    <p class="text-lg text-neutral-600 mb-10 text-balance">{subheadline}</p>
+
+    <div class="space-y-12">
+
+      <!-- Step — repeat for each step (3-5 total) -->
+      <div class="flex gap-6">
+        <div class="shrink-0">
+          <div class="w-10 h-10 bg-neutral-100 rounded-lg flex items-center justify-center text-lg font-bold text-black">1</div>
+        </div>
+        <div class="pt-1">
+          <h3 class="text-base font-semibold text-black mb-2">{steps[0].title}</h3>
+          <p class="text-neutral-600 leading-relaxed">{steps[0].description}</p>
+        </div>
+      </div>
+
+      <div class="flex gap-6">
+        <div class="shrink-0">
+          <div class="w-10 h-10 bg-neutral-100 rounded-lg flex items-center justify-center text-lg font-bold text-black">2</div>
+        </div>
+        <div class="pt-1">
+          <h3 class="text-base font-semibold text-black mb-2">{steps[1].title}</h3>
+          <p class="text-neutral-600 leading-relaxed">{steps[1].description}</p>
+        </div>
+      </div>
+
+      <div class="flex gap-6">
+        <div class="shrink-0">
+          <div class="w-10 h-10 bg-neutral-100 rounded-lg flex items-center justify-center text-lg font-bold text-black">3</div>
+        </div>
+        <div class="pt-1">
+          <h3 class="text-base font-semibold text-black mb-2">{steps[2].title}</h3>
+          <p class="text-neutral-600 leading-relaxed">{steps[2].description}</p>
+        </div>
+      </div>
+
+      <!-- Add steps[3] and steps[4] here if needed. 5 max. -->
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     VARIANT 2: with-images
+     Numbered steps with image placeholders beside each step.
+     Use when each step has something visual to show.
+     ============================================================ -->
+<section class="py-8 md:py-12">
+
+  <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-black mb-4 text-balance">{headline}</h2>
+  <p class="text-lg text-neutral-600 mb-10 text-balance">{subheadline}</p>
+
+  <div class="space-y-12 max-w-2xl">
+
+    <!-- Step with image — repeat for each step (3-5 total) -->
+    <div class="flex gap-6 items-start">
+
+      <!-- Number badge -->
+      <div class="shrink-0">
+        <div class="w-10 h-10 bg-neutral-100 rounded-lg flex items-center justify-center text-lg font-bold text-black">1</div>
+      </div>
+
+      <!-- Text + image -->
+      <div class="flex-1 min-w-0">
+        <h3 class="text-base font-semibold text-black mb-2">{steps[0].title}</h3>
+        <p class="text-neutral-600 leading-relaxed mb-4">{steps[0].description}</p>
+        <!-- Wireframe C1 — mini list -->
+        <div class="bg-neutral-100 rounded-xl aspect-[3/2] overflow-hidden relative border border-neutral-200">
+          <div class="flex flex-col h-full p-4 gap-2">
+            <div class="h-2 w-1/2 bg-neutral-300/60 rounded"></div>
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full bg-neutral-300/60 shrink-0"></div>
+              <div class="h-2 w-3/4 bg-neutral-300/40 rounded"></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full bg-neutral-300/60 shrink-0"></div>
+              <div class="h-2 w-2/3 bg-neutral-300/40 rounded"></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full bg-neutral-300/60 shrink-0"></div>
+              <div class="h-2 w-5/6 bg-neutral-300/40 rounded"></div>
+            </div>
+            <div class="flex-1"></div>
+            <div class="h-6 w-20 bg-neutral-300/60 rounded"></div>
+          </div>
+          <span class="absolute bottom-1.5 right-2.5 text-[10px] text-neutral-300">[img: {steps[0].image}]</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="flex gap-6 items-start">
+      <div class="shrink-0">
+        <div class="w-10 h-10 bg-neutral-100 rounded-lg flex items-center justify-center text-lg font-bold text-black">2</div>
+      </div>
+      <div class="flex-1 min-w-0">
+        <h3 class="text-base font-semibold text-black mb-2">{steps[1].title}</h3>
+        <p class="text-neutral-600 leading-relaxed mb-4">{steps[1].description}</p>
+        <!-- Wireframe C2 — mini card with preview -->
+        <div class="bg-neutral-100 rounded-xl aspect-[3/2] overflow-hidden relative border border-neutral-200">
+          <div class="flex flex-col h-full">
+            <div class="h-[40%] bg-neutral-200/60 rounded-t-xl"></div>
+            <div class="flex-1 p-4 flex flex-col gap-2">
+              <div class="h-2 w-3/4 bg-neutral-300/60 rounded"></div>
+              <div class="h-2 w-1/2 bg-neutral-300/40 rounded"></div>
+              <div class="flex-1"></div>
+              <div class="flex gap-2">
+                <div class="h-4 w-12 bg-neutral-200 rounded-full"></div>
+                <div class="h-4 w-10 bg-neutral-200 rounded-full"></div>
+                <div class="h-4 w-14 bg-neutral-200 rounded-full"></div>
+              </div>
+            </div>
+          </div>
+          <span class="absolute bottom-1.5 right-2.5 text-[10px] text-neutral-300">[img: {steps[1].image}]</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex gap-6 items-start">
+      <div class="shrink-0">
+        <div class="w-10 h-10 bg-neutral-100 rounded-lg flex items-center justify-center text-lg font-bold text-black">3</div>
+      </div>
+      <div class="flex-1 min-w-0">
+        <h3 class="text-base font-semibold text-black mb-2">{steps[2].title}</h3>
+        <p class="text-neutral-600 leading-relaxed mb-4">{steps[2].description}</p>
+        <!-- Wireframe C1 — mini list -->
+        <div class="bg-neutral-100 rounded-xl aspect-[3/2] overflow-hidden relative border border-neutral-200">
+          <div class="flex flex-col h-full p-4 gap-2">
+            <div class="h-2 w-1/2 bg-neutral-300/60 rounded"></div>
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full bg-neutral-300/60 shrink-0"></div>
+              <div class="h-2 w-3/4 bg-neutral-300/40 rounded"></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full bg-neutral-300/60 shrink-0"></div>
+              <div class="h-2 w-2/3 bg-neutral-300/40 rounded"></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full bg-neutral-300/60 shrink-0"></div>
+              <div class="h-2 w-5/6 bg-neutral-300/40 rounded"></div>
+            </div>
+            <div class="flex-1"></div>
+            <div class="h-6 w-20 bg-neutral-300/60 rounded"></div>
+          </div>
+          <span class="absolute bottom-1.5 right-2.5 text-[10px] text-neutral-300">[img: {steps[2].image}]</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add steps[3] and steps[4] here if needed. 5 max. -->
+
+  </div>
+
+</section>
