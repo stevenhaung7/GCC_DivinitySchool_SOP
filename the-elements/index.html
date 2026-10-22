@@ -1,0 +1,1397 @@
+<title>The Elements</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: a full-bleed WebGL stage sits behind three instrument bands (transport, readouts, periodic grid). */
+:root{
+  color-scheme:dark;
+  --bg:#05060a;
+  --ink:#eef0f6;
+  --ink-2:#b3b8c5;
+  --ink-3:#737a8c;
+  --ink-4:#454b5a;
+  --rule:rgba(205,215,255,.09);
+  --cell:rgba(60,64,76,.72);
+  --cell-hi:rgba(96,102,120,.92);
+  --cell-ink:#d9dce4;
+  --pill:#ff6a3d;
+  --accent:#4472ff;
+  --f-sans:"Geist","Inter Tight",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"Geist Mono","JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --ch:clamp(15px,2.3vh,23px);
+}
+html,body{height:100%}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-sans);overflow:hidden;-webkit-font-smoothing:antialiased}
+#gl{position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:0;touch-action:none;outline:none}
+.app{position:relative;z-index:1;height:100%;box-sizing:border-box;display:grid;grid-template-rows:auto minmax(0,1fr) auto;
+  max-width:1640px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));padding-block:14px 12px;pointer-events:none}
+.top,.panel,.ptable,.hero .meta{pointer-events:auto}
+button{font:inherit;color:inherit}
+:focus-visible{outline:1px solid #fff;outline-offset:2px}
+
+/* ---------- top bar ---------- */
+.top{display:grid;grid-template-columns:minmax(170px,1fr) minmax(0,620px) minmax(170px,1fr);gap:20px;align-items:start;padding-bottom:12px;border-bottom:1px solid var(--rule)}
+.brand h1{margin:8px 0 3px;font-size:19px;font-weight:700;letter-spacing:-.012em;line-height:1.1}
+.brand p{margin:0;font-size:11.5px;color:var(--ink-2);letter-spacing:.01em}
+.player{display:flex;flex-direction:column;gap:9px;min-width:0}
+.transport{display:flex;align-items:center;gap:12px;min-width:0}
+.pill{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:100px;height:34px;padding:0 20px;border:0;border-radius:999px;cursor:pointer;
+  background:var(--pill);color:#fff;font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:.16em;
+  box-shadow:0 0 0 3px rgba(255,106,61,.22),0 0 26px rgba(255,106,61,.45),inset 0 1px 0 rgba(255,255,255,.25);transition:transform .15s,filter .15s}
+.pill:hover{filter:brightness(1.08)}
+.pill:active{transform:scale(.97)}
+.pill[disabled]{opacity:.55;cursor:progress}
+.pill .ico{font-size:8px;letter-spacing:0}
+#wave{flex:1;min-width:0;height:30px;cursor:pointer;display:block}
+.time{flex:none;font-family:var(--f-mono);font-size:10.5px;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.lyric{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3);text-align:center;min-height:1.5em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lyric .w{color:var(--ink-2)}
+.lyric .past{color:var(--c);opacity:.72}
+.lyric .now{color:var(--c);font-weight:600;text-shadow:0 0 14px var(--c)}
+.lyric.pre{opacity:.5}
+.tools{display:flex;justify-content:flex-end;gap:6px;flex-wrap:wrap;padding-top:6px}
+.ghost{border:1px solid var(--rule);background:rgba(255,255,255,.025);color:var(--ink-2);border-radius:4px;height:24px;padding:0 9px;cursor:pointer;
+  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+.ghost:hover{color:var(--ink);border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.06)}
+
+/* ---------- middle ---------- */
+.main{display:grid;grid-template-columns:minmax(210px,262px) minmax(0,1fr) minmax(210px,268px);grid-template-rows:auto minmax(0,1fr);column-gap:28px;min-height:0;padding-top:12px}
+.hero{grid-column:2;grid-row:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none}
+.znum{font-family:var(--f-mono);font-size:13px;color:var(--ink-2);display:flex;align-items:center;gap:7px;font-variant-numeric:tabular-nums}
+.znum i{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.sym{font-size:clamp(42px,6.6vh,68px);font-weight:700;line-height:1.02;letter-spacing:-.02em;color:var(--accent);
+  text-shadow:0 0 22px color-mix(in srgb,var(--accent) 70%,transparent),0 0 2px rgba(255,255,255,.35);transition:color .4s}
+.ename{font-size:clamp(12px,1.6vh,15px);font-weight:600;letter-spacing:.3em;text-transform:uppercase;padding-left:.3em}
+.meta{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase;margin-top:4px;background:none;border:0;padding:0;cursor:default}
+.meta.seek{cursor:pointer}
+.meta.seek:hover{color:var(--ink)}
+.stage{grid-column:2;grid-row:2;min-height:0}
+.panel{align-self:center;min-width:0}
+.panel.left{grid-column:1;grid-row:1/3}
+.panel.right{grid-column:3;grid-row:1/3}
+.ph{display:flex;justify-content:space-between;gap:10px;white-space:nowrap;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+  padding-bottom:7px;border-bottom:1px solid var(--rule);margin-bottom:9px}
+.ph em{font-style:normal;color:var(--ink-4)}
+.rows{margin:0;display:flex;flex-direction:column;gap:9px}
+.rows div{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.rows dt{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+.rows dd{margin:0;white-space:nowrap;font-family:var(--f-mono);font-size:10.5px;font-weight:600;color:var(--ink);text-align:right;font-variant-numeric:tabular-nums}
+.fact{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--rule);font-size:11px;line-height:1.5;color:var(--ink-3);max-width:34ch}
+.uses{list-style:none;margin:0 0 22px;padding:0;display:flex;flex-direction:column;gap:11px;counter-reset:u}
+.uses li{display:grid;grid-template-columns:20px 1fr;gap:4px;font-size:11.5px;line-height:1.35;color:var(--ink);counter-increment:u}
+.uses li::before{content:counter(u,decimal-leading-zero);font-family:var(--f-mono);font-size:9px;color:var(--ink-4);padding-top:2px}
+.spec-wrap{position:relative}
+#spec{width:100%;height:46px;display:block;border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,.07)}
+.spec-axis{position:relative;height:14px;font-family:var(--f-mono);font-size:8px;color:var(--ink-4);margin-top:4px}
+.spec-axis span{position:absolute;transform:translateX(-50%)}
+.spec-lines{font-family:var(--f-mono);font-size:8.5px;color:var(--ink-3);margin-top:2px;line-height:1.5;font-variant-numeric:tabular-nums}
+
+/* ---------- periodic table ---------- */
+.ptable{border-top:1px solid var(--rule);padding-top:9px;min-width:0}
+.pt-head{display:flex;justify-content:space-between;align-items:center;gap:8px 18px;flex-wrap:wrap;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.12em;color:var(--ink-3);text-transform:uppercase;margin-bottom:9px}
+.legend{display:flex;gap:4px 12px;flex-wrap:wrap}
+.legend button{background:none;border:0;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase}
+.legend button:hover,.legend button.on{color:var(--ink)}
+.legend i{width:5px;height:5px;border-radius:50%;background:var(--c);box-shadow:0 0 6px var(--c)}
+.grid-wrap{overflow-x:auto;scrollbar-width:thin}
+.grid{display:grid;grid-template-columns:repeat(18,minmax(30px,1fr));grid-template-rows:repeat(7,var(--ch)) 6px repeat(2,var(--ch));gap:3px 3px;max-width:1360px;min-width:600px;margin:0 auto}
+.cell{position:relative;display:flex;align-items:center;justify-content:space-between;box-sizing:border-box;padding:0 5px 0 4px;border:0;border-radius:2px;cursor:pointer;
+  background:var(--cell);font-family:var(--f-mono);transition:background .2s,box-shadow .25s,opacity .25s}
+.cell .n{font-size:7px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.cell .s{font-size:clamp(9px,1.25vh,11px);font-weight:600;color:var(--cell-ink)}
+.cell::after{content:"";position:absolute;top:2px;right:2px;width:3px;height:3px;border-radius:50%;background:var(--c);opacity:.95}
+.cell:hover{background:var(--cell-hi)}
+.cell.off{opacity:.42}
+.cell.dim{opacity:.18}
+.cell.on{background:var(--c);opacity:1;box-shadow:inset 0 0 0 1px rgba(255,255,255,.55),0 0 16px var(--c),0 0 4px var(--c);z-index:2}
+.cell.on .n,.cell.on .s{color:#fff}
+.cell.on::after{background:#fff}
+.ph-cell{display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-size:7.5px;color:var(--ink-4);background:rgba(60,64,76,.25);border-radius:2px}
+
+/* ---------- overlays ---------- */
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;z-index:20;pointer-events:none;
+  background:rgba(16,18,26,.92);border:1px solid var(--rule);color:var(--ink);font-family:var(--f-mono);font-size:11px;padding:9px 14px;border-radius:6px;transition:.25s;max-width:calc(100vw - 40px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.help{position:fixed;z-index:15;top:calc(64px + env(safe-area-inset-top,0px));right:max(20px,env(safe-area-inset-right,0px));width:min(380px,calc(100vw - 40px));max-height:calc(100vh - 100px);overflow:auto;
+  background:rgba(12,14,20,.96);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:16px 18px;font-size:12px;line-height:1.55;color:var(--ink-2);box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.help h2{margin:0 0 8px;font-size:13px;color:var(--ink);font-weight:600}
+.help h3{margin:14px 0 4px;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
+.help p{margin:0 0 6px}
+.help pre{margin:4px 0 8px;padding:8px 10px;background:rgba(255,255,255,.04);border-radius:4px;font-family:var(--f-mono);font-size:10.5px;color:var(--ink);overflow-x:auto;white-space:pre}
+.help kbd{font-family:var(--f-mono);font-size:10px;border:1px solid var(--rule);border-radius:3px;padding:0 4px;color:var(--ink)}
+.help .x{position:absolute;top:8px;right:8px}
+.drop{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:rgba(5,6,10,.78);border:2px dashed rgba(255,255,255,.25);
+  font-family:var(--f-mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);pointer-events:none}
+.no-gl .stage{display:flex;align-items:center;justify-content:center}
+.no-gl .stage::after{content:"3D view needs WebGL";font-family:var(--f-mono);font-size:10px;color:var(--ink-4);letter-spacing:.14em;text-transform:uppercase}
+
+/* ---------- smaller screens ---------- */
+@media (max-height:760px) and (min-width:901px){
+  .main{padding-top:6px}
+  .rows{gap:6px}
+  .uses{gap:7px;margin-bottom:14px}
+  .fact{margin-top:10px;padding-top:10px}
+}
+@media (max-width:1100px) and (min-width:901px){
+  .main{grid-template-columns:minmax(190px,220px) minmax(0,1fr) minmax(190px,220px);column-gap:18px}
+}
+@media (max-width:900px){
+  html,body{height:auto}
+  body{overflow-x:hidden;overflow-y:auto}
+  .app{height:auto;min-height:100%;grid-template-rows:auto auto auto}
+  .top{grid-template-columns:1fr;gap:10px}
+  .tools{justify-content:flex-start;padding-top:0}
+  .lyric{white-space:normal}
+  .main{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto auto;row-gap:18px;padding-block:14px 18px}
+  .hero{grid-column:1;grid-row:1}
+  .stage{grid-column:1;grid-row:2;height:min(62vh,420px)}
+  .panel.left{grid-column:1;grid-row:3}
+  .panel.right{grid-column:1;grid-row:4}
+  .panel{background:rgba(5,6,10,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:12px;border-radius:6px}
+  .fact{max-width:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important}
+}
+</style>
+
+<canvas id="gl" aria-label="Interactive 3D model of the selected atom. Drag to rotate."></canvas>
+
+<div class="app" id="app">
+  <header class="top">
+    <div class="brand">
+      <h1 id="title">The Elements</h1>
+      <p id="subtitle">Rendering synth score…</p>
+    </div>
+    <div class="player">
+      <div class="transport">
+        <button class="pill" id="play" disabled aria-label="Play"><span class="ico">▶</span><span class="lbl">PLAY</span></button>
+        <canvas id="wave" aria-label="Track waveform. Click to seek."></canvas>
+        <span class="time" id="time">00:00.00 / 00:00.00</span>
+      </div>
+      <div class="lyric" id="lyric" aria-live="off">&nbsp;</div>
+    </div>
+    <div class="tools">
+      <button class="ghost" id="btn-audio" title="Load an audio file (mp3, m4a, wav, ogg, flac)">Load track</button>
+      <button class="ghost" id="btn-sync" title="Load timing (.lrc or .json)">Load sync</button>
+      <button class="ghost" id="btn-copy" title="Copy the current timeline as LRC">Copy LRC</button>
+      <button class="ghost" id="btn-help" aria-expanded="false" title="Formats and shortcuts">?</button>
+      <input type="file" id="f-audio" accept="audio/*,.mp3,.m4a,.wav,.ogg,.flac,.aac,.webm" hidden>
+      <input type="file" id="f-sync" accept=".lrc,.txt,.json,application/json,text/plain" hidden>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="hero" aria-live="polite">
+      <div class="znum"><i></i><span id="h-z">1</span></div>
+      <div class="sym" id="h-sym">H</div>
+      <div class="ename" id="h-name">Hydrogen</div>
+      <button class="meta" id="h-meta" type="button">—</button>
+    </section>
+
+    <div class="stage" id="stage"></div>
+
+    <aside class="panel left">
+      <div class="ph"><span>Atomic essentials</span><em id="p-block">1S-BLOCK</em></div>
+      <dl class="rows">
+        <div><dt>Protons / Electrons</dt><dd id="p-pe">—</dd></div>
+        <div><dt>Valence electrons</dt><dd id="p-val">—</dd></div>
+        <div><dt>Shells (K–Q)</dt><dd id="p-shells">—</dd></div>
+        <div><dt>Orbital config</dt><dd id="p-conf">—</dd></div>
+        <div><dt>Atomic weight</dt><dd id="p-mass">—</dd></div>
+        <div><dt>Period / Group</dt><dd id="p-pg">—</dd></div>
+      </dl>
+      <p class="fact" id="p-fact"></p>
+    </aside>
+
+    <aside class="panel right">
+      <div class="ph"><span>Notable uses</span><em>Utility</em></div>
+      <ol class="uses" id="p-uses"></ol>
+      <div class="ph"><span>Spectral fingerprint</span><em id="spec-tag">380–750 nm</em></div>
+      <div class="spec-wrap">
+        <canvas id="spec" aria-label="Visible emission spectrum"></canvas>
+        <div class="spec-axis"><span style="left:5.4%">400nm</span><span style="left:32.4%">500nm</span><span style="left:59.5%">600nm</span><span style="left:86.5%">700nm</span></div>
+        <div class="spec-lines" id="spec-lines"></div>
+      </div>
+    </aside>
+  </main>
+
+  <section class="ptable" aria-label="Periodic table">
+    <div class="pt-head">
+      <span>Periodic table (1–118) · Click element to inspect · Shift+click to seek song</span>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div class="grid-wrap"><div class="grid" id="grid"></div></div>
+  </section>
+</div>
+
+<div class="help" id="help" hidden>
+  <button class="ghost x" id="help-x" aria-label="Close">✕</button>
+  <h2>Sync your own track</h2>
+  <p>Drop an audio file and a timing file anywhere on the page, or use the buttons. Without a timing file, the default timeline is stretched to fit the track length.</p>
+  <h3>LRC (line timing)</h3>
+  <p>Element names are found automatically in each line. Their times are spread across the line by character position.</p>
+  <pre>[ti:Track title]
+[ar:Artist]
+[00:12.40] Hydrogen, helium and lithium
+[00:15.10] Carbon, nitrogen, oxygen</pre>
+  <h3>Enhanced LRC (word timing)</h3>
+  <pre>[00:12.40] &lt;00:12.40&gt;Hydrogen, &lt;00:13.05&gt;helium</pre>
+  <h3>JSON</h3>
+  <pre>{ "title": "…", "artist": "…",
+  "events": [ { "t": 12.4, "z": 1 },
+              { "t": 13.0, "symbol": "He" } ],
+  "lines":  [ { "t": 12.4, "text": "…" } ] }</pre>
+  <p><b>Copy LRC</b> puts the current timeline on your clipboard as a starting template.</p>
+  <h3>Shortcuts</h3>
+  <p><kbd>Space</kbd> play or pause · <kbd>←</kbd> <kbd>→</kbd> previous or next element · <kbd>Esc</kbd> return to the song · drag the atom to rotate it</p>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<div class="drop" id="drop" hidden>Drop audio or timing file</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+
+<script type="module">
+/* =====================================================================
+   DATA
+   symbol | name | category | standard atomic weight ([n] = most stable isotope) | note | uses (;)
+   ===================================================================== */
+const RAW = `H|Hydrogen|NM|1.008|About three quarters of the ordinary matter in the universe by mass is hydrogen. It is the fuel burned in the core of every main-sequence star.|Ammonia synthesis (Haber–Bosch process);Petroleum hydrocracking and desulfurization;Fuel cells and liquid rocket propellant;Hydrogenation of vegetable oils
+He|Helium|NG|4.0026|First detected in 1868 as an unexplained yellow line in the solar spectrum, decades before it was found on Earth.|Coolant for MRI superconducting magnets;Balloons and airships;Leak detection in vacuum systems;Heliox breathing mixes for deep diving
+Li|Lithium|AK|6.94|The lightest metal. It is soft enough to cut with a knife and light enough to float on oil.|Lithium-ion battery cathodes and electrolytes;Mood-stabilizing medication;Heat-resistant glass and ceramics;Lithium-based lubricating greases
+Be|Beryllium|AE|9.0122|Nearly transparent to X-rays, which makes it the standard window material for X-ray tubes and detectors.|X-ray tube and detector windows;James Webb Space Telescope mirror segments;Non-sparking beryllium-copper tools;Neutron reflectors in reactors
+B|Boron|MD|10.81|Cubic boron nitride is second only to diamond in hardness. Plants need boron to build their cell walls.|Borosilicate laboratory and kitchen glass;Neodymium-iron-boron magnets;Neutron-absorbing control rods;p-type dopant for silicon chips
+C|Carbon|NM|12.011|Forms more compounds than any other element except hydrogen, and is the structural backbone of all known life.|Steelmaking (coke and alloying);Carbon-fibre composites;Graphite battery anodes and electrodes;Radiocarbon dating with carbon-14
+N|Nitrogen|NM|14.007|Makes up 78% of the atmosphere, but most organisms can only use it after bacteria or industry convert it to ammonia.|Fertilizers (ammonia, nitrates, urea);Inert atmosphere for food packaging;Liquid nitrogen cryogenics;Explosives and propellants
+O|Oxygen|NM|15.999|Liquid oxygen is pale blue and paramagnetic. Poured between the poles of a strong magnet, it sticks there.|Medical oxygen therapy;Basic oxygen steelmaking;Liquid rocket oxidizer;Ozone water treatment
+F|Fluorine|HA|18.998|The most electronegative element. It attacks glass, most metals and even the noble gases xenon and krypton.|Fluoride toothpaste and water;PTFE non-stick and chemical-resistant coatings;Uranium enrichment as UF₆;Refrigerants and pharmaceuticals
+Ne|Neon|NG|20.180|Glows a vivid red-orange in a gas discharge, the color that gave neon signs their name.|Advertising signs;Helium–neon lasers;Cryogenic refrigerant;High-voltage indicator lamps
+Na|Sodium|AK|22.990|Soft enough to cut with a butter knife, and reacts violently with water to release hydrogen.|Table salt and food processing;Sodium-vapor street lamps;Coolant in fast-breeder reactors;Reducing agent for titanium production
+Mg|Magnesium|AE|24.305|Burns with a blinding white flame that water cannot put out. Every chlorophyll molecule has a magnesium atom at its center.|Lightweight alloys for vehicles and aircraft;Flares and fireworks;Desulfurization of iron and steel;Antacids and laxatives
+Al|Aluminium|PT|26.982|In the 1850s it was prized above gold, and Napoleon III served his most honored guests with aluminium cutlery.|Beverage cans and foil;Aircraft structures;Overhead power transmission lines;Window frames and construction
+Si|Silicon|MD|28.085|The second most abundant element in Earth's crust after oxygen, mostly locked up in silicate minerals and sand.|Integrated circuits and computer chips;Photovoltaic solar cells;Silicone sealants and lubricants;Glass, cement and ceramics
+P|Phosphorus|NM|30.974|Discovered in 1669 by Hennig Brand, who boiled down large quantities of urine looking for the philosopher's stone.|Agricultural fertilizers;Safety matches (red phosphorus);Flame retardants;Phosphor bronze and steel alloys
+S|Sulfur|NM|32.06|Known since antiquity as brimstone. It burns with a pale blue flame, and as H₂S it gives rotten eggs their smell.|Sulfuric acid production;Vulcanization of rubber;Fungicides and pesticides;Gunpowder and matches
+Cl|Chlorine|HA|35.45|Deployed as a weapon in the First World War, yet chlorinated drinking water has since saved many millions of lives.|Drinking water disinfection;PVC plastics;Bleach and sanitizers;Pharmaceutical synthesis
+Ar|Argon|NG|39.948|Almost 1% of the air you breathe. Its name comes from the Greek for "lazy" because it reacts with almost nothing.|Shielding gas for arc welding;Incandescent and fluorescent lamps;Insulating gas in double glazing;Preserving historic documents
+K|Potassium|AK|39.098|Bananas are faintly radioactive because a small fraction of natural potassium is potassium-40.|Potash fertilizers;Soap making;Potassium nitrate in gunpowder;Electrolyte supplements
+Ca|Calcium|AE|40.078|The most abundant metal in the human body, mostly stored in bones and teeth as calcium phosphate.|Cement, lime and plaster;Deoxidizer in steelmaking;Dietary supplements;Reducing agent for rare metals
+Sc|Scandium|TM|44.956|Mendeleev predicted it in 1871 as "eka-boron", eight years before it was isolated.|Aluminium–scandium sports equipment;Metal-halide stadium lighting;Solid oxide fuel cells;Aerospace components
+Ti|Titanium|TM|47.867|As strong as many steels at about 45% less weight, and highly resistant to seawater corrosion.|Aerospace alloys;Medical and dental implants;Titanium dioxide white pigment;Watches and jewelry
+V|Vanadium|TM|50.942|A fraction of a percent of vanadium turns ordinary steel into tough, shock-resistant tool steel.|High-strength steel alloys;Vanadium redox flow batteries;V₂O₅ catalyst for sulfuric acid;Jet engine titanium alloys
+Cr|Chromium|TM|51.996|Traces of chromium give rubies their red and emeralds their green.|Stainless steel;Chrome plating;Leather tanning;Pigments
+Mn|Manganese|TM|54.938|About 90% of mined manganese ends up in steel, where it removes sulfur and adds strength.|Steel production;Alkaline battery cathodes;Aluminium beverage can alloys;Fertilizer and feed additives
+Fe|Iron|TM|55.845|The last element a massive star can fuse for energy. Once its core turns to iron, the star collapses.|Steel for construction and machinery;Cast iron;Magnetic cores in transformers;Iron supplements for anemia
+Co|Cobalt|TM|58.933|Named after the kobold, a goblin that German miners blamed for ores that gave off toxic fumes when smelted.|Lithium-ion battery cathodes;Superalloys for jet turbines;Cobalt-blue pigments;Cobalt-60 radiotherapy and sterilization
+Ni|Nickel|TM|58.693|Most of Earth's nickel is thought to sit in the planet's iron–nickel core.|Stainless steel;Rechargeable battery cathodes;Coinage;Electroplating
+Cu|Copper|TM|63.546|One of the first metals worked by humans, more than 10,000 years ago.|Electrical wiring and motors;Plumbing;Bronze and brass;Antimicrobial touch surfaces
+Zn|Zinc|TM|65.38|A zinc coating protects steel by corroding first, a process called galvanizing.|Galvanized steel;Brass and die-cast alloys;Zinc oxide sunscreen;Dietary supplements
+Ga|Gallium|PT|69.723|Melts at 29.8 °C, so a piece will melt in your hand.|Blue and white LEDs (GaN);Gallium arsenide RF chips;High-efficiency solar cells;Low-melting alloys and thermometers
+Ge|Germanium|MD|72.630|Predicted by Mendeleev as "eka-silicon". The first transistor, built in 1947, was made of germanium.|Fibre-optic cores;Infrared lenses and windows;High-speed SiGe electronics;Polymerization catalyst for PET
+As|Arsenic|MD|74.922|Once used so often as a poison that it was nicknamed "inheritance powder".|Gallium arsenide semiconductors;Wood preservatives (historic);Leukemia treatment (arsenic trioxide);Lead alloys for batteries
+Se|Selenium|NM|78.971|Named after Selene, the Greek goddess of the Moon. Its conductivity rises when light shines on it.|Decolorizing glass;CIGS thin-film solar cells;Photocopier drums (historic);Dietary supplements
+Br|Bromine|HA|79.904|One of only two elements that are liquid at room temperature. It gives off a choking red-brown vapor.|Flame retardants;Oil and gas drilling fluids;Water treatment;Silver bromide photographic film
+Kr|Krypton|NG|83.798|From 1960 to 1983 the meter was defined by the wavelength of an orange-red krypton-86 emission line.|High-performance lighting;Excimer lasers;Insulating window fill;Photographic flash lamps
+Rb|Rubidium|AK|85.468|Its name means "deep red", after the red lines in its spectrum that led to its discovery.|Atomic clocks;Bose–Einstein condensate research;Photocells;Specialty glass
+Sr|Strontium|AE|87.62|Strontium salts give fireworks their brilliant crimson red.|Red fireworks and flares;Ferrite magnets;Strontium-90 radioisotope generators;Toothpaste for sensitive teeth
+Y|Yttrium|TM|88.906|One of four elements named after Ytterby, a small village in Sweden.|Red phosphors for displays;Nd:YAG lasers;YBCO high-temperature superconductors;Yttria-stabilized zirconia
+Zr|Zirconium|TM|91.224|Almost transparent to neutrons, which makes it ideal for wrapping nuclear fuel.|Nuclear fuel cladding;Cubic zirconia gems;Ceramics and refractories;Corrosion-resistant chemical plant
+Nb|Niobium|TM|92.906|Niobium–titanium wire forms the superconducting magnets in MRI scanners and the Large Hadron Collider.|Superconducting magnets;High-strength low-alloy steel;Jet engine superalloys;Hypoallergenic jewelry
+Mo|Molybdenum|TM|95.95|Nitrogenase, the enzyme bacteria use to fix nitrogen from the air, has molybdenum at its active site.|High-strength steels;Molybdenum disulfide lubricant;Petroleum refining catalysts;Furnace heating elements
+Tc|Technetium|TM|[98]|The first element made artificially. None of its isotopes is stable.|Technetium-99m medical imaging;Corrosion inhibition research;Calibration sources;Superconductivity research
+Ru|Ruthenium|TM|101.07|Adding just 0.1% ruthenium makes titanium about a hundred times more resistant to corrosion.|Hard-disk drive layers;Wear-resistant electrical contacts;Catalysts;Dye-sensitized solar cells
+Rh|Rhodium|TM|102.91|One of the rarest and most valuable precious metals, mainly used to clean up car exhaust.|Catalytic converters;Jewelry plating;Nitric acid production;Optical mirrors and coatings
+Pd|Palladium|TM|106.42|Acts like a metallic sponge for hydrogen: at room temperature palladium can absorb up to about 900 times its own volume of hydrogen gas.|Ultra-pure hydrogen gas diffusion membranes;Suzuki and Heck cross-coupling in drug synthesis;Low-emission catalytic converters;Multilayer ceramic capacitors (MLCCs) in electronics
+Ag|Silver|TM|107.87|The best electrical and thermal conductor of all the elements.|Jewelry and silverware;Electrical contacts and solar cell paste;Photographic film;Antimicrobial wound dressings
+Cd|Cadmium|TM|112.41|Cadmium sulfide and selenide give painters their brightest yellows, oranges and reds.|Nickel–cadmium batteries;Pigments;Neutron-absorbing control rods;Cadmium telluride solar panels
+In|Indium|PT|114.82|A bar of indium makes a high-pitched "cry" when bent, as its crystals deform.|Indium tin oxide touchscreens;Low-melting solders;Semiconductors;Cryogenic seals
+Sn|Tin|PT|118.71|Below 13 °C, "tin pest" can slowly turn shiny white tin into a crumbling grey powder.|Solder;Tin-plated steel cans;Bronze and pewter;Float glass production
+Sb|Antimony|MD|121.76|Ancient Egyptians used powdered antimony sulfide as kohl eyeliner.|Flame retardants;Lead-acid battery grids;Semiconductor dopant;Pewter and type metal
+Te|Tellurium|MD|127.60|Named after Tellus, Latin for Earth. Exposure gives the breath a strong garlic smell.|Cadmium telluride solar panels;Thermoelectric coolers;Rubber vulcanization;Free-machining steel and copper
+I|Iodine|HA|126.90|Sublimes into a violet vapor. The thyroid gland needs it to make hormones.|Antiseptics;Iodized salt;X-ray contrast agents;Thyroid treatment with iodine-131
+Xe|Xenon|NG|131.29|In 1962 it became the first noble gas shown to form a chemical compound.|Car headlamps and cinema projectors;Ion thrusters for spacecraft;General anesthesia;Flash lamps
+Cs|Caesium|AK|132.91|The second is defined by 9,192,631,770 oscillations of a caesium-133 atom.|Atomic clocks;Caesium formate drilling fluids;Photoelectric cells;Caesium-137 radiotherapy
+Ba|Barium|AE|137.33|Patients swallow a barium sulfate suspension so their digestive tract shows up on X-rays.|Barium sulfate X-ray contrast;Green fireworks;Drilling mud;Vacuum tube getters
+La|Lanthanum|LA|138.91|Gives its name to the whole lanthanide series.|Nickel–metal hydride hybrid-car batteries;High-refractive camera lenses;Petroleum cracking catalysts;Carbon arc lighting
+Ce|Cerium|LA|140.12|The most abundant rare-earth element. Its alloy throws sparks when scraped, which is how lighter flints work.|Lighter flints;Glass polishing powder;Catalytic converters;Self-cleaning oven walls
+Pr|Praseodymium|LA|140.91|Colors glass and ceramics a distinctive yellow-green.|Didymium glass for welders' goggles;High-strength magnets;Aircraft engine alloys;Ceramic pigments
+Nd|Neodymium|LA|144.24|Neodymium–iron–boron magnets are the strongest permanent magnets in common use.|NdFeB motor and generator magnets;Nd:YAG lasers;Glass coloring;Headphones and speakers
+Pm|Promethium|LA|[145]|The only lanthanide with no stable isotopes. Almost none exists naturally on Earth.|Nuclear batteries;Luminous paint;Thickness gauges;Research
+Sm|Samarium|LA|150.36|Samarium–cobalt magnets keep their strength at temperatures that would weaken neodymium magnets.|Samarium–cobalt magnets;Samarium-153 bone pain treatment;Neutron absorber;Organic synthesis reagent (SmI₂)
+Eu|Europium|LA|151.96|Its red glow under UV light helps protect euro banknotes against forgery.|Red phosphors in screens;Anti-counterfeiting inks;Fluorescent lamps;Neutron absorber
+Gd|Gadolinium|LA|157.25|Ferromagnetic only below about 20 °C, which is roughly room temperature.|MRI contrast agents;Neutron shielding;Magneto-optical data storage;Magnetic refrigeration research
+Tb|Terbium|LA|158.93|Terfenol-D, an alloy containing terbium, changes shape noticeably in a magnetic field.|Green phosphors;Terfenol-D sonar and actuators;Solid-state devices;Fuel cell stabilizer
+Dy|Dysprosium|LA|162.50|Its name comes from the Greek for "hard to get at".|High-temperature magnets for EV motors;Data storage;Nuclear control rods;Lasers
+Ho|Holmium|LA|164.93|Has the highest magnetic moment of any naturally occurring element.|Pole pieces for the strongest magnets;Holmium lasers in surgery;Nuclear control rods;Glass coloring
+Er|Erbium|LA|167.26|Erbium-doped fibre amplifiers boost the light signals that carry the internet under the oceans.|Fibre-optic amplifiers;Pink glass and ceramic coloring;Dermatology lasers;Vanadium alloys
+Tm|Thulium|LA|168.93|One of the least abundant rare-earth elements.|Portable X-ray sources;Medical lasers;Euro banknote anti-forgery;Ceramic magnets
+Yb|Ytterbium|LA|173.05|Ytterbium optical lattice clocks are among the most precise clocks ever built.|Optical atomic clocks;Fibre lasers;Stress gauges;Stainless steel additive
+Lu|Lutetium|LA|174.97|The densest and hardest of the lanthanides.|PET scanner crystals;Lutetium-177 cancer therapy;Petroleum catalysts;Meteorite dating
+Hf|Hafnium|TM|178.49|Chemically so similar to zirconium that it went unnoticed until 1923.|Nuclear control rods;Superalloys;High-k gate insulators in chips;Plasma cutting tips
+Ta|Tantalum|TM|180.95|Highly biocompatible and almost immune to chemical attack.|Capacitors in phones and laptops;Surgical implants;Superalloys;Camera lens glass
+W|Tungsten|TM|183.84|Has the highest melting point of any metal, 3,422 °C.|Lamp filaments;Tungsten carbide cutting tools;Radiation shielding;Welding electrodes
+Re|Rhenium|TM|186.21|Discovered in 1925, the last stable element to be found.|Jet engine superalloys;Reforming catalysts;Thermocouples;Electrical contacts
+Os|Osmium|TM|190.23|The densest naturally occurring element, about twice as dense as lead.|Fountain pen nibs;Electrical contacts;Fingerprint detection;Electron microscopy stain
+Ir|Iridium|TM|192.22|A thin iridium-rich clay layer found worldwide marks the asteroid impact that ended the age of dinosaurs.|Spark plug electrodes;Crucibles for crystal growth;Platinum–iridium standards;Compass bearings
+Pt|Platinum|TM|195.08|So unreactive that a platinum–iridium cylinder served as the international prototype kilogram.|Catalytic converters;Jewelry;Cisplatin chemotherapy;Fuel cell catalysts
+Au|Gold|TM|196.97|So malleable that a single gram can be beaten into a sheet about one square meter in area.|Jewelry and monetary reserves;Electronic connectors;Dentistry;Reflective coatings on spacecraft visors
+Hg|Mercury|TM|200.59|The only metal that is liquid at room temperature.|Fluorescent lamps;Thermometers and barometers (historic);Dental amalgam;Chlor-alkali electrolysis (historic)
+Tl|Thallium|PT|204.38|Tasteless, odorless and highly toxic, it was once known as "the poisoner's poison".|Thallium-201 heart imaging;Infrared optics;Gamma-ray detectors;Low-temperature thermometers
+Pb|Lead|PT|207.2|Romans made water pipes from lead. The word "plumbing" comes from its Latin name, plumbum.|Lead-acid batteries;Radiation shielding;Ammunition;Cable sheathing
+Bi|Bismuth|PT|208.98|Forms iridescent, stair-stepped hopper crystals as it cools.|Bismuth subsalicylate stomach remedies;Lead-free solders;Cosmetic pigments;Fire sprinkler fuses
+Po|Polonium|PT|[209]|Discovered by Marie and Pierre Curie in 1898 and named after Marie's homeland, Poland.|Antistatic brushes;Neutron sources with beryllium;Spacecraft heat sources (historic);Research
+At|Astatine|HA|[210]|The rarest naturally occurring element. Far less than a gram exists in Earth's crust at any moment.|Targeted alpha therapy research;Radiochemistry;Nuclear medicine research
+Rn|Radon|NG|[222]|After smoking, the leading cause of lung cancer. It seeps into basements from uranium in the ground.|Radiotherapy (historic);Earthquake precursor research;Groundwater tracer;Research
+Fr|Francium|AK|[223]|No one has seen a weighable amount. A visible sample would be vaporized by the heat of its own decay.|Atomic structure research;Laser spectroscopy;Tests of fundamental symmetries
+Ra|Radium|AE|[226]|Once painted onto luminous watch dials and even sold in patent medicines, before its dangers were understood.|Radium-223 cancer therapy;Luminous paint (historic);Neutron sources;Radon generation
+Ac|Actinium|AC|[227]|So radioactive that it glows a pale blue in the dark.|Actinium-225 targeted alpha therapy;Neutron sources;Thermoelectric generators;Research
+Th|Thorium|AC|232.04|About three times more abundant than uranium, and a candidate fuel for future reactors.|Gas lantern mantles (historic);Thorium reactor research;Welding electrodes;Optical coatings
+Pa|Protactinium|AC|231.04|One of the rarest and most expensive naturally occurring elements.|Ocean sediment dating;Nuclear research
+U|Uranium|AC|238.03|Fission of uranium-235 powers nuclear reactors worldwide.|Nuclear power fuel;Naval propulsion reactors;Radiometric dating;Depleted uranium armor and ballast
+Np|Neptunium|AC|[237]|The first transuranium element, made at Berkeley in 1940.|Neutron detectors;Precursor for plutonium-238;Research
+Pu|Plutonium|AC|[244]|Plutonium-238 has powered spacecraft such as Voyager, Curiosity and Perseverance.|Nuclear weapons;MOX reactor fuel;Radioisotope thermoelectric generators;Research
+Am|Americium|AC|[243]|Most household ionization smoke detectors contain a tiny amount of americium-241.|Smoke detectors;Neutron sources;Industrial thickness gauges;Research
+Cm|Curium|AC|[247]|Named in honor of Marie and Pierre Curie. Aboard Mars rovers, curium-244 bombards Martian rocks with alpha particles to read their elemental composition.|Mars rover (Sojourner, Spirit, Opportunity, Curiosity) APXS rock analyzers;Rosetta Philae comet lander alpha-particle spectrometer;Synthesizing superheavy elements (Lv, Ts);High-specific-power space radionuclide research
+Bk|Berkelium|AC|[247]|Named after Berkeley, California, where it was first made in 1949.|Target for synthesizing tennessine;Nuclear research
+Cf|Californium|AC|[251]|Californium-252 is an intense neutron source: one microgram emits millions of neutrons per second.|Neutron sources for reactor start-up;Metal fatigue detection;Oil well logging;Cancer treatment research
+Es|Einsteinium|AC|[252]|First identified in the debris of the first hydrogen bomb test in 1952.|Synthesis of mendelevium;Nuclear research
+Fm|Fermium|AC|[257]|Also found in hydrogen bomb debris, and named after Enrico Fermi.|Nuclear research
+Md|Mendelevium|AC|[258]|Named after Dmitri Mendeleev, who arranged the first periodic table.|Nuclear research
+No|Nobelium|AC|[259]|Named after Alfred Nobel, founder of the Nobel Prizes.|Nuclear research
+Lr|Lawrencium|AC|[266]|Named after Ernest Lawrence, inventor of the cyclotron.|Nuclear research
+Rf|Rutherfordium|TM|[267]|Named after Ernest Rutherford, who discovered the atomic nucleus.
+Db|Dubnium|TM|[268]|Named after Dubna, Russia, home of the Joint Institute for Nuclear Research.
+Sg|Seaborgium|TM|[269]|Named after Glenn Seaborg while he was still alive, a first for any element.
+Bh|Bohrium|TM|[270]|Named after Niels Bohr, pioneer of atomic structure.
+Hs|Hassium|TM|[269]|Named after the German state of Hesse, home of the GSI laboratory.
+Mt|Meitnerium|TM|[278]|Named after Lise Meitner, who helped explain nuclear fission.
+Ds|Darmstadtium|TM|[281]|Named after Darmstadt, Germany, where it was first made in 1994.
+Rg|Roentgenium|TM|[282]|Named after Wilhelm Röntgen, discoverer of X-rays.
+Cn|Copernicium|TM|[285]|Named after Nicolaus Copernicus. Relativistic effects may make it behave almost like a noble gas.
+Nh|Nihonium|PT|[286]|The first element discovered in Asia, named after Nihon, Japan.
+Fl|Flerovium|PT|[289]|Named after the Flerov Laboratory of Nuclear Reactions in Dubna.
+Mc|Moscovium|PT|[290]|Named after the Moscow region, home of Dubna.
+Lv|Livermorium|PT|[293]|Named after Lawrence Livermore National Laboratory in California.
+Ts|Tennessine|HA|[294]|Named after Tennessee, home of Oak Ridge National Laboratory, which supplied the berkelium target.
+Og|Oganesson|NG|[294]|Named after Yuri Oganessian. The heaviest element known; only a handful of atoms have ever been made.`;
+
+const CAT = {
+  AK:{label:'Alkali',     name:'Alkali metal',          color:'#ff5a46'},
+  AE:{label:'Alk Earth',  name:'Alkaline earth metal',  color:'#ffbb3d'},
+  TM:{label:'Transition', name:'Transition metal',      color:'#4472ff'},
+  PT:{label:'Post-trans', name:'Post-transition metal', color:'#25c7a4'},
+  MD:{label:'Metalloid',  name:'Metalloid',             color:'#a173ff'},
+  NM:{label:'Nonmetal',   name:'Reactive nonmetal',     color:'#3fd67a'},
+  HA:{label:'Halogen',    name:'Halogen',               color:'#ff3d5e'},
+  NG:{label:'Noble gas',  name:'Noble gas',             color:'#3dbdff'},
+  LA:{label:'Lanthanide', name:'Lanthanide',            color:'#ff8636'},
+  AC:{label:'Actinide',   name:'Actinide',              color:'#ff5fa6'},
+};
+const DEFAULT_USES = ['Fundamental nuclear physics research','Mapping the island of stability','Testing relativistic effects in chemistry'];
+
+/* Strong visible emission lines (nm). Elements not listed get a deterministic modeled pattern, labeled as such. */
+const SPECTRA = {
+  1:[410.2,434.0,486.1,656.3], 2:[447.1,471.3,492.2,501.6,587.6,667.8,706.5], 3:[460.3,610.4,670.8],
+  10:[540.1,585.2,588.2,594.5,614.3,626.6,633.4,640.2,659.9,692.9,703.2,724.5], 11:[568.8,589.0,589.6],
+  12:[383.8,516.7,517.3,518.4], 13:[394.4,396.2], 18:[434.8,480.6,696.5,706.7,738.4,750.4],
+  19:[404.4,404.7,691.1,693.9], 20:[393.4,396.8,422.7,445.5,558.9,612.2,616.2,643.9],
+  22:[453.3,498.2,499.1], 23:[437.9,438.5], 24:[425.4,427.5,429.0,520.6,520.8],
+  25:[403.1,403.3,403.4,404.1,482.4], 26:[382.0,404.6,427.2,430.8,432.6,438.4,440.5,495.8,527.0,532.8],
+  28:[380.7,385.8], 29:[510.6,515.3,521.8,578.2], 30:[468.0,472.2,481.1,636.2], 31:[403.3,417.2],
+  36:[427.4,431.9,557.0,587.1], 37:[420.2,421.6], 38:[407.8,421.6,460.7,640.8], 47:[520.9,546.5],
+  48:[467.8,480.0,508.6,643.8], 49:[410.2,451.1], 50:[452.5], 54:[450.1,462.4,467.1,473.4],
+  55:[455.5,459.3,672.3,697.3], 56:[455.4,493.4,553.5,614.2,649.7], 80:[404.7,435.8,546.1,577.0,579.1],
+  81:[535.0], 82:[405.8], 83:[472.2],
+};
+
+/* =====================================================================
+   DERIVED PHYSICS
+   ===================================================================== */
+const SUPMAP = {'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+const sup = n => String(n).split('').map(c => SUPMAP[c]).join('');
+const ORDER = ['1s','2s','2p','3s','3p','4s','3d','4p','5s','4d','5p','6s','4f','5d','6p','7s','5f','6d','7p'];
+const CAP = {s:2,p:6,d:10,f:14};
+const LIDX = {s:0,p:1,d:2,f:3};
+// Known departures from Madelung filling
+const EXC = {24:{'4s':-1,'3d':1},29:{'4s':-1,'3d':1},41:{'5s':-1,'4d':1},42:{'5s':-1,'4d':1},44:{'5s':-1,'4d':1},
+  45:{'5s':-1,'4d':1},46:{'5s':-2,'4d':2},47:{'5s':-1,'4d':1},57:{'4f':-1,'5d':1},58:{'4f':-1,'5d':1},64:{'4f':-1,'5d':1},
+  78:{'6s':-1,'5d':1},79:{'6s':-1,'5d':1},89:{'5f':-1,'6d':1},90:{'5f':-2,'6d':2},91:{'5f':-1,'6d':1},92:{'5f':-1,'6d':1},
+  93:{'5f':-1,'6d':1},96:{'5f':-1,'6d':1},103:{'6d':-1,'7p':1}};
+const NOBLE_CORES = [[2,'He'],[10,'Ne'],[18,'Ar'],[36,'Kr'],[54,'Xe'],[86,'Rn']];
+
+function occupancy(z, exceptions = true){
+  const occ = {}; let left = z;
+  for (const o of ORDER){ if (left <= 0) break; const k = Math.min(CAP[o[1]], left); occ[o] = k; left -= k; }
+  const ex = exceptions && EXC[z];
+  if (ex) for (const k in ex){ occ[k] = (occ[k] || 0) + ex[k]; if (occ[k] <= 0) delete occ[k]; }
+  return occ;
+}
+const sortSub = (a,b) => (+a[0] - +b[0]) || (LIDX[a[1]] - LIDX[b[1]]);
+
+function placement(z){
+  const P = z<=2?1 : z<=10?2 : z<=18?3 : z<=36?4 : z<=54?5 : z<=86?6 : 7;
+  const start = [0,1,3,11,19,37,55,87][P];
+  const i = z - start;
+  let row = P, col;
+  if (P === 1) col = z === 1 ? 1 : 18;
+  else if (P <= 3) col = i < 2 ? i + 1 : i + 11;
+  else if (P <= 5) col = i + 1;
+  else if (i < 2) col = i + 1;
+  else if (i <= 16){ row = P === 6 ? 9 : 10; col = i + 1; }
+  else col = i - 13;
+  return { period:P, row, col, group: row >= 9 ? null : col };
+}
+
+const ELEMENTS = RAW.trim().split('\n').map((line, idx) => {
+  const [sym, name, cat, mass, fact, uses] = line.split('|');
+  const z = idx + 1;
+  const pos = placement(z);
+  const occ = occupancy(z);
+  const subs = Object.keys(occ).sort(sortSub);
+  const shells = [];
+  for (const s of subs){ const n = +s[0]; shells[n-1] = (shells[n-1] || 0) + occ[s]; }
+  for (let i = 0; i < shells.length; i++) shells[i] = shells[i] || 0;
+  // condensed configuration
+  const core = NOBLE_CORES.filter(([cz]) => cz < z).pop();
+  let conf;
+  if (!core) conf = subs.map(s => s + sup(occ[s])).join(' ');
+  else {
+    const cOcc = occupancy(core[0]);
+    const rest = subs.filter(s => occ[s] - (cOcc[s] || 0) > 0).map(s => s + sup(occ[s] - (cOcc[s] || 0)));
+    conf = `[${core[1]}] ${rest.join(' ')}`;
+  }
+  const block = (cat === 'LA' || cat === 'AC') ? 'f' : (pos.group <= 2 || z === 2) ? 's' : pos.group >= 13 ? 'p' : 'd';
+  const blockN = block === 'd' ? pos.period - 1 : block === 'f' ? pos.period - 2 : pos.period;
+  const P = pos.period;
+  let valence;
+  if (block === 's' || block === 'p') valence = shells[shells.length - 1];
+  else valence = (occ[`${P}s`] || 0) + (occ[`${P-1}d`] || 0) + (block === 'f' ? (occ[`${P-2}f`] || 0) : 0);
+  const unstable = mass.startsWith('[');
+  const massNum = unstable ? parseInt(mass.slice(1)) : parseFloat(mass);
+  const useList = uses ? [...new Set(uses.split(';'))] : DEFAULT_USES;
+  return { z, sym, name, cat, mass, massNum, unstable, fact, uses:useList, ...pos, occ, subs, shells, conf, block, blockN, valence };
+});
+const BY_SYM = Object.fromEntries(ELEMENTS.map(e => [e.sym.toLowerCase(), e]));
+const el = z => ELEMENTS[z - 1];
+
+function mulberry32(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+function spectrumOf(z){
+  if (SPECTRA[z]) return { lines: SPECTRA[z], measured:true };
+  const r = mulberry32(z * 7919 + 17);
+  const n = 3 + Math.floor(r() * 4);
+  const out = [];
+  for (let i = 0; i < n; i++) out.push(Math.round((392 + r() * 350) * 10) / 10);
+  return { lines: out.sort((a,b) => a - b), measured:false };
+}
+
+/* =====================================================================
+   HELPERS
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function fmt(t){ t = Math.max(0, t || 0); const m = Math.floor(t / 60), s = t - m * 60; return `${String(m).padStart(2,'0')}:${s.toFixed(2).padStart(5,'0')}`; }
+let toastTimer;
+function toast(msg){ const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 3200); }
+const cap1 = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+/* =====================================================================
+   AUDIO
+   ===================================================================== */
+const BPM = 116, BEAT = 60 / BPM, INTRO = 8, LEAD = 0.25;
+
+async function renderTour(){
+  const n = ELEMENTS.length, sr = 44100;
+  const totalBeats = INTRO + n + 8;
+  const dur = LEAD + totalBeats * BEAT + 1.5;
+  const ctx = new OfflineAudioContext(2, Math.ceil(dur * sr), sr);
+  const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3; comp.connect(ctx.destination);
+  const bus = ctx.createGain(); bus.gain.value = 0.85; bus.connect(comp);
+  const dl = ctx.createDelay(2); dl.delayTime.value = BEAT * 0.75;
+  const fb = ctx.createGain(); fb.gain.value = 0.3;
+  const dlp = ctx.createBiquadFilter(); dlp.type = 'lowpass'; dlp.frequency.value = 2400;
+  const wet = ctx.createGain(); wet.gain.value = 0.24;
+  dl.connect(dlp); dlp.connect(fb); fb.connect(dl); dlp.connect(wet); wet.connect(comp);
+  const noise = ctx.createBuffer(1, (sr * 0.3) | 0, sr);
+  { const d = noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+  const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+  const env = (g, t, a, peak, dec) => { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + dec); };
+  const out = (node, pan = 0, send = true) => { const p = ctx.createStereoPanner(); p.pan.value = pan; node.connect(p); p.connect(bus); if (send) p.connect(dl); };
+
+  function pluck(t, m, vel, dec, pan){
+    const o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = mtof(m);
+    const o2 = ctx.createOscillator(); o2.type = 'square'; o2.frequency.value = mtof(m) * 1.004;
+    const g2 = ctx.createGain(); g2.gain.value = 0.16;
+    const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.Q.value = 3;
+    f.frequency.setValueAtTime(5600, t); f.frequency.exponentialRampToValueAtTime(650, t + dec);
+    const g = ctx.createGain(); env(g, t, 0.004, vel, dec);
+    o.connect(f); o2.connect(g2); g2.connect(f); f.connect(g); out(g, pan);
+    o.start(t); o2.start(t); o.stop(t + dec + 0.05); o2.stop(t + dec + 0.05);
+  }
+  function bell(t, m, vel){
+    [[1, 1], [2.76, 0.35], [5.4, 0.12]].forEach(([r, a]) => {
+      const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = mtof(m) * r;
+      const g = ctx.createGain(); env(g, t, 0.003, vel * a, 1.2 / r + 0.2);
+      o.connect(g); out(g, 0.15); o.start(t); o.stop(t + 1.6);
+    });
+  }
+  function kick(t, vel){
+    const o = ctx.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.14);
+    const g = ctx.createGain(); env(g, t, 0.002, vel, 0.26);
+    o.connect(g); out(g, 0, false); o.start(t); o.stop(t + 0.3);
+  }
+  function hat(t, vel){
+    const s = ctx.createBufferSource(); s.buffer = noise;
+    const f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 7600;
+    const g = ctx.createGain(); env(g, t, 0.001, vel, 0.045);
+    s.connect(f); f.connect(g); out(g, 0.3, false); s.start(t); s.stop(t + 0.08);
+  }
+  function bass(t, m, len){
+    const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = mtof(m);
+    const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 480; f.Q.value = 5;
+    const g = ctx.createGain(); env(g, t, 0.008, 0.26, len);
+    o.connect(f); f.connect(g); out(g, 0, false); o.start(t); o.stop(t + len + 0.05);
+  }
+  function pad(t, ms, len){
+    ms.forEach((m, i) => {
+      const o = ctx.createOscillator(); o.type = i % 2 ? 'sine' : 'triangle'; o.frequency.value = mtof(m); o.detune.value = (i - 1) * 6;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.03, t + 0.35);
+      g.gain.setValueAtTime(0.03, t + len - 0.3); g.gain.linearRampToValueAtTime(0, t + len);
+      o.connect(g); out(g, clamp((i - 1) * 0.4, -0.8, 0.8)); o.start(t); o.stop(t + len + 0.05);
+    });
+  }
+  // I – V – vi – IV
+  const CH = [[60,64,67,72],[59,62,67,71],[60,64,69,72],[60,65,69,72]];
+  const ROOT = [36, 43, 45, 41];
+  const endMain = INTRO + n;
+  for (let b = 0; b < endMain + 1; b++){
+    const t = LEAD + b * BEAT, bar = b >> 2, bi = b & 3, ch = CH[bar % 4], root = ROOT[bar % 4];
+    if (b === endMain){
+      pad(t, [48, 55, 64, 67, 72], BEAT * 7); bell(t, 84, 0.12); bell(t + BEAT * 0.5, 91, 0.06);
+      bass(t, 36, BEAT * 5); kick(t, 0.9);
+      break;
+    }
+    if (bi === 0) pad(t, ch.slice(0, 3), BEAT * 4);
+    if (b < 4){ bell(t, bi === 0 ? 84 : 79, 0.05); continue; }
+    if (bi === 0 || bi === 2) kick(t, 0.85);
+    hat(t + BEAT / 2, 0.06);
+    if (b >= INTRO) hat(t, 0.03);
+    bass(t, root, BEAT * 0.85);
+    if (b >= INTRO && (bi === 1 || bi === 3)) bass(t + BEAT / 2, root + 12, BEAT * 0.35);
+    if (b >= INTRO){
+      const i = b - INTRO, e = ELEMENTS[i];
+      const tone = ch[(bi + (bar >> 1)) % 4] + (e.cat === 'NG' ? 12 : 0);
+      pluck(t, tone, 0.3, 0.3, -0.18);
+      pluck(t + BEAT / 2, ch[(bi + 2) % 4] - 12, 0.12, 0.18, 0.22);
+      if (bi === 0) bell(t, tone + 12, 0.05);
+    }
+  }
+  return ctx.startRendering();
+}
+
+function peaksOf(buffer, bins = 1400){
+  const ch0 = buffer.getChannelData(0), ch1 = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : ch0;
+  const step = Math.max(1, Math.floor(ch0.length / bins)), out = new Float32Array(bins);
+  let max = 0;
+  for (let i = 0; i < bins; i++){
+    let m = 0; const s = i * step, e = Math.min(ch0.length, s + step);
+    for (let j = s; j < e; j += 4){ const v = Math.abs(ch0[j]) + Math.abs(ch1[j]); if (v > m) m = v; }
+    out[i] = m; if (m > max) max = m;
+  }
+  if (max > 0) for (let i = 0; i < bins; i++) out[i] = Math.pow(out[i] / max, 0.8);
+  return out;
+}
+
+class Player {
+  constructor(){ this.ctx = null; this.buffer = null; this.src = null; this.offset = 0; this.startAt = 0; this.playing = false; this.onstate = () => {}; }
+  ensure(){
+    if (!this.ctx){ const AC = window.AudioContext || window.webkitAudioContext; this.ctx = new AC(); this.out = this.ctx.createGain(); this.out.connect(this.ctx.destination); }
+    return this.ctx;
+  }
+  get duration(){ return this.buffer ? this.buffer.duration : 0; }
+  time(){ return this.playing ? clamp(this.ctx.currentTime - this.startAt, 0, this.duration) : this.offset; }
+  async play(){
+    if (!this.buffer || this.playing) return;
+    const ctx = this.ensure();
+    if (ctx.state === 'suspended') await ctx.resume();
+    if (this.offset >= this.duration - 0.05) this.offset = 0;
+    const s = ctx.createBufferSource(); s.buffer = this.buffer; s.connect(this.out);
+    s.onended = () => { if (this.src === s){ this.src = null; this.playing = false; this.offset = this.duration; this.onstate(); } };
+    s.start(0, this.offset);
+    this.src = s; this.startAt = ctx.currentTime - this.offset; this.playing = true; this.onstate();
+  }
+  pause(){
+    if (!this.playing) return;
+    this.offset = this.time(); const s = this.src; this.src = null; this.playing = false;
+    try { s.stop(); } catch (e) {}
+    this.onstate();
+  }
+  seek(t){
+    t = clamp(t, 0, this.duration);
+    if (this.playing){ const s = this.src; this.src = null; this.playing = false; try { s.stop(); } catch (e) {} this.offset = t; this.play(); }
+    else this.offset = t;
+  }
+  setBuffer(b){ this.pause(); this.buffer = b; this.offset = 0; }
+}
+const player = new Player();
+
+/* =====================================================================
+   TIMELINE (song = events + lyric lines)
+   ===================================================================== */
+const NAME_ALIASES = { aluminum:13, caesium:55, cesium:55, sulphur:16, sulfur:16, aluminium:13 };
+const NAME_TO_Z = Object.assign(Object.fromEntries(ELEMENTS.map(e => [e.name.toLowerCase(), e.z])), NAME_ALIASES);
+const NAME_RE = new RegExp(`\\b(${Object.keys(NAME_TO_Z).sort((a,b) => b.length - a.length).join('|')})\\b`, 'gi');
+
+function finalizeSong(song){
+  song.events.sort((a, b) => a.t - b.t);
+  song.events.forEach((e, i) => e.idx = i);
+  song.lines.sort((a, b) => a.t - b.t);
+  song.inSong = new Set(song.events.map(e => e.z));
+  song.firstIdx = {};
+  song.events.forEach(e => { if (!(e.z in song.firstIdx)) song.firstIdx[e.z] = e.idx; });
+  return song;
+}
+
+function tourTimeline(){
+  const events = [], lines = [];
+  for (let i = 0; i < ELEMENTS.length; i += 4){
+    const group = ELEMENTS.slice(i, i + 4);
+    let text = '', spans = [];
+    group.forEach((e, k) => {
+      const ev = { t: LEAD + (INTRO + e.z - 1) * BEAT, z: e.z };
+      events.push(ev);
+      const word = k === 0 && i % 8 === 0 ? e.name : e.name.toLowerCase();
+      const a = text.length; text += (k === 0 ? cap1(word) : word); spans.push({ a, b: text.length, ev });
+      text += (i + k === ELEMENTS.length - 1) ? '.' : k === group.length - 1 ? ',' : ', ';
+    });
+    lines.push({ t: events[i].t, text, spans });
+  }
+  return { events, lines };
+}
+
+function scaleTimeline(tl, factor){
+  const evMap = new Map();
+  const events = tl.events.map(e => { const n = { t: e.t * factor, z: e.z }; evMap.set(e, n); return n; });
+  const lines = tl.lines.map(l => ({ t: l.t * factor, text: l.text, spans: l.spans.map(s => ({ a: s.a, b: s.b, ev: evMap.get(s.ev) })) }));
+  return { events, lines };
+}
+
+function stamp(m, s){ return parseInt(m, 10) * 60 + parseFloat(String(s).replace(':', '.')); }
+
+function timelineFromLines(rawLines, duration){
+  // rawLines: [{t, raw}] where raw may contain <mm:ss.xx> word stamps
+  rawLines.sort((a, b) => a.t - b.t);
+  const events = [], lines = [];
+  rawLines.forEach((L, i) => {
+    const next = rawLines[i + 1] ? rawLines[i + 1].t : (duration ? Math.max(L.t + 0.5, duration) : L.t + 4);
+    const anchors = []; let text = '';
+    L.raw.split(/(<\d{1,2}:\d{1,2}(?:[.:]\d{1,3})?>)/).forEach(part => {
+      const m = part.match(/^<(\d{1,2}):(\d{1,2}(?:[.:]\d{1,3})?)>$/);
+      if (m) anchors.push({ i: text.length, t: stamp(m[1], m[2]) }); else text += part;
+    });
+    text = text.replace(/\s+/g, ' ').trim() ? text : '';
+    const spans = [];
+    const span = Math.min(next - L.t, 12);
+    for (const m of text.matchAll(NAME_RE)){
+      const z = NAME_TO_Z[m[0].toLowerCase()];
+      let t;
+      const before = anchors.filter(a => a.i <= m.index).pop();
+      if (before && Math.abs(before.i - m.index) <= 2) t = before.t;
+      else if (before){
+        const after = anchors.find(a => a.i > m.index);
+        t = after ? before.t + (after.t - before.t) * (m.index - before.i) / (after.i - before.i) : before.t + (m.index - before.i) * 0.06;
+      } else t = L.t + span * (m.index / Math.max(1, text.length));
+      const ev = { t, z }; events.push(ev);
+      spans.push({ a: m.index, b: m.index + m[0].length, ev });
+    }
+    lines.push({ t: L.t, text: text.trim() ? text : '♪', spans });
+  });
+  return { events, lines };
+}
+
+function parseLRC(src, duration){
+  const meta = {}, raw = [];
+  for (const line of src.split(/\r?\n/)){
+    const tag = line.match(/^\s*\[(ti|ar|al|by):([^\]]*)\]\s*$/i);
+    if (tag){ meta[tag[1].toLowerCase()] = tag[2].trim(); continue; }
+    const stamps = [...line.matchAll(/\[(\d{1,3}):(\d{1,2}(?:[.:]\d{1,3})?)\]/g)];
+    if (!stamps.length) continue;
+    const body = line.replace(/\[\d{1,3}:\d{1,2}(?:[.:]\d{1,3})?\]/g, '').trim();
+    for (const s of stamps) raw.push({ t: stamp(s[1], s[2]), raw: body });
+  }
+  if (!raw.length) throw new Error('No [mm:ss.xx] timestamps found in that file.');
+  return { meta, ...timelineFromLines(raw, duration) };
+}
+
+function zFrom(e){
+  if (Number.isFinite(e.z)) return e.z;
+  if (e.symbol && BY_SYM[String(e.symbol).toLowerCase()]) return BY_SYM[String(e.symbol).toLowerCase()].z;
+  if (e.name && NAME_TO_Z[String(e.name).toLowerCase()]) return NAME_TO_Z[String(e.name).toLowerCase()];
+  return null;
+}
+function parseJSON(src, duration){
+  const data = JSON.parse(src);
+  const obj = Array.isArray(data) ? { events: data } : data;
+  const meta = { ti: obj.title, ar: obj.artist };
+  if (obj.lines && obj.lines.length && !(obj.events && obj.events.length)){
+    return { meta, ...timelineFromLines(obj.lines.map(l => ({ t: +l.t, raw: String(l.text || '') })), duration) };
+  }
+  const events = (obj.events || []).map(e => ({ t: +e.t, z: zFrom(e) })).filter(e => e.z && Number.isFinite(e.t) && e.z >= 1 && e.z <= 118);
+  if (!events.length) throw new Error('The JSON has no usable events. Each needs "t" and one of "z", "symbol" or "name".');
+  events.sort((a, b) => a.t - b.t);
+  let lines;
+  if (obj.lines && obj.lines.length){
+    const lt = timelineFromLines(obj.lines.map(l => ({ t: +l.t, raw: String(l.text || '') })), duration);
+    lines = lt.lines.map(l => ({ t: l.t, text: l.text, spans: [] }));
+    // attach events by time and name match
+    lines.forEach((l, i) => {
+      const end = lines[i + 1] ? lines[i + 1].t : Infinity;
+      const evs = events.filter(e => e.t >= l.t - 0.01 && e.t < end);
+      let from = 0;
+      evs.forEach(ev => {
+        const name = el(ev.z).name.toLowerCase();
+        const at = l.text.toLowerCase().indexOf(name, from);
+        if (at >= 0){ l.spans.push({ a: at, b: at + name.length, ev }); from = at + name.length; }
+      });
+    });
+  } else {
+    lines = [];
+    for (let i = 0; i < events.length; i += 4){
+      const g = events.slice(i, i + 4); let text = ''; const spans = [];
+      g.forEach((ev, k) => { const w = el(ev.z).name; const a = text.length; text += w; spans.push({ a, b: text.length, ev }); text += k < g.length - 1 ? ', ' : ''; });
+      lines.push({ t: g[0].t, text, spans });
+    }
+  }
+  return { meta, events, lines };
+}
+
+/* =====================================================================
+   STATE + UI
+   ===================================================================== */
+const state = { song:null, ev:-2, line:-2, z:null, manualZ:null, lastT:-1, waveDirty:true, legend:null, tourDuration:0 };
+const cells = {};
+
+function buildTable(){
+  const grid = $('grid');
+  for (const e of ELEMENTS){
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'cell'; b.dataset.z = e.z;
+    b.style.gridRow = e.row; b.style.gridColumn = e.col; b.style.setProperty('--c', CAT[e.cat].color);
+    b.innerHTML = `<span class="n">${e.z}</span><span class="s">${e.sym}</span>`;
+    b.title = `${e.name} · ${e.z}`;
+    b.setAttribute('aria-label', `${e.name}, ${e.z}`);
+    grid.appendChild(b); cells[e.z] = b;
+  }
+  [['57–71', 6], ['89–103', 7]].forEach(([t, r]) => {
+    const d = document.createElement('div'); d.className = 'ph-cell'; d.textContent = t; d.style.gridRow = r; d.style.gridColumn = 3; grid.appendChild(d);
+  });
+  grid.addEventListener('click', ev => {
+    const b = ev.target.closest('.cell'); if (!b) return;
+    const z = +b.dataset.z;
+    if (ev.shiftKey) seekToElement(z); else inspect(z);
+  });
+  const lg = $('legend');
+  for (const k in CAT){
+    const b = document.createElement('button'); b.type = 'button'; b.style.setProperty('--c', CAT[k].color);
+    b.innerHTML = `<i></i>${CAT[k].label}`; b.dataset.cat = k;
+    b.addEventListener('mouseenter', () => highlightCat(k));
+    b.addEventListener('mouseleave', () => highlightCat(state.legend));
+    b.addEventListener('click', () => { state.legend = state.legend === k ? null : k; lg.querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.cat === state.legend)); highlightCat(state.legend); });
+    lg.appendChild(b);
+  }
+}
+function highlightCat(k){ for (const e of ELEMENTS) cells[e.z].classList.toggle('dim', !!k && e.cat !== k); }
+
+function inspect(z){ state.manualZ = z; }
+
+function seekToElement(z){
+  const s = state.song; if (!s) return;
+  const evs = s.events.filter(e => e.z === z);
+  if (!evs.length){ toast(`${el(z).name} isn't in this track.`); inspect(z); return; }
+  const now = player.time();
+  const target = evs.find(e => e.t > now + 0.05) || evs[0];
+  state.manualZ = null;
+  player.seek(target.t + 0.002);
+}
+
+function eventAt(t){
+  const ev = state.song.events; let lo = 0, hi = ev.length - 1, ans = -1;
+  while (lo <= hi){ const m = (lo + hi) >> 1; if (ev[m].t <= t + 1e-4){ ans = m; lo = m + 1; } else hi = m - 1; }
+  return ans;
+}
+function lineAt(t){
+  const L = state.song.lines; let ans = -1;
+  for (let i = 0; i < L.length; i++){ if (L[i].t <= t + 1e-4) ans = i; else break; }
+  return ans;
+}
+
+function renderLyric(){
+  const s = state.song, box = $('lyric');
+  const li = state.line;
+  const L = s.lines[li < 0 ? 0 : li];
+  box.classList.toggle('pre', li < 0);
+  if (!L){ box.innerHTML = '&nbsp;'; return; }
+  let html = '', at = 0;
+  const spans = [...L.spans].sort((a, b) => a.a - b.a);
+  for (const sp of spans){
+    html += esc(L.text.slice(at, sp.a));
+    const e = el(sp.ev.z);
+    const cls = li < 0 ? 'w' : sp.ev.idx === state.ev ? 'now' : sp.ev.idx < state.ev ? 'past' : 'w';
+    html += `<span class="${cls}" style="--c:${CAT[e.cat].color}">${esc(L.text.slice(sp.a, sp.b))}</span>`;
+    at = sp.b;
+  }
+  html += esc(L.text.slice(at));
+  box.innerHTML = html || '&nbsp;';
+}
+
+function showElement(z){
+  state.z = z;
+  const e = el(z), c = CAT[e.cat];
+  document.documentElement.style.setProperty('--accent', c.color);
+  $('h-z').textContent = e.z;
+  $('h-sym').textContent = e.sym;
+  $('h-name').textContent = e.name;
+  $('p-block').textContent = `${e.blockN}${e.block}-block`;
+  $('p-pe').textContent = `${e.z} p⁺ / ${e.z} e⁻`;
+  $('p-val').textContent = `${e.valence} e⁻ (${e.blockN}${e.block}-block)`;
+  $('p-shells').textContent = e.shells.join(' · ');
+  $('p-conf').textContent = e.conf;
+  $('p-mass').textContent = `${e.mass} u`;
+  $('p-pg').textContent = `Period ${e.period} · ${e.group ? 'Group ' + e.group : c.name}`;
+  $('p-fact').textContent = e.fact;
+  $('p-uses').innerHTML = e.uses.slice(0, 4).map(u => `<li>${esc(u)}</li>`).join('');
+  drawSpectrum(e);
+  updateMeta();
+  for (const k in cells) cells[k].classList.remove('on');
+  cells[z].classList.add('on');
+  state.waveDirty = true;
+  gl && gl.setElement(e);
+}
+
+function updateMeta(){
+  const s = state.song, z = state.z; if (!z) return;
+  const e = el(z), meta = $('h-meta');
+  let idx = null;
+  if (s){
+    const cur = s.events[state.ev];
+    idx = cur && cur.z === z ? cur.idx : s.firstIdx[z];
+  }
+  if (idx != null){
+    meta.textContent = `${CAT[e.cat].name} · ▶ Song #${String(idx + 1).padStart(3, '0')} @ ${fmt(s.events[idx].t)}`;
+    meta.classList.add('seek'); meta.dataset.t = s.events[idx].t;
+    meta.title = 'Play from here';
+  } else {
+    meta.textContent = `${CAT[e.cat].name} · Not in this track`;
+    meta.classList.remove('seek'); delete meta.dataset.t; meta.title = '';
+  }
+}
+
+function markSung(){
+  const s = state.song;
+  for (const e of ELEMENTS){
+    cells[e.z].classList.toggle('off', !s.inSong.has(e.z));
+  }
+}
+
+/* ----- waveform ----- */
+const waveCv = $('wave'), wctx = waveCv.getContext('2d');
+function sizeCanvas(cv){
+  const dpr = Math.min(2, window.devicePixelRatio || 1), r = cv.getBoundingClientRect();
+  const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr));
+  if (cv.width !== w || cv.height !== h){ cv.width = w; cv.height = h; return true; }
+  return false;
+}
+function drawWave(t){
+  const s = state.song; const w = waveCv.width, h = waveCv.height;
+  wctx.clearRect(0, 0, w, h);
+  if (!s || !s.peaks) return;
+  const dpr = w / Math.max(1, waveCv.getBoundingClientRect().width);
+  const step = 3 * dpr, bw = Math.max(1, 1.7 * dpr), nb = Math.floor(w / step);
+  const px = (t / Math.max(0.001, player.duration)) * w;
+  const accent = CAT[el(state.z || 1).cat].color;
+  wctx.fillStyle = accent;
+  for (let i = 0; i < nb; i++){
+    const x = i * step; if (x > px) break;
+    const p = s.peaks[Math.floor(i / nb * s.peaks.length)];
+    const bh = Math.max(2 * dpr, p * h * 0.94);
+    wctx.globalAlpha = 0.5 + p * 0.5;
+    wctx.fillRect(x, (h - bh) / 2, bw, bh);
+  }
+  wctx.globalAlpha = 1;
+  wctx.fillStyle = 'rgba(255,255,255,.2)';
+  wctx.fillRect(px, h / 2 - dpr * 0.5, w - px, Math.max(1, dpr));
+}
+let scrubbing = false;
+function scrubTo(ev){
+  const r = waveCv.getBoundingClientRect();
+  state.manualZ = null;
+  player.seek(clamp((ev.clientX - r.left) / r.width, 0, 1) * player.duration);
+}
+waveCv.addEventListener('pointerdown', ev => { if (!player.buffer) return; scrubbing = true; waveCv.setPointerCapture(ev.pointerId); scrubTo(ev); });
+waveCv.addEventListener('pointermove', ev => { if (scrubbing) scrubTo(ev); });
+waveCv.addEventListener('pointerup', () => { scrubbing = false; });
+
+/* ----- spectrum ----- */
+function wl2rgb(l){
+  let r = 0, g = 0, b = 0;
+  if (l < 440){ r = -(l - 440) / 60; b = 1; }
+  else if (l < 490){ g = (l - 440) / 50; b = 1; }
+  else if (l < 510){ g = 1; b = -(l - 510) / 20; }
+  else if (l < 580){ r = (l - 510) / 70; g = 1; }
+  else if (l < 645){ r = 1; g = -(l - 645) / 65; }
+  else r = 1;
+  let f = 1;
+  if (l < 420) f = 0.3 + 0.7 * (l - 380) / 40; else if (l > 700) f = 0.3 + 0.7 * (780 - l) / 80;
+  return [r, g, b].map(v => Math.round(255 * Math.pow(Math.max(0, v * f), 0.8)));
+}
+function drawSpectrum(e){
+  const cv = $('spec'); sizeCanvas(cv);
+  const g = cv.getContext('2d'), w = cv.width, h = cv.height, L0 = 380, L1 = 750;
+  g.clearRect(0, 0, w, h);
+  for (let x = 0; x < w; x++){
+    const [r, gg, b] = wl2rgb(L0 + (L1 - L0) * x / w);
+    g.fillStyle = `rgba(${r},${gg},${b},.26)`; g.fillRect(x, 0, 1, h);
+  }
+  const grad = g.createLinearGradient(0, 0, 0, h); grad.addColorStop(0, 'rgba(0,0,0,.35)'); grad.addColorStop(.5, 'rgba(0,0,0,0)'); grad.addColorStop(1, 'rgba(0,0,0,.45)');
+  g.fillStyle = grad; g.fillRect(0, 0, w, h);
+  const sp = spectrumOf(e.z), lw = Math.max(1.5, w / 160);
+  g.globalCompositeOperation = 'lighter';
+  for (const l of sp.lines){
+    const x = (l - L0) / (L1 - L0) * w; const [r, gg, b] = wl2rgb(l);
+    g.shadowColor = `rgb(${r},${gg},${b})`; g.shadowBlur = lw * 4;
+    g.fillStyle = `rgb(${Math.min(255, r + 60)},${Math.min(255, gg + 60)},${Math.min(255, b + 60)})`;
+    g.fillRect(x - lw / 2, 0, lw, h);
+  }
+  g.shadowBlur = 0; g.globalCompositeOperation = 'source-over';
+  $('spec-lines').textContent = `λ = ${sp.lines.map(l => l.toFixed(1)).join(' · ')} nm${sp.measured ? '' : ' · modeled'}`;
+}
+
+/* ----- transport ----- */
+function onPlayState(){
+  const b = $('play');
+  b.querySelector('.ico').textContent = player.playing ? '❚❚' : '▶';
+  b.querySelector('.lbl').textContent = player.playing ? 'PAUSE' : 'PLAY';
+  b.setAttribute('aria-label', player.playing ? 'Pause' : 'Play');
+}
+player.onstate = onPlayState;
+$('play').addEventListener('click', () => { if (player.playing) player.pause(); else { state.manualZ = null; player.play(); } });
+$('h-meta').addEventListener('click', () => { const t = $('h-meta').dataset.t; if (t != null){ state.manualZ = null; player.seek(+t + 0.002); if (!player.playing) player.play(); } });
+
+function stepEvent(dir){
+  const s = state.song; if (!s || !s.events.length) return;
+  let i = state.ev + dir;
+  if (state.manualZ != null && s.firstIdx[state.manualZ] != null) i = s.firstIdx[state.manualZ] + dir;
+  i = clamp(i, 0, s.events.length - 1);
+  state.manualZ = null; player.seek(s.events[i].t + 0.002);
+}
+window.addEventListener('keydown', ev => {
+  if (ev.target.closest && ev.target.closest('input,textarea')) return;
+  if (ev.code === 'Space'){ ev.preventDefault(); $('play').click(); }
+  else if (ev.key === 'ArrowRight'){ ev.preventDefault(); stepEvent(1); }
+  else if (ev.key === 'ArrowLeft'){ ev.preventDefault(); stepEvent(-1); }
+  else if (ev.key === 'Escape'){ state.manualZ = null; $('help').hidden = true; $('btn-help').setAttribute('aria-expanded', 'false'); }
+});
+
+/* ----- loading ----- */
+function setSong(song){
+  state.song = finalizeSong(song);
+  state.ev = -2; state.line = -2; state.manualZ = null; state.waveDirty = true;
+  markSung();
+}
+let pendingTimeline = null;
+async function loadAudioFile(file){
+  try {
+    toast(`Decoding ${file.name}…`);
+    const ctx = player.ensure();
+    const buf = await ctx.decodeAudioData(await file.arrayBuffer());
+    player.setBuffer(buf);
+    let tl = pendingTimeline, meta = tl ? tl.meta : {};
+    if (!tl){ tl = scaleTimeline(state.tour, buf.duration / state.tourDuration); }
+    setSong({ peaks: peaksOf(buf), events: tl.events, lines: tl.lines });
+    $('title').textContent = meta.ti || 'The Elements';
+    $('subtitle').textContent = meta.ar ? meta.ar : file.name.replace(/\.[^.]+$/, '');
+    toast(pendingTimeline ? `Loaded ${file.name} with your timing.` : `Loaded ${file.name}. Timing is stretched to fit; load a .lrc or .json to sync exactly.`);
+  } catch (err){
+    toast(`Couldn't decode that audio file. Try mp3, m4a, wav or ogg.`);
+  }
+}
+async function loadSyncFile(file){
+  try {
+    const text = await file.text();
+    const isJSON = /\.json$/i.test(file.name) || /^\s*[\[{]/.test(text);
+    const tl = isJSON ? parseJSON(text, player.duration) : parseLRC(text, player.duration);
+    if (!tl.events.length) throw new Error('No element names were found in the lyric lines.');
+    pendingTimeline = tl;
+    setSong({ peaks: state.song.peaks, events: tl.events, lines: tl.lines });
+    if (tl.meta.ti) $('title').textContent = tl.meta.ti;
+    if (tl.meta.ar) $('subtitle').textContent = tl.meta.ar;
+    toast(`Synced ${tl.events.length} element cues from ${file.name}.`);
+  } catch (err){
+    toast(err.message || 'That timing file could not be read.');
+  }
+}
+function routeFile(f){
+  if (/^audio\//.test(f.type) || /\.(mp3|m4a|wav|ogg|oga|flac|aac|webm|opus)$/i.test(f.name)) return loadAudioFile(f);
+  if (/\.(lrc|txt|json)$/i.test(f.name) || /json|text/.test(f.type)) return loadSyncFile(f);
+  toast(`${f.name} isn't an audio or timing file.`);
+}
+$('btn-audio').addEventListener('click', () => $('f-audio').click());
+$('btn-sync').addEventListener('click', () => $('f-sync').click());
+$('f-audio').addEventListener('change', e => { const f = e.target.files[0]; if (f) loadAudioFile(f); e.target.value = ''; });
+$('f-sync').addEventListener('change', e => { const f = e.target.files[0]; if (f) loadSyncFile(f); e.target.value = ''; });
+$('btn-help').addEventListener('click', () => { const h = $('help'); h.hidden = !h.hidden; $('btn-help').setAttribute('aria-expanded', String(!h.hidden)); });
+$('help-x').addEventListener('click', () => { $('help').hidden = true; $('btn-help').setAttribute('aria-expanded', 'false'); });
+$('btn-copy').addEventListener('click', () => {
+  const s = state.song; if (!s) return;
+  const t2 = t => { const m = Math.floor(t / 60); return `${String(m).padStart(2,'0')}:${(t - m * 60).toFixed(2).padStart(5,'0')}`; };
+  const out = [`[ti:${$('title').textContent}]`, `[ar:${$('subtitle').textContent}]`,
+    ...s.lines.map(l => `[${t2(l.t)}] ${wordStamped(l, t2)}`)].join('\n');
+  navigator.clipboard.writeText(out).then(() => toast(`Copied ${s.lines.length} timed lines as LRC.`), () => toast('Clipboard access was blocked by the browser.'));
+});
+function wordStamped(l, t2){
+  let out = '', at = 0;
+  for (const sp of [...l.spans].sort((a, b) => a.a - b.a)){ out += l.text.slice(at, sp.a) + `<${t2(sp.ev.t)}>` + l.text.slice(sp.a, sp.b); at = sp.b; }
+  return out + l.text.slice(at);
+}
+let dragDepth = 0;
+window.addEventListener('dragenter', e => { if (e.dataTransfer && [...e.dataTransfer.types].includes('Files')){ dragDepth++; $('drop').hidden = false; } });
+window.addEventListener('dragleave', () => { dragDepth = Math.max(0, dragDepth - 1); if (!dragDepth) $('drop').hidden = true; });
+window.addEventListener('dragover', e => e.preventDefault());
+window.addEventListener('drop', e => {
+  e.preventDefault(); dragDepth = 0; $('drop').hidden = true;
+  const files = [...(e.dataTransfer?.files || [])];
+  // timing first so a dropped pair syncs in one go
+  files.sort((a, b) => (/\.(lrc|txt|json)$/i.test(b.name) ? 1 : 0) - (/\.(lrc|txt|json)$/i.test(a.name) ? 1 : 0));
+  (async () => { for (const f of files) await routeFile(f); })();
+});
+
+/* ----- frame tick ----- */
+function uiTick(){
+  const s = state.song; if (!s) return;
+  if (sizeCanvas(waveCv)) state.waveDirty = true;
+  const t = player.time();
+  const ei = eventAt(t);
+  let lyricDirty = false;
+  if (ei !== state.ev){ state.ev = ei; if (player.playing) state.manualZ = null; lyricDirty = true; }
+  const li = lineAt(t);
+  if (li !== state.line){ state.line = li; lyricDirty = true; }
+  const z = state.manualZ ?? (ei >= 0 ? s.events[ei].z : (s.events[0] ? s.events[0].z : 1));
+  if (z !== state.z) showElement(z);
+  else if (lyricDirty) updateMeta();
+  if (lyricDirty) renderLyric();
+  if (t !== state.lastT || state.waveDirty){
+    $('time').textContent = `${fmt(t)} / ${fmt(player.duration)}`;
+    drawWave(t); state.lastT = t; state.waveDirty = false;
+  }
+}
+
+/* =====================================================================
+   3D ATOM (three.js)
+   ===================================================================== */
+let gl = null;
+async function initGL(){
+  let THREE, OrbitControls, EffectComposer, RenderPass, UnrealBloomPass, OutputPass;
+  try {
+    THREE = await import('three');
+    [{ OrbitControls }, { EffectComposer }, { RenderPass }, { UnrealBloomPass }, { OutputPass }] = await Promise.all([
+      import('three/addons/controls/OrbitControls.js'),
+      import('three/addons/postprocessing/EffectComposer.js'),
+      import('three/addons/postprocessing/RenderPass.js'),
+      import('three/addons/postprocessing/UnrealBloomPass.js'),
+      import('three/addons/postprocessing/OutputPass.js'),
+    ]);
+  } catch (err){ document.body.classList.add('no-gl'); return null; }
+
+  const canvas = $('gl');
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas, antialias:true, powerPreference:'high-performance' }); }
+  catch (err){ document.body.classList.add('no-gl'); return null; }
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1));
+  renderer.toneMapping = THREE.NoToneMapping;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(32, innerWidth / innerHeight, 0.1, 200);
+  camera.position.set(0, 1.2, 22);
+
+  const controls = new OrbitControls(camera, canvas);
+  controls.enablePan = false; controls.enableZoom = false; controls.enableDamping = true; controls.dampingFactor = 0.06;
+  controls.autoRotate = !reduced; controls.autoRotateSpeed = 0.7; controls.rotateSpeed = 0.6;
+
+  // background: radial wash tinted by category, centered on the atom
+  const bgMat = new THREE.ShaderMaterial({
+    uniforms: { uColor:{ value:new THREE.Color('#4472ff') }, uRes:{ value:new THREE.Vector2(1,1) }, uCenter:{ value:new THREE.Vector2(0,0) } },
+    vertexShader: `void main(){ gl_Position = vec4(position.xy, 0.9999, 1.0); }`,
+    fragmentShader: `uniform vec3 uColor; uniform vec2 uRes; uniform vec2 uCenter;
+      void main(){
+        vec2 p = (gl_FragCoord.xy - uCenter) / uRes.y;
+        float d = length(p * vec2(0.62, 1.0));
+        vec3 base = vec3(0.0016, 0.0019, 0.0034);
+        vec3 c = base + uColor * (0.085 * exp(-d * d * 4.5) + 0.018 * exp(-d * 1.6));
+        float v = smoothstep(1.4, 0.2, length((gl_FragCoord.xy / uRes - 0.5) * vec2(1.2, 1.0)));
+        gl_FragColor = vec4(c * (0.55 + 0.45 * v), 1.0);
+      }`,
+    depthWrite:false, depthTest:false,
+  });
+  const bg = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), bgMat);
+  bg.frustumCulled = false; bg.renderOrder = -10; scene.add(bg);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.45));
+  const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(5, 8, 10); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xffffff, 0.8); rim.position.set(-8, -4, -6); scene.add(rim);
+  const core = new THREE.PointLight(0xffffff, 40, 14, 2); scene.add(core);
+
+  const composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.62, 0.5, 0.3);
+  composer.addPass(bloom);
+  composer.addPass(new OutputPass());
+
+  const SPH = new THREE.SphereGeometry(1, 32, 22);
+  const SPH_LO = new THREE.SphereGeometry(1, 18, 12);
+  const UP = new THREE.Vector3(0, 1, 0);
+
+  function glassMat(color, strength = 1){
+    return new THREE.ShaderMaterial({
+      uniforms: { uColor:{ value:color.clone() }, uOpacity:{ value:strength }, uFade:{ value:1 } },
+      vertexShader: `varying vec3 vN; varying vec3 vV;
+        void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }`,
+      fragmentShader: `uniform vec3 uColor; uniform float uOpacity; uniform float uFade; varying vec3 vN; varying vec3 vV;
+        void main(){
+          float f = 1.0 - abs(dot(normalize(vN), normalize(vV)));
+          float rim = pow(f, 2.4);
+          vec3 c = mix(uColor * 0.7, vec3(1.0), rim * 0.65);
+          float a = (0.04 + rim * 0.6) * uOpacity * uFade;
+          gl_FragColor = vec4(c * (0.5 + rim * 1.5), a);
+        }`,
+      transparent:true, depthWrite:false, side:THREE.DoubleSide, blending:THREE.AdditiveBlending,
+    });
+  }
+
+  function lobe(group, mat, dir, dist, rad, len){
+    const m = new THREE.Mesh(SPH, mat);
+    const d = dir.clone().normalize();
+    m.quaternion.setFromUnitVectors(UP, d);
+    m.position.copy(d).multiplyScalar(dist);
+    m.scale.set(rad, len, rad);
+    m.userData.shared = true;
+    group.add(m);
+  }
+
+  function buildAtom(e){
+    const col = new THREE.Color(CAT[e.cat].color);
+    const white = new THREE.Color(1, 1, 1);
+    const root = new THREE.Group();
+    const spin = [];
+    const fadeMats = [];
+    const rng = mulberry32(e.z * 131 + 7);
+
+    // nucleus: a packed cluster of protons and neutrons
+    const A = Math.max(1, Math.round(e.massNum));
+    const count = Math.min(A, Math.round(4 + Math.sqrt(A) * 2.2));
+    const pr = 0.3, protons = Math.max(1, Math.round(count * e.z / A));
+    const pts = [];
+    const R0 = count === 1 ? 0 : pr * Math.cbrt(count) * 0.95;
+    for (let i = 0; i < count; i++){
+      const v = new THREE.Vector3(rng() - 0.5, rng() - 0.5, rng() - 0.5).normalize().multiplyScalar(R0 * Math.cbrt(rng()));
+      pts.push(v);
+    }
+    for (let it = 0; it < 40; it++){
+      for (let i = 0; i < count; i++){
+        for (let j = i + 1; j < count; j++){
+          const d = pts[i].distanceTo(pts[j]), want = pr * 1.85;
+          if (d < want && d > 1e-5){ const push = pts[i].clone().sub(pts[j]).multiplyScalar((want - d) / d * 0.5); pts[i].add(push); pts[j].sub(push); }
+        }
+        pts[i].multiplyScalar(0.985);
+      }
+    }
+    const nucleus = new THREE.Group();
+    const pMat = new THREE.MeshStandardMaterial({ color:col, emissive:col, emissiveIntensity:0.4, roughness:0.35, metalness:0.05, transparent:true });
+    const nMat = new THREE.MeshStandardMaterial({ color:new THREE.Color().copy(col).lerp(white, 0.82), emissive:col, emissiveIntensity:0.12, roughness:0.3, metalness:0.05, transparent:true });
+    fadeMats.push(pMat, nMat);
+    const order = pts.map((_, i) => i).sort(() => rng() - 0.5);
+    pts.forEach((p, k) => {
+      const m = new THREE.Mesh(SPH, order[k] < protons ? pMat : nMat);
+      m.position.copy(p); m.scale.setScalar(pr); m.userData.shared = true; nucleus.add(m);
+    });
+    root.add(nucleus);
+    spin.push({ obj:nucleus, axis:new THREE.Vector3(0.3, 1, 0.2).normalize(), w:0.35 });
+
+    // orbital clouds keyed to the element's block
+    const clouds = new THREE.Group();
+    const dense = e.block === 'f' ? 0.6 : e.block === 'd' ? 0.8 : 1;
+    const gm = glassMat(col, dense); fadeMats.push(gm);
+    const gmSoft = glassMat(col, 0.45 * dense); fadeMats.push(gmSoft);
+    const X = new THREE.Vector3(1,0,0), Y = new THREE.Vector3(0,1,0), Z = new THREE.Vector3(0,0,1);
+    if (e.block === 's'){
+      lobe(clouds, gm, Y, 0, 1.25, 1.25);
+      if (e.period > 1) lobe(clouds, gmSoft, Y, 0, 1.85, 1.85);
+    } else if (e.block === 'p'){
+      for (const d of [X, Y, Z]) for (const s of [1, -1]) lobe(clouds, gm, d.clone().multiplyScalar(s), 1.05, 0.52, 0.98);
+      lobe(clouds, gmSoft, Y, 0, 0.85, 0.85);
+    } else {
+      for (let k = 0; k < 4; k++){ const a = Math.PI / 4 + k * Math.PI / 2; lobe(clouds, gm, new THREE.Vector3(Math.cos(a), Math.sin(a), 0), 1.1, 0.5, 0.95); }
+      for (const s of [1, -1]) lobe(clouds, gm, Z.clone().multiplyScalar(s), 1.15, 0.46, 1.0);
+      const tor = new THREE.Mesh(new THREE.TorusGeometry(0.85, 0.24, 18, 64), gm); clouds.add(tor);
+      if (e.block === 'f'){
+        for (const sx of [1,-1]) for (const sy of [1,-1]) for (const sz of [1,-1]) lobe(clouds, gmSoft, new THREE.Vector3(sx, sy, sz), 1.45, 0.38, 0.75);
+        const tor2 = new THREE.Mesh(new THREE.TorusGeometry(1.55, 0.16, 16, 96), gmSoft); tor2.rotation.x = Math.PI / 2; clouds.add(tor2);
+        for (const d of [X, Y]) for (const s of [1, -1]) lobe(clouds, gmSoft, d.clone().multiplyScalar(s), 1.25, 0.42, 0.9);
+      }
+      // axis rods
+      const rodMat = new THREE.MeshStandardMaterial({ color:new THREE.Color().copy(col).lerp(white, 0.7), emissive:col, emissiveIntensity:0.4, roughness:0.3, transparent:true });
+      fadeMats.push(rodMat);
+      const rodGeo = new THREE.CylinderGeometry(0.035, 0.035, 4.2, 10);
+      for (const d of [X, Y, Z]){ const r = new THREE.Mesh(rodGeo, rodMat); r.quaternion.setFromUnitVectors(UP, d); clouds.add(r); }
+    }
+    root.add(clouds);
+    spin.push({ obj:clouds, axis:new THREE.Vector3(0.2, 1, -0.3).normalize(), w:-0.18, breathe:true });
+
+    // electron shells
+    const n = e.shells.length;
+    const rMin = 2.35, rMax = n > 1 ? 4.75 : 2.6;
+    const eMat = new THREE.MeshStandardMaterial({ color:new THREE.Color().copy(col).lerp(white, 0.86), emissive:col, emissiveIntensity:0.3, roughness:0.22, metalness:0.05, transparent:true });
+    const ringMat = new THREE.MeshBasicMaterial({ color:new THREE.Color().copy(col).lerp(white, 0.25), transparent:true, opacity:0.62, blending:THREE.AdditiveBlending, depthWrite:false });
+    fadeMats.push(eMat, ringMat);
+    for (let i = 0; i < n; i++){
+      const r = n > 1 ? rMin + (rMax - rMin) * i / (n - 1) : rMin + 0.25;
+      const tilt = new THREE.Group();
+      if (i === n - 1) tilt.rotation.set((rng() - 0.5) * 0.6, (rng() - 0.5) * 0.6, 0);
+      else tilt.rotation.set(rng() * Math.PI, rng() * Math.PI, rng() * Math.PI);
+      const wheel = new THREE.Group();
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.026, 8, 220), ringMat);
+      wheel.add(ring);
+      const c = e.shells[i];
+      const size = clamp((Math.PI * 2 * r / c) * 0.3, 0.085, 0.19);
+      const phase = rng() * Math.PI * 2;
+      for (let k = 0; k < c; k++){
+        const a = phase + k / c * Math.PI * 2;
+        const m = new THREE.Mesh(SPH_LO, eMat);
+        m.position.set(Math.cos(a) * r, Math.sin(a) * r, 0); m.scale.setScalar(size); m.userData.shared = true;
+        wheel.add(m);
+      }
+      tilt.add(wheel); root.add(tilt);
+      spin.push({ obj:wheel, axis:Z, w:(0.55 / Math.pow(i + 1, 0.55)) * (rng() > 0.5 ? 1 : -1) });
+    }
+    return { root, spin, fadeMats, born:performance.now(), dying:false };
+  }
+
+  function disposeAtom(a){
+    a.root.traverse(o => { if (o.isMesh && !o.userData.shared) o.geometry.dispose(); });
+    a.fadeMats.forEach(m => m.dispose());
+    scene.remove(a.root);
+  }
+
+  const atoms = [];
+  let current = null;
+  const targetBg = new THREE.Color('#4472ff');
+  function setElement(e){
+    if (current && current.z === e.z) return;
+    if (current){ current.dying = true; current.died = performance.now(); }
+    const a = buildAtom(e); a.z = e.z;
+    a.root.scale.setScalar(0.001);
+    scene.add(a.root); atoms.push(a); current = a;
+    targetBg.set(CAT[e.cat].color);
+    core.color.set(CAT[e.cat].color);
+  }
+
+  const stage = $('stage');
+  let W = 0, H = 0, last = { cx:0, cy:0, fit:0 };
+  function layout(){
+    const w = innerWidth, h = innerHeight;
+    if (w !== W || h !== H){
+      W = w; H = h;
+      renderer.setSize(W, H, false);
+      composer.setSize(W, H);
+      bloom.resolution.set(W, H);
+      camera.aspect = W / H;
+    }
+    const r = stage.getBoundingClientRect();
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2, fit = Math.max(180, Math.min(r.width, r.height));
+    if (Math.abs(cx - last.cx) + Math.abs(cy - last.cy) + Math.abs(fit - last.fit) > 0.5 || camera.view === null){
+      last = { cx, cy, fit };
+      camera.setViewOffset(W, H, W / 2 - cx, H / 2 - cy, W, H);
+      camera.updateProjectionMatrix();
+      const dist = (10.6 * H / (fit * 0.98)) / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
+      camera.position.setLength(dist);
+      const dpr = renderer.getPixelRatio();
+      bgMat.uniforms.uRes.value.set(W * dpr, H * dpr);
+      bgMat.uniforms.uCenter.value.set(cx * dpr, (H - cy) * dpr);
+    }
+  }
+
+  const easeOutBack = x => { const c1 = 1.5, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+  let prev = performance.now();
+  function render(){
+    const now = performance.now(), dt = Math.min(0.05, (now - prev) / 1000); prev = now;
+    layout();
+    bgMat.uniforms.uColor.value.lerp(targetBg, 1 - Math.pow(0.02, dt));
+    for (let i = atoms.length - 1; i >= 0; i--){
+      const a = atoms[i];
+      let s, fade;
+      if (a.dying){
+        const k = clamp((now - a.died) / 320, 0, 1);
+        s = 1 + k * 0.25; fade = 1 - k;
+        if (k >= 1){ disposeAtom(a); atoms.splice(i, 1); continue; }
+      } else {
+        const k = clamp((now - a.born) / 700, 0, 1);
+        s = Math.max(0.001, easeOutBack(k)); fade = Math.min(1, k * 1.6);
+      }
+      a.root.scale.setScalar(s);
+      for (const m of a.fadeMats){
+        if (m.uniforms) m.uniforms.uFade.value = fade;
+        else { if (m.userData.base == null) m.userData.base = m.opacity; m.opacity = m.userData.base * fade; }
+      }
+      const speed = reduced ? 0.15 : 1;
+      for (const sp of a.spin){
+        sp.obj.rotateOnAxis(sp.axis, sp.w * dt * speed);
+        if (sp.breathe) sp.obj.scale.setScalar(1 + Math.sin(now / 900) * 0.035);
+      }
+    }
+    controls.update();
+    composer.render();
+  }
+  return { setElement, render };
+}
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+buildTable();
+showElement(1);
+function frame(){
+  uiTick();
+  if (gl) gl.render();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+initGL().then(g => { gl = g; if (gl && state.z) gl.setElement(el(state.z)); });
+
+(async () => {
+  try {
+    const buf = await renderTour();
+    state.tour = tourTimeline();
+    state.tourDuration = buf.duration;
+    player.setBuffer(buf);
+    setSong({ peaks: peaksOf(buf), events: state.tour.events, lines: state.tour.lines });
+    $('subtitle').textContent = 'Synth score · all 118 elements';
+  } catch (err){
+    $('subtitle').textContent = 'Audio unavailable in this browser';
+    state.tour = tourTimeline();
+    setSong({ peaks: null, events: state.tour.events, lines: state.tour.lines });
+  }
+  $('play').disabled = !player.buffer;
+})();
+</script>
