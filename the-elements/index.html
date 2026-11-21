@@ -24,9 +24,9 @@
 }
 html,body{height:100%}
 [hidden]{display:none!important}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-sans);overflow:hidden;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-sans);overflow-x:hidden;overflow-y:auto;-webkit-font-smoothing:antialiased}
 #gl{position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:0;touch-action:none;outline:none}
-.app{position:relative;z-index:1;height:100%;box-sizing:border-box;display:grid;grid-template-rows:auto minmax(0,1fr) auto;
+.app{position:relative;z-index:1;height:100%;min-height:640px;box-sizing:border-box;display:grid;grid-template-rows:auto minmax(0,1fr) auto;
   max-width:1640px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));padding-block:14px 12px;pointer-events:none}
 .top,.panel,.ptable,.hero .meta{pointer-events:auto}
 button{font:inherit;color:inherit}
@@ -614,22 +614,36 @@ function peaksOf(buffer, bins = 1400){
 }
 
 class Player {
-  constructor(){ this.ctx = null; this.buffer = null; this.src = null; this.offset = 0; this.startAt = 0; this.playing = false; this.onstate = () => {}; }
+  constructor(){ this.ctx = null; this.buffer = null; this.src = null; this.offset = 0; this.startAt = 0; this.wallAt = 0; this.playing = false; this.onstate = () => {}; this.onblocked = () => {}; }
   ensure(){
-    if (!this.ctx){ const AC = window.AudioContext || window.webkitAudioContext; this.ctx = new AC(); this.out = this.ctx.createGain(); this.out.connect(this.ctx.destination); }
+    if (!this.ctx){
+      const AC = window.AudioContext || window.webkitAudioContext;
+      this.ctx = new AC(); this.out = this.ctx.createGain(); this.out.connect(this.ctx.destination);
+      // sound allowed late: resync the audio to where the visuals already are
+      this.ctx.onstatechange = () => { if (this.playing && this.ctx.state === 'running' && this.silent){ this.silent = false; this.seek(this.time()); } };
+    }
     return this.ctx;
   }
   get duration(){ return this.buffer ? this.buffer.duration : 0; }
-  time(){ return this.playing ? clamp(this.ctx.currentTime - this.startAt, 0, this.duration) : this.offset; }
-  async play(){
+  get audible(){ return this.ctx && this.ctx.state === 'running' && !this.silent; }
+  time(){
+    if (!this.playing) return this.offset;
+    const t = this.audible ? this.ctx.currentTime - this.startAt : performance.now() / 1000 - this.wallAt;
+    return clamp(t, 0, this.duration);
+  }
+  play(){
     if (!this.buffer || this.playing) return;
     const ctx = this.ensure();
-    if (ctx.state === 'suspended') await ctx.resume();
+    // resume inside the click, but never wait on it: a blocked context leaves the promise pending
+    if (ctx.state !== 'running'){ this.silent = true; ctx.resume().catch(() => {}); }
     if (this.offset >= this.duration - 0.05) this.offset = 0;
     const s = ctx.createBufferSource(); s.buffer = this.buffer; s.connect(this.out);
-    s.onended = () => { if (this.src === s){ this.src = null; this.playing = false; this.offset = this.duration; this.onstate(); } };
+    s.onended = () => { if (this.src === s && this.audible){ this.src = null; this.playing = false; this.offset = this.duration; this.onstate(); } };
     s.start(0, this.offset);
-    this.src = s; this.startAt = ctx.currentTime - this.offset; this.playing = true; this.onstate();
+    this.src = s; this.startAt = ctx.currentTime - this.offset; this.wallAt = performance.now() / 1000 - this.offset;
+    this.playing = true; this.onstate();
+    clearTimeout(this.check);
+    this.check = setTimeout(() => { if (this.playing && ctx.state !== 'running') this.onblocked(); }, 800);
   }
   pause(){
     if (!this.playing) return;
@@ -639,7 +653,7 @@ class Player {
   }
   seek(t){
     t = clamp(t, 0, this.duration);
-    if (this.playing){ const s = this.src; this.src = null; this.playing = false; try { s.stop(); } catch (e) {} this.offset = t; this.play(); }
+    if (this.playing){ const s = this.src; this.src = null; this.playing = false; try { s.stop(); } catch (e) {} this.offset = t; this.silent = false; this.play(); }
     else this.offset = t;
   }
   setBuffer(b){ this.pause(); this.buffer = b; this.offset = 0; }
@@ -922,15 +936,14 @@ function drawWave(t){
   const accent = CAT[el(state.z || 1).cat].color;
   wctx.fillStyle = accent;
   for (let i = 0; i < nb; i++){
-    const x = i * step; if (x > px) break;
+    const x = i * step, played = x <= px;
     const p = s.peaks[Math.floor(i / nb * s.peaks.length)];
-    const bh = Math.max(2 * dpr, p * h * 0.94);
-    wctx.globalAlpha = 0.5 + p * 0.5;
+    const bh = Math.max(2 * dpr, p * h * (played ? 0.94 : 0.5));
+    wctx.fillStyle = played ? accent : '#ffffff';
+    wctx.globalAlpha = played ? 0.5 + p * 0.5 : 0.13;
     wctx.fillRect(x, (h - bh) / 2, bw, bh);
   }
   wctx.globalAlpha = 1;
-  wctx.fillStyle = 'rgba(255,255,255,.2)';
-  wctx.fillRect(px, h / 2 - dpr * 0.5, w - px, Math.max(1, dpr));
 }
 let scrubbing = false;
 function scrubTo(ev){
@@ -985,6 +998,9 @@ function onPlayState(){
   b.setAttribute('aria-label', player.playing ? 'Pause' : 'Play');
 }
 player.onstate = onPlayState;
+player.onblocked = () => toast('Sound is blocked in this tab, so the timeline runs silently. Allow sound for this site to hear it.');
+window.addEventListener('error', e => toast(`Error: ${e.message}`));
+window.addEventListener('unhandledrejection', e => toast(`Error: ${(e.reason && e.reason.message) || e.reason}`));
 $('play').addEventListener('click', () => { if (player.playing) player.pause(); else { state.manualZ = null; player.play(); } });
 $('h-meta').addEventListener('click', () => { const t = $('h-meta').dataset.t; if (t != null){ state.manualZ = null; player.seek(+t + 0.002); if (!player.playing) player.play(); } });
 
@@ -1080,6 +1096,7 @@ window.addEventListener('drop', e => {
 function uiTick(){
   const s = state.song; if (!s) return;
   if (sizeCanvas(waveCv)) state.waveDirty = true;
+  if (player.playing && !player.audible && player.time() >= player.duration) player.pause();
   const t = player.time();
   const ei = eventAt(t);
   let lyricDirty = false;
